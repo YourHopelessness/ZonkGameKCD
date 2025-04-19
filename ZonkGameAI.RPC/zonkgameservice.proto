@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package zonk;
+
+service ZonkService {
+  // Метод для получения выбранных кубиков
+  rpc GetSelectedDices(SelectedDicesRequest) returns (SelectedDicesResponse);
+
+  // Метод для получения решения о продолжении
+  rpc GetContinuationDecision(ContinuationDecisionRequest) returns (ContinuationDecisionResponse);
+}
+
+// Запрос для GetSelectedDices (может быть пустым)
+message SelectedDicesRequest {}
+
+// Ответ с массивом выбранных кубиков
+message SelectedDicesResponse {
+  repeated int32 dices = 1;
+}
+
+// Запрос для GetContinuationDecision (может быть пустым)
+message ContinuationDecisionRequest {}
+
+// Ответ с решением о продолжении
+message ContinuationDecisionResponse {
+  bool continue_game = 1;
+}
