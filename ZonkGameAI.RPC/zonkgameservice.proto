@@ -11,7 +11,9 @@ service ZonkService {
 }
 
 // Запрос для GetSelectedDices (может быть пустым)
-message SelectedDicesRequest {}
+message SelectedDicesRequest {
+  repeated int32 dices = 1;
+}
 
 // Ответ с массивом выбранных кубиков
 message SelectedDicesResponse {

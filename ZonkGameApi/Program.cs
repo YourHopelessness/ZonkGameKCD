@@ -1,4 +1,7 @@
+using Microsoft.Extensions.Configuration;
 using ZonkGameApi.Hubs;
+using ZonkGameApi.Services;
+using ZonkGameApi.Utils;
 
 internal class Program
 {
@@ -6,16 +9,26 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.Services.AddSingleton<IGrpcChannelSingletone, GrpcChannelSingletone>();
+        builder.Services.AddScoped<IGameService, GameService>();
+        builder.Services.AddScoped<WebLogger>();
+        builder.Services.AddLogging();
+
+        builder.Services.Configure<GameZonkConfiguration>(
+            builder.Configuration.GetSection(GameZonkConfiguration.Position));
 
         builder.Services.AddControllers();
         builder.Services.AddSignalR();
+        builder.Services.AddGrpc();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        var app = builder.Build();
+        builder.Services.AddStackExchangeRedisCache(options => {
+            options.Configuration = builder.Configuration.GetSection(GameZonkConfiguration.Position + ":RedisConnectionString").Value;
+            options.InstanceName = "local";
+        });
 
-        // Configure the HTTP request pipeline.
+        var app = builder.Build();
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

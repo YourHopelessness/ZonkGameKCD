@@ -19,7 +19,7 @@ namespace ZonkGameCore.FSM.States
             if (_fsm.GameContext.CurrentPlayerIndex == 1 &&
                 _fsm.GameContext.Players.Any(p => p.TotalScore >= _fsm.GameContext.TargetScore))
             {
-                // Игра окончена, кто-то  из игроков достиг целевого счета
+                // Игра окончена, кто-то из игроков достиг целевого счета
                 _fsm.TransitionTo(new GameOverState(_observer, _fsm));
             }
             else

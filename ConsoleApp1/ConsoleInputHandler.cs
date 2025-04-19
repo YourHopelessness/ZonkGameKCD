@@ -18,6 +18,7 @@ namespace ZonkGameCore.InputHandler
         {
             while (true)
             {
+                Console.WriteLine("Хотите продолжить игру? (y/n)");
                 var input = Console.ReadLine();
                 if (input == null)
                 {
@@ -31,9 +32,6 @@ namespace ZonkGameCore.InputHandler
                 {
                     return false;
                 }
-
-                Console.WriteLine("Повторите ввод");
-                input = Console.ReadLine();
             }
         }
 
@@ -42,6 +40,7 @@ namespace ZonkGameCore.InputHandler
             var selectedDices = new List<int>();
             while (true)
             {
+                Console.WriteLine("Выберите кости, которые хотите отложить (через запятую):");
                 var input = Console.ReadLine();
                 if (string.IsNullOrEmpty(input))
                 {
@@ -67,8 +66,6 @@ namespace ZonkGameCore.InputHandler
                         break;
                     }
                 }
-                Console.WriteLine("Повторите ввод");
-                input = Console.ReadLine();
             }
 
             return selectedDices;

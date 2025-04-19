@@ -9,9 +9,6 @@ namespace ZonkGameCore.FSM.States
     {
         public async override Task HandleAsync()
         {
-            _observer.Info($"Игрок {_fsm.GameContext.CurrentPlayer.PlayerName}," +
-                $" выберите кости, которые хотите отложить (через запятую):");
-
             // Игрок выбирает кости среди выпавших
             var selectedDices = await _fsm.GameContext
                 .CurrentPlayer
@@ -19,9 +16,9 @@ namespace ZonkGameCore.FSM.States
                 .HandleSelectDiceInputAsync(_fsm.GameContext.CurrentRoll);
 
             // Проверка что есть доступные комбинации и нет ли лишних или неккоректных костей
-            if (!_fsm.GameContext.HasValidCombos(selectedDices))
+            if (_fsm.GameContext.GetValidCombinations(selectedDices).Count < 1)
             {
-                _observer.Error("Данные кости отложить нельзя, среди них нет доступных комбинаций");
+                _observer.Error($"Выбрана неверная комбинация костей [{string.Join(", ", selectedDices)}]");
             }
             else
             {

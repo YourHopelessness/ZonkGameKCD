@@ -1,11 +1,15 @@
-﻿using Grpc.Net.Client;
-using ZonkGameCore.InputParams;
+﻿using ZonkGameCore.InputParams;
 
-namespace ZonkGameAI.RPC.AIClient
+namespace ZonkGameSignalR.InputHandler
 {
-    public class ZonkAIClient(GrpcChannel channel) : IInputAsyncHandler
+    public class SignalRInputHandler : IInputAsyncHandler
     {
-        private readonly GrpcChannel _channel = channel;
+        private object connectionId;
+
+        public SignalRInputHandler(object connectionId)
+        {
+            this.connectionId = connectionId;
+        }
 
         public Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll)
         {

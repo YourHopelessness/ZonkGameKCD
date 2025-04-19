@@ -1,5 +1,8 @@
 ﻿namespace ZonkGameCore.Observer
 {
+    /// <summary>
+    /// Логгирование в консоль
+    /// </summary>
     public class ConsoleLogger : BaseObserver
     {
         public override void Error(string text)
