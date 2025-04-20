@@ -15,7 +15,7 @@ namespace ZonkGameCore.FSM.States
             _observer.Info($"Игрок {_fsm.GameContext.CurrentPlayer.PlayerName} сделал бросок [{string.Join(", ", _fsm.GameContext.CurrentRoll)}]");
 
             // Определение есть ли возможное комбинации среди брошенных костей
-            if (!_fsm.GameContext.HasValidCombos())
+            if (_fsm.GameContext.CurrentRoll.GetValidCombinations().Count < 1)
             {
                 _observer.Info($"Среди брошенных костей нет доступных комбинаций, ход переходит другому игроку");
 

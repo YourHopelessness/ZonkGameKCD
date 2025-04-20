@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using System.Collections.Concurrent;
-using System.Linq;
 using System.Text.Json;
 using ZonkGameAI.RPC.AIClient;
 using ZonkGameApi.Request;
 using ZonkGameApi.Services;
 using ZonkGameApi.Utils;
 using ZonkGameCore.FSM;
+using ZonkGameCore.Utils;
 using ZonkGameSignalR.InputHandler;
 
 namespace ZonkGameApi.Controllers
@@ -15,7 +14,7 @@ namespace ZonkGameApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class GameController(
-        IGameService gameService, 
+        IGameService gameService,
         IGrpcChannelSingletone channel,
         WebLogger logger,
         IDistributedCache cache) : ControllerBase
@@ -69,7 +68,7 @@ namespace ZonkGameApi.Controllers
         public async Task<IActionResult> StartGame([FromQuery] Guid gameId)
         {
             var fsmCached = await _cache.GetStringAsync(gameId.ToString());
-            
+
             if (fsmCached is not null)
             {
                 var fsm = JsonSerializer.Deserialize<ZonkStateMachine>(fsmCached);
@@ -98,7 +97,7 @@ namespace ZonkGameApi.Controllers
         [HttpGet("GetCurrentGameState")]
         public IActionResult GetCurrentGameState([FromQuery] Guid gameId)
         {
-            var fsmCached =  _cache.GetString(gameId.ToString());
+            var fsmCached = _cache.GetString(gameId.ToString());
             if (fsmCached is not null)
             {
                 var fsm = JsonSerializer.Deserialize<ZonkStateMachine>(fsmCached);

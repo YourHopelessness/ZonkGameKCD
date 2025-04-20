@@ -1,6 +1,7 @@
 ﻿using ZonkGameCore.InputParams;
+using ZonkGameCore.Utils;
 
-namespace ZonkGameCore.FSM
+namespace ZonkGameCore.Context
 {
     /// <summary>
     /// Состояние игрока
@@ -25,7 +26,7 @@ namespace ZonkGameCore.FSM
         /// <summary>
         /// Счет игрока
         /// </summary>
-        public int TotalScore { get; set; } = 0;
+        public int TotalScore { get; private set; } = 0;
 
         /// <summary>
         /// Счет игрока за текущий ход
@@ -35,29 +36,43 @@ namespace ZonkGameCore.FSM
         /// <summary>
         /// Количество оставшихся костей
         /// </summary>
-        public int RemainingDice { get; set; } = 6;
+        public int RemainingDice { get; private set; } = 6;
 
         /// <summary>
         /// Победитель ли данный игрок
         /// </summary>
         public bool IsWinner { get; set; } = false;
-    }
-
-    /// <summary>
-    /// Информация о игроке
-    /// </summary>
-    /// <param name="name">Имя игрока</param>
-    /// <param name="inputHandler">Обработчик пользовательского ввода</param>
-    public class Player(string name, IInputAsyncHandler inputHandler)
-    {
-        /// <summary>
-        /// Обработчик ввода игрока
-        /// </summary>
-        public IInputAsyncHandler PlayerInputHandler { get; set; } = inputHandler;
 
         /// <summary>
-        /// Имя игрока
+        /// Уменьшить количество костей на отложенные
         /// </summary>
-        public string PlayerName { get; set; } = name;
+        /// <param name="selected">Количетсво отложенных костей</param>
+        /// <exception cref="InvalidOperationException">Невозможность уменьшить кости</exception>
+        public void SubstructDices(int selected)
+        {
+            RemainingDice -= selected;
+
+            if (RemainingDice < 0)
+            {
+                RemainingDice = 0;
+                throw new InvalidOperationException("Количество костей не может быть меньше 0");
+            }
+        }
+
+        /// <summary>
+        /// Установить кости в изначальное состояние
+        /// </summary>
+        public void ResetDices()
+        {
+            RemainingDice = 6;
+        }
+
+        /// <summary>
+        /// Меняем общий счет игрока в случае успешного хода
+        /// </summary>
+        public void AddingTotalScore()
+        {
+            TotalScore += TurnScore;
+        }
     }
 }

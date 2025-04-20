@@ -17,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZonkGameAI.RPC\ZonkGameAI.RPC.csproj" />
-    <ProjectReference Include="..\ZonkGameML\ZonkGameCore.csproj" />
-    <ProjectReference Include="..\ZonkGameSignalR\ZonkGameSignalR.csproj" />
+    <ProjectReference Include="..\ZonkGame.AIRPC\ZonkGameAI.RPC.csproj" />
+    <ProjectReference Include="..\ZonkGame.FSM\ZonkGameCore.csproj" />
+    <ProjectReference Include="..\ZonkGame.SignalR\ZonkGameSignalR.csproj" />
   </ItemGroup>
 
 </Project>

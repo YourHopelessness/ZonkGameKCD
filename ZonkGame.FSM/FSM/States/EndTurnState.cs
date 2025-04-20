@@ -10,7 +10,7 @@ namespace ZonkGameCore.FSM.States
         protected override bool Handle()
         {
             // Плюсуем очки за ход в общий счет игрока
-            _fsm.GameContext.CurrentPlayer.TotalScore += _fsm.GameContext.CurrentPlayer.TurnScore;
+            _fsm.GameContext.CurrentPlayer.AddingTotalScore();
 
             _observer.Info($"Ход игрока {_fsm.GameContext.CurrentPlayer.PlayerName} " +
                 $"закончен со счетом {_fsm.GameContext.CurrentPlayer.TurnScore}. " +

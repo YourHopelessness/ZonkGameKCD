@@ -15,7 +15,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <ProjectReference Include="..\ZonkGameML\ZonkGameCore.csproj" />
+    <ProjectReference Include="..\ZonkGame.FSM\ZonkGameCore.csproj" />
     <Protobuf Include="zonkgameservice.proto" GrpcServices="Client" />
   </ItemGroup>
 

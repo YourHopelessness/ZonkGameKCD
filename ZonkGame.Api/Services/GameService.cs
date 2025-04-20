@@ -41,7 +41,7 @@ namespace ZonkGameApi.Services
                 OpponentScore = opponentPlayer.TotalScore,
                 RemainingDice = gameContext.CurrentPlayer.RemainingDice,
                 CurrentRoll = [.. gameContext.CurrentRoll],
-                AvailableCombinations = gameContext.GetValidCombinations(),
+                AvailableCombinations = gameContext.CurrentRoll.GetValidCombinations(),
                 TargetScore = gameContext.TargetScore
             };
 

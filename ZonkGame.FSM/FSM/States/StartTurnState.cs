@@ -12,7 +12,7 @@ namespace ZonkGameCore.FSM.States
             _observer.Info($"Ход игрока {_fsm.GameContext.CurrentPlayer.PlayerName}");
 
             // Начало хода нового игрока
-            _fsm.GameContext.CurrentPlayer.RemainingDice = 6;
+            _fsm.GameContext.CurrentPlayer.ResetDices();
             _fsm.TransitionTo(new RollDiceState(_observer, _fsm));
 
             return true;

@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZonkGameML\ZonkGameCore.csproj" />
+    <ProjectReference Include="..\ZonkGame.FSM\ZonkGameCore.csproj" />
   </ItemGroup>
 
 </Project>
