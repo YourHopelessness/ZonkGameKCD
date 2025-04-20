@@ -5,8 +5,10 @@ namespace ZonkGameCore.FSM.States
     /// <summary>
     /// Состояние при котом происходит выбор костей и подсчет очков игрока
     /// </summary>
-    public class SelectDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
+    public class SelectDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm), IStateName
     {
+        public static string StateName => "SelectDiceState";
+
         public async override Task HandleAsync()
         {
             // Игрок выбирает кости среди выпавших

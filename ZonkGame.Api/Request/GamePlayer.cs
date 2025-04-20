@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ZonkGameApi.Utils;
+using ZonkGameCore.Enum;
 
 namespace ZonkGameApi.Request
 {

@@ -1,4 +1,4 @@
-﻿namespace ZonkGameApi.Utils
+﻿namespace ZonkGameCore.Enum
 {
     /// <summary>
     /// Режим игры

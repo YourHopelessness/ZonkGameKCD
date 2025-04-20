@@ -7,7 +7,7 @@ import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-BASE_URL = "http://localhost:5218/api/Game"
+BASE_URL = "http://localhost:5218/api"
 TARGET_SCORES = [1000, 1500, 2000, 2500, 3000]
 EPISODES_PER_SCORE = 1000
 
@@ -17,27 +17,28 @@ agent2 = DQNAgent()
 def create_game(target_score):
     payload = {
         "players": [
-            {"playerName": "agent1", "playerType": 1},
-            {"playerName": "agent2", "playerType": 1}
+            {"playerName": "agent1", "playerType": 2},
+            {"playerName": "agent2", "playerType": 2}
         ],
         "mode": 2,
         "targetScore": target_score
     }
-    res = requests.post(f"{BASE_URL}/CreateGame", json=payload, verify=False)
+    res = requests.post(f"{BASE_URL}/Game/CreateGame", json=payload, verify=False)
     res.raise_for_status()
     return res.json()["roomId"]
 
 def start_game(game_id):
-    res = requests.post(f"{BASE_URL}/StartGame", params={"gameId": game_id}, verify=False)
+    res = requests.post(f"{BASE_URL}/Game/StartGame", params={"gameId": game_id}, verify=False)
     res.raise_for_status()
 
 def get_game_state(game_id):
-    res = requests.get(f"{BASE_URL}/GetCurrentGameState", params={"gameId": game_id}, verify=False)
+    res = requests.get(f"{BASE_URL}/Game/GetCurrentGameState", params={"gameId": game_id}, verify=False)
     res.raise_for_status()
-    return res.json()
+    state = res.json()
+    return state
 
 def get_game_winner(game_id):
-    res = requests.get(f"{BASE_URL}/GetGameWinner", params={"gameId": game_id}, verify=False)
+    res = requests.get(f"{BASE_URL}/Game/GetGameWinner", params={"gameId": game_id}, verify=False)
     if res.status_code == 200:
         return res.text
     return None
@@ -48,8 +49,24 @@ def create_agent_input(state, combination):
         Normilize.normalize_remaining_dice(state["remainingDice"]),
         Normilize.normalize_score(state["playerScore"]),
         Normilize.normalize_score(state["opponentScore"]),
-        *Normilize.normalize_dice_roll(state["currentRoll"])
-    ]
+        *Normilize.normalize_dice_roll(state["currentRoll"] + [0] * (6 - len(state["currentRoll"])))
+    ][:10]
+    
+def send_select_dice_response(game_id, selected_dice):
+    response = {
+        "gameId": game_id,
+        "selectedDice": selected_dice
+    }
+    res = requests.post(f"{BASE_URL}/AgentResponse/SelectDice", json=response, verify=False)
+    res.raise_for_status()
+
+def send_should_continue_response(game_id, decision):
+    response = {
+        "gameId": game_id,
+        "shouldContinue": decision
+    }
+    res = requests.post(f"{BASE_URL}/AgentResponse/ShouldContinue", json=response, verify=False)
+    res.raise_for_status()
 
 def run_training_loop():
     for target_score in TARGET_SCORES:
@@ -66,27 +83,32 @@ def run_training_loop():
                 state = get_game_state(game_id)
                 done = state["isGameOver"]
                 current_player = state["currentPlayerName"]
-                current_roll = state["currentRoll"]
 
-                combinations = state["availableCombinations"]
-                if not combinations:
+                if not state['availableCombinations']:
+                    time.sleep(1)
                     continue
 
                 current_agent = agent1 if current_player == "agent1" else agent2
-                input_vectors = [create_agent_input(state, combo) for combo in combinations]
+                input_vectors = [create_agent_input(state, combo) for combo in state["availableCombinations"]]
 
                 q_values = [current_agent.model.predict(np.array([inp]))[0][0] for inp in input_vectors]
                 best_idx = np.argmax(q_values)
-                best_combination = combinations[best_idx]
+                best_combination = state["availableCombinations"][best_idx]
                 input_vector = input_vectors[best_idx]
 
+                send_select_dice_response(game_id, best_combination)
+
+                # логика продолжения игры — к примеру, агент продолжает, если есть хотя бы 2 кости
+                should_continue = len(state["currentRoll"]) >= 2
+                send_should_continue_response(game_id, should_continue)
+
+                # обучение
                 if prev_input is not None:
-                    # обучаемся на предыдущем шаге
-                    reward = 0  # по умолчанию
+                    reward = 0
                     if done:
                         winner_name = get_game_winner(game_id)
                         reward = 1 if winner_name == prev_state["currentPlayerName"] else -1
-                    current_agent.learn(prev_input, reward, input_vector, done)
+                    current_agent.remember(prev_input, reward, input_vector, done)
 
                 prev_input = input_vector
                 prev_state = state
@@ -94,6 +116,7 @@ def run_training_loop():
             print(f"{target_score} | Эпизод {episode + 1} | Победитель: {get_game_winner(game_id)}")
 
 if __name__ == "__main__":
+    
     run_training_loop()
     agent1.save_model("agent1")
     agent2.save_model("agent2")

@@ -7,6 +7,8 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class AskContinueState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
+        public static string StateName => "AskContinueState";
+
         public async override Task HandleAsync()
         {
             // Вопрос о продолжении игры

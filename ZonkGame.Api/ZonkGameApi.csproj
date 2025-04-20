@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.70.0" />
     <PackageReference Include="Grpc.AspNetCore.Server.ClientFactory" Version="2.70.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ZonkGame.AIRPC\ZonkGameAI.RPC.csproj" />
     <ProjectReference Include="..\ZonkGame.FSM\ZonkGameCore.csproj" />
+    <ProjectReference Include="..\ZonkGame.Redis\ZonkGameRedis.csproj" />
     <ProjectReference Include="..\ZonkGame.SignalR\ZonkGameSignalR.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
-namespace ZonkGameApi.Utils
+﻿namespace ZonkGameCore.Enum
 {
     /// <summary>
     /// Тип игрока
@@ -11,6 +8,8 @@ namespace ZonkGameApi.Utils
         /// <summary> Игрок - человек</summary>
         RealPlayer,
         /// <summary> Игрок - ИИ</summary>
-        AIAgent
+        AIAgent,
+        /// <summary> Игрок - ИИ с использованием Rest</summary>
+        AITraining,
     }
 }

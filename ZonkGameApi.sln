@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGameSignalR", "ZonkGame
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGameConsole", "ZonkGame.Console\ZonkGameConsole.csproj", "{497AC89D-963A-1F24-11F1-91888810AAB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGameRedis", "ZonkGame.Redis\ZonkGameRedis.csproj", "{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{497AC89D-963A-1F24-11F1-91888810AAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{497AC89D-963A-1F24-11F1-91888810AAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{497AC89D-963A-1F24-11F1-91888810AAB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

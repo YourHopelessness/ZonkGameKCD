@@ -1,4 +1,4 @@
-﻿using ZonkGameCore.Utils;
+﻿using ZonkGameCore.Dto;
 
 namespace ZonkGameCore.Context
 {
@@ -7,40 +7,38 @@ namespace ZonkGameCore.Context
     /// </summary>
     public class GameContext
     {
-        public GameContext(int targetScore, List<Player> players)
+        public GameContext(int targetScore, List<InputPlayerDto> players)
         {
             Players = [new(players[0]), new(players[1])];
             TargetScore = targetScore;
 
             var rnd = new Random();
-            CurrentPlayerIndex = 0;
             Players = [.. Players.OrderBy(x => rnd.Next())];
-            CurrentPlayer = Players[CurrentPlayerIndex];
+            CurrentPlayer = Players[0];
         }
 
-        /// <summary>
-        /// Целевой счет для победы
-        /// </summary>
+        public GameContext(
+            int targetScore,
+            IEnumerable<int> currentRoll,
+            PlayerState currentPlayer,  
+            List<PlayerState> players)
+        {
+            TargetScore = targetScore;
+            CurrentRoll = currentRoll;
+            CurrentPlayer = currentPlayer;
+            Players = players;
+        }
+
+        /// <summary> Целевой счет для победы </summary>
         public int TargetScore { get; init; }
 
-        /// <summary>
-        /// Текущий бросок
-        /// </summary>
+        /// <summary> Текущий бросок </summary>
         public IEnumerable<int> CurrentRoll { get; set; } = [];
 
-        /// <summary>
-        /// Текущий игрок
-        /// </summary>
+        /// <summary> Текущий игрок </summary>
         public PlayerState CurrentPlayer { get; private set; }
 
-        /// <summary>
-        /// Индекс текущего игрока
-        /// </summary>
-        public int CurrentPlayerIndex { get; private set; } = 0;
-
-        /// <summary>
-        /// Состояние игроков
-        /// </summary>
+        /// <summary> Состояние игроков </summary>
         public List<PlayerState> Players { get; private set; }
 
         /// <summary>
@@ -51,12 +49,14 @@ namespace ZonkGameCore.Context
             CurrentPlayer.ResetDices();
             CurrentPlayer.TurnScore = 0;
 
-            CurrentPlayerIndex = (CurrentPlayerIndex + 1) % Players.Count;
-            CurrentPlayer = Players[CurrentPlayerIndex];
+            CurrentPlayer = Players.First(x => x.PlayerId != CurrentPlayer.PlayerId);
 
             return CurrentPlayer;
         }
 
+        /// <summary>
+        /// Получить противника текущего игрока
+        /// </summary>
         public PlayerState GetOpponentPlayer()
         {
             return Players.FirstOrDefault(x => x != CurrentPlayer) ?? throw new InvalidOperationException("Не удалось найти противника");

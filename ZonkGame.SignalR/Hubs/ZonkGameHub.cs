@@ -4,20 +4,41 @@ namespace ZonkGameApi.Hubs
 {
     public class ZonkGameHub : Hub
     {
-        public async Task JoinGame(string roomId)
+        public Dictionary<string, TaskCompletionSource<List<int>>> DiceSelections { get; set; } = [];
+        public Dictionary<string, TaskCompletionSource<bool>> ContinueDecisions { get; set; } = [];
+
+        public async Task SendSelectedDice(List<int> selectedDice)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
-            await Clients.Group(roomId).SendAsync("PlayerJoined", Context.ConnectionId);
+            var connectionId = Context.ConnectionId;
+            await ReceiveSelectedDice(connectionId, selectedDice);
         }
 
-        public async Task RollDice(string roomId, int[] dice)
+        public async Task SendContinueDecision(bool decision)
         {
-            await Clients.Group(roomId).SendAsync("DiceRolled", Context.ConnectionId, dice);
+            var connectionId = Context.ConnectionId;
+            await ReceiveShouldContinue(connectionId, decision);
         }
 
-        public async Task EndTurn(string roomId, int score)
+        public Task ReceiveShouldContinue(string connectionId, bool decision)
         {
-            await Clients.Group(roomId).SendAsync("TurnEnded", Context.ConnectionId, score);
+            if (ContinueDecisions.TryGetValue(connectionId, out var tcs))
+            {
+                tcs.SetResult(decision);
+                DiceSelections.Remove(connectionId);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task ReceiveSelectedDice(string connectionId, List<int> selectedDice)
+        {
+            if (DiceSelections.TryGetValue(connectionId, out var tcs))
+            {
+                tcs.SetResult(selectedDice);
+                DiceSelections.Remove(connectionId);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

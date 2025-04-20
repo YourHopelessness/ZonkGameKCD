@@ -2,9 +2,9 @@
 using Grpc.Net.Client;
 using Microsoft.Extensions.Options;
 using System.Threading.Channels;
-using ZonkGameApi.Utils;
+using ZonkGameCore.Utils;
 
-namespace ZonkGameApi.Services
+namespace ZonkGameAI.RPC
 {
     public interface IGrpcChannelSingletone
     {

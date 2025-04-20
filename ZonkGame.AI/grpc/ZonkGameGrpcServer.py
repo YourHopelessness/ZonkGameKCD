@@ -15,18 +15,10 @@ class ZonkServiceServicer(zonkgameservice_pb2_grpc.ZonkServiceServicer):
     def GetContinuationDecision(self, request, context):
         decision = random.choice([True, False])
         return zonkgameservice_pb2.ContinuationDecisionResponse(continue_game=decision)
-
-def serve():
+    
+def create_grpc_service():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     zonkgameservice_pb2_grpc.add_ZonkServiceServicer_to_server(ZonkServiceServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     print("gRPC сервер запущен на порту 50051")
-    try:
-        while True:
-            time.sleep(86400)  # 24 часа
-    except KeyboardInterrupt:
-        server.stop(0)
-
-if __name__ == '__main__':
-    serve()

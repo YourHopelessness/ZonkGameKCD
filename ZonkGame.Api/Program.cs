@@ -1,7 +1,10 @@
 using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
+using ZonkGameAI.RPC;
 using ZonkGameApi.Hubs;
 using ZonkGameApi.Services;
 using ZonkGameApi.Utils;
+using ZonkGameCore.Utils;
 
 internal class Program
 {
@@ -23,10 +26,9 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddStackExchangeRedisCache(options => {
-            options.Configuration = builder.Configuration.GetSection(GameZonkConfiguration.Position + ":RedisConnectionString").Value;
-            options.InstanceName = "local";
-        });
+        builder.Services.AddSingleton<ZonkGameHub>();
+
+        builder.Services.AddSingleton<RedisGameStateStore>();
 
         var app = builder.Build();
         if (app.Environment.IsDevelopment())
