@@ -9,7 +9,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_URL = "http://localhost:5218/api"
 TARGET_SCORES = [1000, 1500, 2000, 2500, 3000]
-EPISODES_PER_SCORE = 1000
+EPISODES_PER_SCORE = 10
 
 agent1 = DQNAgent()
 agent2 = DQNAgent()
@@ -71,52 +71,68 @@ def send_should_continue_response(game_id, decision):
 def run_training_loop():
     for target_score in TARGET_SCORES:
         for episode in range(EPISODES_PER_SCORE):
-            game_id = create_game(target_score)
-            start_game(game_id)
+            try:
+                game_id = create_game(target_score)
+                start_game(game_id)
+                winner = None
+                prev_state = None
+                prev_input = None
+                done = False
 
-            winner = None
-            prev_state = None
-            prev_input = None
-            done = False
+                while not done:
+                    state = get_game_state(game_id)
+                    done = state["isGameOver"]
+                    current_player = state["currentPlayerName"]
 
-            while not done:
-                state = get_game_state(game_id)
-                done = state["isGameOver"]
-                current_player = state["currentPlayerName"]
+                    if not state['availableCombinations']:
+                        time.sleep(1)
+                        continue
 
-                if not state['availableCombinations']:
-                    time.sleep(1)
-                    continue
+                    current_agent = agent1 if current_player == "agent1" else agent2
+                    input_vectors = [create_agent_input(state, combo) for combo in state["availableCombinations"]]
+                    
+                    q_values = [current_agent.model.predict(np.array([inp]))[0][0] for inp in input_vectors]
+                    best_idx = np.argmax(q_values)
+                    best_combination = state["availableCombinations"][best_idx]
+                    input_vector = input_vectors[best_idx]
 
-                current_agent = agent1 if current_player == "agent1" else agent2
-                input_vectors = [create_agent_input(state, combo) for combo in state["availableCombinations"]]
+                    send_select_dice_response(game_id, best_combination)
 
-                q_values = [current_agent.model.predict(np.array([inp]))[0][0] for inp in input_vectors]
-                best_idx = np.argmax(q_values)
-                best_combination = state["availableCombinations"][best_idx]
-                input_vector = input_vectors[best_idx]
+                    # логика продолжения игры — к примеру, агент продолжает, если есть хотя бы 2 кости
+                    should_continue = len(state["currentRoll"]) >= 2
+                    send_should_continue_response(game_id, should_continue)
+                    
+                    state = get_game_state(game_id)
 
-                send_select_dice_response(game_id, best_combination)
+                    # обучение
+                    if prev_input is not None:
+                        # Промежуточная награда — за прогресс
+                        reward = (state["playerScore"] - prev_state["playerScore"]) / 100.0
 
-                # логика продолжения игры — к примеру, агент продолжает, если есть хотя бы 2 кости
-                should_continue = len(state["currentRoll"]) >= 2
-                send_should_continue_response(game_id, should_continue)
+                        if done:
+                            winner_name = get_game_winner(game_id)
+                            if winner_name == prev_state["currentPlayerName"]:
+                                # Чем меньше раундов — тем лучше
+                                reward = 1.0 + (prev_state["targetScore"] / (prev_state["roundCount"] + 1))
+                            else:
+                                # Проигрыш — наказание с учётом неэффективности
+                                reward = -1.0 * (prev_state["roundCount"] + 1)
 
-                # обучение
-                if prev_input is not None:
-                    reward = 0
-                    if done:
-                        winner_name = get_game_winner(game_id)
-                        reward = 1 if winner_name == prev_state["currentPlayerName"] else -1
-                    current_agent.remember(prev_input, reward, input_vector, done)
+                        current_agent.remember(prev_input, reward, input_vector, done)
 
-                prev_input = input_vector
-                prev_state = state
+                    prev_input = input_vector
+                    prev_state = state
+                
+                current_agent.replay()
 
-            print(f"{target_score} | Эпизод {episode + 1} | Победитель: {get_game_winner(game_id)}")
+                print(f"{target_score} | Эпизод {episode + 1} | Победитель: {get_game_winner(game_id)}")
+            except Exception as e:
+                print(f'{target_score} | Эпизод {episode + 1} | Произошла ошибка {e}') 
 
 if __name__ == "__main__":
-    
-    run_training_loop()
+    try:
+        run_training_loop()
+    except: 
+        print('При обучении моделей произошла ошибка')
     agent1.save_model("agent1")
     agent2.save_model("agent2")

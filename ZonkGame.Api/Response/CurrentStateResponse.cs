@@ -5,49 +5,40 @@
     /// </summary>
     public class CurrentStateResponse
     {
-        /// <summary>
-        /// Идентификатор игры
-        /// </summary>
+        /// <summary> Идентификатор игры </summary>
         public Guid RoomId { get; set; }
-        /// <summary>
-        /// Флаг окончания игры
-        /// </summary>
+
+        /// <summary> Флаг окончания игры </summary>
         public bool IsGameOver { get; set; }
-        /// <summary>
-        /// Текущий игрок
-        /// </summary>
+
+        /// <summary> Текущий игрок </summary>
         public Guid CurrentPlayerId { get; set; }
-        /// <summary>
-        /// Имя текущего игрока
-        /// </summary>
+
+        /// <summary> Имя текущего игрока </summary>
         public string CurrentPlayerName { get; set; } = string.Empty;
-        /// <summary>
-        /// Текущий счет игрока
-        /// </summary>
+
+        /// <summary> Текущий счет игрока </summary>
         public int PlayerScore { get; set; }
-        /// <summary>
-        /// Текущий счет противника
-        /// </summary>
+
+        /// <summary> Текущий счет противника </summary>
         public int OpponentScore { get; set; }
-        /// <summary>
-        /// Остаток кубиков
-        /// </summary>
+
+        /// <summary> Остаток кубиков </summary>
         public int RemainingDice { get; set; }
-        /// <summary>
-        /// Текущий бросок кубиков
-        /// </summary>
+
+        /// <summary> Текущий бросок кубиков </summary>
         public int[] CurrentRoll { get; set; } = [];
-        /// <summary>
-        /// Доступные очковые комбинации, которые можно выбрать
-        /// </summary>
+
+        /// <summary> Доступные очковые комбинации, которые можно выбрать </summary>
         public List<int[]> AvailableCombinations { get; set; } = new();
-        /// <summary>
-        /// Агенту можно выбрать — продолжить ли игру
-        /// </summary>
-        public bool CanDecideToContinue { get; set; }
-        /// <summary>
-        /// Целевой счет для завершения игры
-        /// </summary>
+
+        /// <summary> Количество отыгранных раундов </summary>
+        public int RoundCount { get; set; }
+
+        /// <summary> Целевой счет для завершения игры </summary>
         public int TargetScore { get; internal set; }
+
+        /// <summary> Текущее состояние </summary>
+        public string CurrentState { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace ZonkGameCore.FSM
         public int RoundCount { get; set; } = 0;
 
         /// <summary> Флаг окончания игры </summary>
-        public bool IsGameOver { get => _isGameOver; set => _isGameOver = _state is GameOverState ? true : false; }
+        public bool IsGameOver { get => _isGameOver; set => _isGameOver = _state is GameOverState; }
 
         /// <summary> Флаг начала игры </summary>
         public bool IsGameStarted => _isGameStarted;
@@ -81,6 +81,8 @@ namespace ZonkGameCore.FSM
 
             Observer.Info($"Игра началась, цель - {targetScore} очков. " +
                 $"Первым ходит игрок {GameContext.CurrentPlayer.PlayerName}");
+
+            _state = new StartTurnState(Observer, this);
 
             _isGameStarted = true;
         }

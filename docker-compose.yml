@@ -1,27 +1,47 @@
 services:
   redis:
     image: redis:latest
-    container_name: redis
+    container_name: redis-zonk
     ports:
       - "6379:6379"
     networks:
-      - redis-network
+      - backend
     restart: always
 
   redisinsight:
     image: redis/redisinsight:latest
-    container_name: redisinsight
+    container_name: redisinsight-zonk
     ports:
-      - "5540:5540" 
+      - "5540:5540"
     networks:
-      - redis-network
+      - backend
     restart: always
+    depends_on:
+      - redis
+    environment:
+      - REDISINSIGHT_REDIS_HOST=redis
     volumes:
-      - redisinsight-data:/var/lib/redisinsight-data/data
+      - redisinsight-data:/var/lib/redisinsight/data
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-zonk
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
 networks:
-  redis-network:
+  backend:
     driver: bridge
 
 volumes:
   redisinsight-data:
+  pgdata:

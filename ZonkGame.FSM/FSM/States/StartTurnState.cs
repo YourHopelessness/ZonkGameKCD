@@ -5,10 +5,8 @@ namespace ZonkGameCore.FSM.States
     /// <summary>
     /// Состояние начала хода игрока
     /// </summary>
-    public class StartTurnState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm), IStateName
+    public class StartTurnState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public static string StateName => "StartTurnState";
-
         protected override bool Handle()
         {
             _observer.Info($"Ход игрока {_fsm.GameContext.CurrentPlayer.PlayerName}");

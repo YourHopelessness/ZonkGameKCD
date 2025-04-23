@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /ZonkGame.AI/zonkenv
 *.keras
+*.png

@@ -98,7 +98,9 @@ namespace ZonkGameApi.Services
                 RemainingDice = gameContext.CurrentPlayer.RemainingDice,
                 CurrentRoll = [.. gameContext.CurrentRoll],
                 AvailableCombinations = gameContext.CurrentRoll.GetValidCombinations(),
-                TargetScore = gameContext.TargetScore
+                RoundCount = stateMachine.RoundCount,
+                TargetScore = gameContext.TargetScore,
+                CurrentState = stateMachine.GetStateName()
             };
 
             return currentState;

@@ -5,10 +5,8 @@ namespace ZonkGameCore.FSM.States
     /// <summary>
     /// Состояние окончания хода
     /// </summary>
-    public class EndTurnState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm), IStateName
+    public class EndTurnState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public static string StateName => "EndTurnState";
-
         protected override bool Handle()
         {
             // Плюсуем очки за ход в общий счет игрока

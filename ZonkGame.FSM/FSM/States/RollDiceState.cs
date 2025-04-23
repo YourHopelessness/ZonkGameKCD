@@ -5,10 +5,8 @@ namespace ZonkGameCore.FSM.States
     /// <summary>
     /// Состояние броска костей
     /// </summary>
-    public class RollDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm), IStateName
+    public class RollDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public static string StateName => "RollDiceState";
-
         protected override bool Handle()
         {
             // Бросок костей

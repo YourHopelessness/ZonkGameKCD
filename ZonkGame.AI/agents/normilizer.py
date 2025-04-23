@@ -10,7 +10,7 @@ class Normilize:
         return normalized
     
     @staticmethod
-    def normalize_score(score, max_score=10000):
+    def normalize_score(score, max_score=2000):
         return score / max_score
     
     @staticmethod
@@ -19,13 +19,33 @@ class Normilize:
     
     @staticmethod
     def calculate_combination_value(combination):
-        # Пример: каждая единица = 100 очков, каждая пятёрка = 50 очков
+        from collections import Counter
+
+        count = Counter(combination)
         score = 0
-        for die in combination:
+
+        # Проверка на стриты
+        unique = set(combination)
+        if unique == {1, 2, 3, 4, 5, 6}:
+            return 1500
+        elif {1, 2, 3, 4, 5}.issubset(unique):
+            return 500
+        elif {2, 3, 4, 5, 6}.issubset(unique):
+            return 750
+
+        for die, cnt in count.items():
+            if cnt >= 3:
+                multiplier = 2 ** (cnt - 3)
+                base = 1000 if die == 1 else die * 100
+                score += base * multiplier
+                cnt -= 3
+
+            # Остатки единиц и пятёрок
             if die == 1:
-                score += 100
+                score += cnt * 100
             elif die == 5:
-                score += 50
+                score += cnt * 50
+
         return score
 
     @staticmethod

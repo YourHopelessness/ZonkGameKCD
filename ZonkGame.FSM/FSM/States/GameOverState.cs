@@ -5,10 +5,8 @@ namespace ZonkGameCore.FSM.States
     /// <summary>
     /// Состояние окончания игры
     /// </summary>
-    public class GameOverState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm), IStateName
+    public class GameOverState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public static string StateName => "GameOverState";
-
         protected override bool Handle()
         {
             // Флаг конца игры

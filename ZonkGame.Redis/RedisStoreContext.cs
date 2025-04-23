@@ -9,6 +9,7 @@ using ZonkGameApi.Utils;
 using ZonkGameCore.Dto;
 using ZonkGameCore.Enum;
 using ZonkGameCore.FSM;
+using ZonkGameCore.FSM.States;
 using ZonkGameCore.Observer;
 using ZonkGameCore.Utils;
 using ZonkGameRedis.Utils;
@@ -30,8 +31,13 @@ public class RedisGameStateStore(
     public async Task SaveGameStateAsync(StoredFSM gameState)
     {
         var json = StoredFSMSerializer.Serialize(gameState);
+        var key = GetKey(gameState.GameId);
 
-        await Database.StringSetAsync(GetKey(gameState.GameId), json);
+        TimeSpan expiry = gameState.StateName == nameof(GameOverState)
+            ? TimeSpan.FromMinutes(15)  
+            : TimeSpan.FromDays(1);   
+
+        await Database.StringSetAsync(key, json, expiry);
     }
 
     public async Task<ZonkStateMachine?> LoadGameStateAsync(Guid gameId)
@@ -76,6 +82,8 @@ public class RedisGameStateStore(
                 PlayerName = p.PlayerName,
                 TotalScore = p.TotalScore,
                 TurnScore = p.TurnScore,
+                IsWinner = p.IsWinner,
+                RemainingDice = p.RemainingDice,
                 PlayerType = p.PlayerType,
                 IsCurrentPlayer = zfsm.GameContext.CurrentPlayer.PlayerId == p.PlayerId,
                 TurnsCount = p.TurnsCount,
