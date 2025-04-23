@@ -10,18 +10,18 @@ namespace ZonkGameAI.RPC.AIClient
         private readonly ZonkService.ZonkServiceClient _serviceClient = 
             new(channel);
 
-        public async Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll)
+        public async Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid)
         {
             var response = await _serviceClient.GetSelectedDicesAsync(
-                new SelectedDicesRequest { Dices = { roll } });
+                new SelectedDicesRequest { GameId = gameid.ToString(), Dices = { roll } });
 
             return [..response.Dices.Select(x => x)];
         }
 
-        public async Task<bool> HandleShouldContinueGameInputAsync()
+        public async Task<bool> HandleShouldContinueGameInputAsync(Guid gameid)
         {
             var response = await _serviceClient.GetContinuationDecisionAsync(
-                new ContinuationDecisionRequest());
+                new ContinuationDecisionRequest() { GameId = gameid.ToString()});
 
             return response.ContinueGame;
         }

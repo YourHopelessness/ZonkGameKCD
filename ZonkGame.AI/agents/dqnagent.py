@@ -3,13 +3,14 @@ config_gpu_agents()
 import random
 import numpy as np
 from collections import deque
-from tensorflow import reduce_mean 
-from tensorflow.keras import layers, models
+from tensorflow import reduce_mean
+from tensorflow.keras import layers, models 
+from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
 
 class DQNAgent:
     def __init__(self, state_size=4, epsilon=1.0, epsilon_min=0.1, epsilon_decay=0.995,
-                 gamma=0.95, learning_rate=0.001, combo_output_size=10):
+                 gamma=0.95, learning_rate=0.001, combo_output_size=10, saved_model=None):
         self.state_size = state_size
         self.combo_output_size = combo_output_size
         self.epsilon = epsilon
@@ -19,6 +20,7 @@ class DQNAgent:
         self.batch_size = 64
         self.memory = deque(maxlen=2000)
         self.model = self._build_model_v2(learning_rate)
+        self.model.load_weights(saved_model)
 
     def _build_model(self, learning_rate):
         input_layer = layers.Input(shape=(self.state_size,))
@@ -32,6 +34,9 @@ class DQNAgent:
         model.compile(optimizer=Adam(learning_rate=learning_rate),
                       loss={"combo_output": "mse", "continue_output": "binary_crossentropy"})
         return model
+    
+    def _mean_advantage_fn(self, x):
+        return tf.reduce_mean(x, axis=1, keepdims=True)
     
     def _build_model_v2(self, learning_rate):
         input_layer = layers.Input(shape=(self.state_size,))
@@ -89,4 +94,4 @@ class DQNAgent:
             self.epsilon *= self.epsilon_decay
 
     def save_model(self, name):
-        self.model.save(f"{name}.keras")
+        self.model.save(f"{name}.keras")  

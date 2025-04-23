@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import zonkgameservice_pb2 as zonkgameservice__pb2
+import grpc_services.zonkgameservice_pb2 as zonkgameservice__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -50,11 +50,15 @@ class ZonkServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def GetSelectedDices(self, request, context):
+        """Method for delect dice
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetContinuationDecision(self, request, context):
+        """Method for ask about continue game
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')

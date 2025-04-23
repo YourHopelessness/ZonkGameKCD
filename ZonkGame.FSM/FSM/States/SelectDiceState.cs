@@ -13,7 +13,7 @@ namespace ZonkGameCore.FSM.States
             var selectedDices = await _fsm.GameContext
                 .CurrentPlayer
                 .PlayerInputHandler
-                .HandleSelectDiceInputAsync(_fsm.GameContext.CurrentRoll);
+                .HandleSelectDiceInputAsync(_fsm.GameContext.CurrentRoll, _fsm.GameId);
 
             // Проверка что есть доступные комбинации и нет ли лишних или неккоректных костей
             if (!selectedDices.HasValidCombos())

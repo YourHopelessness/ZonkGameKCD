@@ -3,27 +3,30 @@ syntax = "proto3";
 package zonk;
 
 service ZonkService {
-  // ћетод дл€ получени€ выбранных кубиков
+  // Method for delect dice
   rpc GetSelectedDices(SelectedDicesRequest) returns (SelectedDicesResponse);
 
-  // ћетод дл€ получени€ решени€ о продолжении
+  // Method for ask about continue game
   rpc GetContinuationDecision(ContinuationDecisionRequest) returns (ContinuationDecisionResponse);
 }
 
-// «апрос дл€ GetSelectedDices (может быть пустым)
+// Request params for GetSelectedDices 
 message SelectedDicesRequest {
-  repeated int32 dices = 1;
+  string game_id = 1;
+  repeated int32 dices = 2;
 }
 
-// ќтвет с массивом выбранных кубиков
+// Response with selected dices
 message SelectedDicesResponse {
   repeated int32 dices = 1;
 }
 
-// «апрос дл€ GetContinuationDecision (может быть пустым)
-message ContinuationDecisionRequest {}
+// Request params for GetContinuationDecision (может быть пустым)
+message ContinuationDecisionRequest {
+ string game_id = 1;
+}
 
-// ќтвет с решением о продолжении
+// Response with continue game
 message ContinuationDecisionResponse {
   bool continue_game = 1;
 }

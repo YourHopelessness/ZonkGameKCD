@@ -10,7 +10,7 @@ namespace ZonkGameCore.FSM.States
         public async override Task HandleAsync()
         {
             // Вопрос о продолжении игры
-            var desision = await _fsm.GameContext.CurrentPlayer.PlayerInputHandler.HandleShouldContinueGameInputAsync();
+            var desision = await _fsm.GameContext.CurrentPlayer.PlayerInputHandler.HandleShouldContinueGameInputAsync(_fsm.GameId);
 
             if (desision)
             {

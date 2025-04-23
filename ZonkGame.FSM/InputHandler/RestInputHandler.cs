@@ -1,23 +1,22 @@
 ﻿using ZonkGameCore.InputParams;
 
-public class RestInputHandler(Guid gameId) : IInputAsyncHandler
+public class RestInputHandler : IInputAsyncHandler
 {
     private static readonly Dictionary<Guid, TaskCompletionSource<List<int>>> _diceSelections = [];
     private static readonly Dictionary<Guid, TaskCompletionSource<bool>> _continueDecisions = [];
-    private readonly Guid _gameId = gameId;
 
-    public async Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll)
+    public async Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid)
     {
         var tcs = new TaskCompletionSource<List<int>>();
-        _diceSelections[_gameId] = tcs;
+        _diceSelections[gameid] = tcs;
 
         return await tcs.Task;
     }
 
-    public async Task<bool> HandleShouldContinueGameInputAsync()
+    public async Task<bool> HandleShouldContinueGameInputAsync(Guid gameid)
     {
         var tcs = new TaskCompletionSource<bool>();
-        _continueDecisions[_gameId] = tcs;
+        _continueDecisions[gameid] = tcs;
 
         return await tcs.Task;
     }

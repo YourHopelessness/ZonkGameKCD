@@ -53,7 +53,7 @@ public class RedisGameStateStore(
                     ? new SignalRInputHandler(_hub)
                     : p.PlayerType == PlayerTypeEnum.AIAgent
                     ? new GrpcAgentInputHandler(_channel.GetChannel())
-                    : new RestInputHandler(desirialized.GameId);
+                    : new RestInputHandler();
         });
 
         return new ZonkStateMachine(_baseObserver, desirialized);

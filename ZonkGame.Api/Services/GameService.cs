@@ -71,7 +71,7 @@ namespace ZonkGameApi.Services
                 p.PlayerType == PlayerTypeEnum.AIAgent
                         ? new GrpcAgentInputHandler(_channel.GetChannel()) // gRPC вызовы с агентом
                         : p.PlayerType == PlayerTypeEnum.RealPlayer ? new SignalRInputHandler(_hub) // SignalR взаимодействие
-                        : new RestInputHandler(game.GameId), // ДЛя обучения модели,
+                        : new RestInputHandler(),
                     p.PlayerType,
                     null
                 )).ToList();

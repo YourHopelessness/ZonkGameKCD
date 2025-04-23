@@ -8,11 +8,11 @@
         /// <summary>
         /// Обработчик пользовательского ввода пользователя выбора костей
         /// </summary>
-        Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll);
+        Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid);
 
         /// <summary>
         /// Обработчик пользовательского ввода пользователя выбора продолжения игры
         /// </summary>
-        Task<bool> HandleShouldContinueGameInputAsync();
+        Task<bool> HandleShouldContinueGameInputAsync(Guid gameid);
     }
 }
