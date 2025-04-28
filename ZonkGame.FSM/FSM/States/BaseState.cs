@@ -21,14 +21,6 @@ namespace ZonkGameCore.FSM.States
         /// <summary>
         /// Обработчик текущего состояния машины состояний
         /// </summary>
-        public virtual Task HandleAsync()
-        {
-            return Task.FromResult(Handle());
-        }
-
-        protected virtual bool Handle()
-        {
-            return true;
-        }
+        public abstract Task HandleAsync();
     }
 }

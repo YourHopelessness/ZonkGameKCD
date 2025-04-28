@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZonkGameApi.Request;
 using ZonkGameApi.Services;
+using ZonkGameRedis.Services;
 
 namespace ZonkGameApi.Controllers
 {
@@ -8,9 +9,9 @@ namespace ZonkGameApi.Controllers
     [Route("api/[controller]")]
     public class GameController(
         IGameService gameService,
-        RedisGameStateStore cache) : ControllerBase
+        IGameStateStore cache) : ControllerBase
     {
-        private readonly RedisGameStateStore _cache = cache;
+        private readonly IGameStateStore _cache = cache;
         private readonly IGameService _gameService = gameService;
 
         /// <summary>

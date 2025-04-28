@@ -8,19 +8,7 @@ namespace ZonkGameConsole
     {
         public async static Task Main(params string[] args)
         {
-            ZonkStateMachine game = new(new ConsoleLogger());
-            game.InitStartGame(2000, [new("First", new ConsoleInputHandler()), new("Second", new ConsoleInputHandler())]);
-            while (!game.IsGameOver)
-            {
-                try
-                {
-                    await game.Handle();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            
         }
     }
 }

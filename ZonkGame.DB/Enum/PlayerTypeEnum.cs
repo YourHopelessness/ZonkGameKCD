@@ -1,4 +1,4 @@
-﻿namespace ZonkGameCore.Enum
+﻿namespace ZonkGame.DB.Enum
 {
     /// <summary>
     /// Тип игрока

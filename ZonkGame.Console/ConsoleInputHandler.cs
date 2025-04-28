@@ -70,5 +70,15 @@ namespace ZonkGameCore.InputHandler
 
             return selectedDices;
         }
+
+        public Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> HandleShouldContinueGameInputAsync(Guid gameid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

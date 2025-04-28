@@ -10,17 +10,18 @@ namespace ZonkGameCore.FSM.States
         public async override Task HandleAsync()
         {
             // Вопрос о продолжении игры
-            var desision = await _fsm.GameContext.CurrentPlayer.PlayerInputHandler.HandleShouldContinueGameInputAsync(_fsm.GameId);
+            var desision = await _fsm.GameContext.CurrentPlayer.PlayerInputHandler
+                .HandleShouldContinueGameInputAsync(_fsm.GameId);
 
             if (desision)
             {
-                _observer.Info($"Игрок {_fsm.GameContext.CurrentPlayer.PlayerName} продолжил ход");
-                _fsm.TransitionTo(new RollDiceState(_observer, _fsm));
+                _observer.ContinueTurn();
+                _fsm.TransitionTo<RollDiceState>();
             }
             else
             {
-                _observer.Info($"Игрок {_fsm.GameContext.CurrentPlayer.PlayerName} закончил ход");
-                _fsm.TransitionTo(new EndTurnState(_observer, _fsm));
+                _observer.FinishTurn();
+                _fsm.TransitionTo<EndTurnState>();
             }
         }
     }

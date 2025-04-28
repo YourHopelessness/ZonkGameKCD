@@ -7,17 +7,15 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class StartTurnState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        protected override bool Handle()
+        public override async Task HandleAsync()
         {
-            _observer.Info($"Ход игрока {_fsm.GameContext.CurrentPlayer.PlayerName}");
+            await _observer.NewTurn();
 
             _fsm.GameContext.CurrentPlayer.TurnsCount++;
 
             // Начало хода нового игрока
             _fsm.GameContext.CurrentPlayer.ResetDices();
-            _fsm.TransitionTo(new RollDiceState(_observer, _fsm));
-
-            return true;
+            _fsm.TransitionTo<RollDiceState>();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using ZonkGameCore.Enum;
-using ZonkGameCore.InputParams;
+﻿using ZonkGame.DB.Enum;
 
 namespace ZonkGameCore.Dto
 {

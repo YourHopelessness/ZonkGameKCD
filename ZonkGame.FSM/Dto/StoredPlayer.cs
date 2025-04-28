@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using ZonkGameCore.Enum;
+using ZonkGame.DB.Enum;
 using ZonkGameCore.InputParams;
 
 namespace ZonkGameCore.Dto

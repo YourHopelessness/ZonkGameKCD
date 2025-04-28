@@ -18,7 +18,7 @@ namespace ZonkGameCore.FSM.States
             // Проверка что есть доступные комбинации и нет ли лишних или неккоректных костей
             if (!selectedDices.HasValidCombos())
             {
-                _observer.Error($"Выбрана неверная комбинация костей [{string.Join(", ", selectedDices)}]");
+                await _observer.IncorrectDiceSelection(selectedDices);
             }
             else
             {
@@ -26,9 +26,7 @@ namespace ZonkGameCore.FSM.States
                 var currentScore = CalculateScore(selectedDices);
                 _fsm.GameContext.CurrentPlayer.TurnScore += currentScore;
 
-                _observer.Info($"Игрок {_fsm.GameContext.CurrentPlayer.PlayerName} набрал " +
-                    $"{currentScore} очков." +
-                    $"Текущий счет за раунд {_fsm.GameContext.CurrentPlayer.TurnScore}");
+                await   _observer.CorrectDiceSelection(selectedDices);
 
                 // Уменьшение костей для дальнейшего броска с учетом отложенных костей
                 _fsm.GameContext.CurrentPlayer.SubstructDices(selectedDices.Count());
@@ -36,15 +34,13 @@ namespace ZonkGameCore.FSM.States
                 // Проверка отложены ли все кости
                 if (_fsm.GameContext.CurrentPlayer.RemainingDice == 0)
                 {
-                    _observer.Info($"Игрок {_fsm.GameContext.CurrentPlayer.PlayerName} " +
-                        $"выбросил все кости, его счет за раунд {currentScore}, " +
-                        $"можно снова перекинуть все кости");
+                    _observer.CanReroll();
 
                     // Все кости отложены, можно снова бросить все кости
                     _fsm.GameContext.CurrentPlayer.ResetDices();
                 }
 
-                _fsm.TransitionTo(new AskContinueState(_observer, _fsm));
+                _fsm.TransitionTo<AskContinueState>();
             }
         }
 

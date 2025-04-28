@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ZonkGameCore.Enum;
+using ZonkGame.DB.Enum;
 
 namespace ZonkGameApi.Request
 {
@@ -12,7 +12,7 @@ namespace ZonkGameApi.Request
         /// Игроки
         /// </summary>
         [Required, MaxLength(2), MinLength(2)]
-        public required List<GamePlayer> Players { get; set; }
+        public required List<PlayerRequest> Players { get; set; }
 
         /// <summary>
         /// Выбранный режим игры

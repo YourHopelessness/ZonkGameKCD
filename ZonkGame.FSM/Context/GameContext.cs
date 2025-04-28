@@ -7,7 +7,10 @@ namespace ZonkGameCore.Context
     /// </summary>
     public class GameContext
     {
-        public GameContext(int targetScore, List<InputPlayerDto> players)
+        public GameContext(
+            int targetScore, 
+            List<InputPlayerDto> players,
+            Guid gameId)
         {
             Players = [new(players[0]), new(players[1])];
             TargetScore = targetScore;
@@ -15,19 +18,27 @@ namespace ZonkGameCore.Context
             var rnd = new Random();
             Players = [.. Players.OrderBy(x => rnd.Next())];
             CurrentPlayer = Players[0];
+
+            GameId = gameId;
         }
 
         public GameContext(
             int targetScore,
             IEnumerable<int> currentRoll,
             PlayerState currentPlayer,  
-            List<PlayerState> players)
+            List<PlayerState> players,
+            Guid gameId)
         {
             TargetScore = targetScore;
             CurrentRoll = currentRoll;
             CurrentPlayer = currentPlayer;
             Players = players;
+            GameId = gameId;
         }
+        /// <summary>
+        /// Идентификатор игры
+        /// </summary>
+        public Guid GameId { get; set; }
 
         /// <summary> Целевой счет для победы </summary>
         public int TargetScore { get; init; }

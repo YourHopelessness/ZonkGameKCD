@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Channels;
+﻿using ZonkGame.DB.Entites;
+using ZonkGame.DB.Enum;
+using ZonkGame.DB.GameRepository;
 using ZonkGameAI.RPC;
 using ZonkGameAI.RPC.AIClient;
 using ZonkGameApi.Hubs;
 using ZonkGameApi.Request;
 using ZonkGameApi.Response;
-using ZonkGameApi.Utils;
 using ZonkGameCore.Dto;
-using ZonkGameCore.Enum;
 using ZonkGameCore.FSM;
-using ZonkGameCore.Utils;
+using ZonkGameCore.Observer;
+using ZonkGameRedis.Services;
 using ZonkGameSignalR.InputHandler;
 
 namespace ZonkGameApi.Services
@@ -54,30 +50,44 @@ namespace ZonkGameApi.Services
     /// </summary>
     public class GameService(
         IGrpcChannelSingletone channel,
-        WebLogger logger,
-        RedisGameStateStore cache,
-        IServiceProvider serviceProvider) : IGameService
+        BaseObserver logger,
+        IGameStateStore cache,
+        IServiceProvider serviceProvider,
+        IGameRepository repository) : IGameService
     {
-        private readonly WebLogger _logger = logger;
+        private readonly BaseObserver _logger = logger;
         private readonly IGrpcChannelSingletone _channel = channel;
         private readonly ZonkGameHub _hub = serviceProvider.GetRequiredService<ZonkGameHub>();
-        private readonly RedisGameStateStore _cache = cache;
+        private readonly IGameStateStore _cache = cache;
+        private readonly IGameRepository _repository = repository;
 
         public async Task<CurrentStateResponse> CreateGame(GameCreationRequest request)
         {
             var game = new ZonkStateMachine(_logger);
-            var players = request.Players.Select(p =>
-                new InputPlayerDto(p.PlayerName,
-                p.PlayerType == PlayerTypeEnum.AIAgent
-                        ? new GrpcAgentInputHandler(_channel.GetChannel()) // gRPC вызовы с агентом
-                        : p.PlayerType == PlayerTypeEnum.RealPlayer ? new SignalRInputHandler(_hub) // SignalR взаимодействие
-                        : new RestInputHandler(),
-                    p.PlayerType,
-                    null
-                )).ToList();
-            game.InitStartGame(request.TargetScore, players);
+            List<InputPlayerDto> players = [];
+            foreach (var player in request.Players)
+            {
+                var existingPlayer = await _repository.GetPlayerByNameAsync(player.Name)
+                    ?? await _repository.CreateOrUpdatePlayerAsync(new Player
+                    {
+                        Id = Guid.NewGuid(),
+                        PlayerName = player.Name,
+                        PlayerType = player.Type
+                    });
 
-            await _cache.SaveGameStateAsync(_cache.Map(game));
+                players.Add(new InputPlayerDto(
+                       existingPlayer.PlayerName,
+                       existingPlayer.PlayerType == PlayerTypeEnum.AIAgent
+                            ? new GrpcAgentInputHandler(_channel.GetChannel()) // gRPC вызовы с агентом
+                            : existingPlayer.PlayerType == PlayerTypeEnum.RealPlayer ? new SignalRInputHandler(_hub) // SignalR взаимодействие
+                            : new RestInputHandler(),
+                        existingPlayer.PlayerType,
+                        existingPlayer.Id));
+            }
+
+            await game.InitStartGame(request.TargetScore, players);
+
+            await _cache.SaveGameStateAsync(RedisGameStateStore.Map(game));
 
             return GetState(game.GameId, game);
         }
@@ -126,7 +136,7 @@ namespace ZonkGameApi.Services
                     }
                     else
                     {
-                        await _cache.SaveGameStateAsync(_cache.Map(stateMachineq));
+                        await _cache.SaveGameStateAsync(RedisGameStateStore.Map(stateMachineq));
                     }
                 }
             });

@@ -1,10 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
+using ZonkGame.DB.Audit;
+using ZonkGame.DB.Context;
+using ZonkGame.DB.GameRepository;
 using ZonkGameAI.RPC;
 using ZonkGameApi.Hubs;
 using ZonkGameApi.Services;
-using ZonkGameApi.Utils;
+using ZonkGameCore.Observer;
 using ZonkGameCore.Utils;
+using ZonkGameRedis;
+using ZonkGameRedis.Services;
 
 internal class Program
 {
@@ -12,23 +18,38 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddSingleton<IGrpcChannelSingletone, GrpcChannelSingletone>();
-        builder.Services.AddScoped<IGameService, GameService>();
-        builder.Services.AddScoped<WebLogger>();
-        builder.Services.AddLogging();
-
         builder.Services.Configure<GameZonkConfiguration>(
             builder.Configuration.GetSection(GameZonkConfiguration.Position));
 
-        builder.Services.AddControllers();
-        builder.Services.AddSignalR();
+        // Добавляем Grpc
         builder.Services.AddGrpc();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSingleton<IGrpcChannelSingletone, GrpcChannelSingletone>();
 
+        // Добавляем SignalR
+        builder.Services.AddSignalR();
         builder.Services.AddSingleton<ZonkGameHub>();
 
-        builder.Services.AddSingleton<RedisGameStateStore>();
+        // Добавляем сервисы
+        builder.Services.AddScoped<IGameService, GameService>();
+
+        // Репозитории и база данных
+        builder.Services.AddDbContext<ZonkDbContext>(options =>
+            options.UseNpgsql(
+                builder.Configuration.GetSection(GameZonkConfiguration.Position).GetSection("DbConnection").Value, x => x.MigrationsAssembly("ZonkGame.DB")));
+        builder.Services.AddScoped<IAuditWriter, AuditWriter>();
+        builder.Services.AddScoped<IGameRepository, GameRepository>();
+
+        // Добавляем кеш
+        builder.Services.AddSingleton<IRedisConnectionProvider, RedisConnectionProvider>();
+        builder.Services.AddScoped<IGameStateStore, RedisGameStateStore>();
+
+        // Добавляем логгеры
+        builder.Services.AddLogging();
+        builder.Services.AddScoped<BaseObserver, WebLogger>();
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
         if (app.Environment.IsDevelopment())

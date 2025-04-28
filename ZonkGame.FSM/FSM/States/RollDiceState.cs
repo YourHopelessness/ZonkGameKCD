@@ -7,28 +7,26 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class RollDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        protected override bool Handle()
+        public override async Task HandleAsync()
         {
             // Бросок костей
             _fsm.GameContext.CurrentRoll = [.. RollDice()];
 
-            _observer.Info($"Игрок {_fsm.GameContext.CurrentPlayer.PlayerName} сделал бросок [{string.Join(", ", _fsm.GameContext.CurrentRoll)}]");
+            await _observer.RollDice();
 
             // Определение есть ли возможное комбинации среди брошенных костей
             if (_fsm.GameContext.CurrentRoll.GetValidCombinations().Count < 1)
             {
-                _observer.Info($"Среди брошенных костей нет доступных комбинаций, ход переходит другому игроку");
+                await _observer.FailedTurn();
 
                 // Обнуляем очки за текущий ход, т.к бросок был неудачынм
-                _fsm.GameContext.CurrentPlayer.TurnScore = 0; 
-                _fsm.TransitionTo(new EndTurnState(_observer, _fsm));
+                _fsm.GameContext.CurrentPlayer.TurnScore = 0;
+                _fsm.TransitionTo<EndTurnState>();
             }
             else
             {
-                _fsm.TransitionTo(new SelectDiceState(_observer, _fsm));
+                _fsm.TransitionTo<SelectDiceState>();
             }
-
-            return true;
         }
 
         private IEnumerable<int> RollDice()

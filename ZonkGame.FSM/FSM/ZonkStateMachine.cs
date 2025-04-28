@@ -11,7 +11,7 @@ namespace ZonkGameCore.FSM
     /// </summary>
     public class ZonkStateMachine
     {
-        private BaseGameState _state;
+        private BaseGameState _state = null!;
         private bool _isGameStarted = false;
         private bool _isGameOver = false;
 
@@ -42,7 +42,7 @@ namespace ZonkGameCore.FSM
         {
             Observer = logger;
             GameId = Guid.NewGuid();
-            _state = new StartTurnState(Observer, this);
+            TransitionTo<StartTurnState>();
         }
 
         /// <summary>
@@ -63,9 +63,10 @@ namespace ZonkGameCore.FSM
                 var players = fsm.Players.Select(x => new PlayerState(x)).ToList();
                 GameContext = new GameContext(
                     fsm.TargetScore,
-                    fsm.CurrentRoll, 
-                    players.First(x => x.PlayerId == fsm.CurrentPlayerId), 
-                    players);
+                    fsm.CurrentRoll,
+                    players.First(x => x.PlayerId == fsm.CurrentPlayerId),
+                    players,
+                    GameId);
             }
         }
 
@@ -74,27 +75,36 @@ namespace ZonkGameCore.FSM
         /// </summary>
         /// <param name="targetScore">Целевой счет</param>
         /// <param name="players">Игроки</param>
-        public void InitStartGame(int targetScore, List<InputPlayerDto> players)
+        public async Task InitStartGame(int targetScore, List<InputPlayerDto> players)
         {
+            if (players.Count != 2 || players[0].PlayerId == players[1].PlayerId)
+            {
+                throw new ArgumentException("Игроки не могут быть одинаковыми или их должно быть 2");
+            }
+
             // Создаем контекст игры
-            GameContext = new GameContext(targetScore, players);
+            GameContext = new GameContext(targetScore, players, GameId);
+            await Observer.StartGame(GameContext);
 
-            Observer.Info($"Игра началась, цель - {targetScore} очков. " +
-                $"Первым ходит игрок {GameContext.CurrentPlayer.PlayerName}");
-
-            _state = new StartTurnState(Observer, this);
-
+            TransitionTo<StartTurnState>();
             _isGameStarted = true;
         }
 
         /// <summary>
         /// Ручной переход по состояниям
         /// </summary>
-        /// <param name="newState"></param>
-        internal void TransitionTo(BaseGameState newState)
+        internal void TransitionTo<TState>()
+             where TState : BaseGameState
         {
-            _state = newState;
+            var stateType = typeof(TState);
+            _state = (TState)Activator.CreateInstance(
+                stateType,
+                Observer,
+                this)! ?? throw new InvalidOperationException(
+                $"Не удалось создать состояние {stateType.Name}"
+            );
         }
+
 
         /// <summary>
         /// Переход в следующее состояние
@@ -112,7 +122,7 @@ namespace ZonkGameCore.FSM
             }
             catch (Exception ex)
             {
-                Observer.Error(ex.Message);
+                Observer.Error(ex);
 
                 return false;
             }
