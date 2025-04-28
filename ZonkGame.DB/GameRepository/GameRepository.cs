@@ -48,25 +48,21 @@ namespace ZonkGame.DB.GameRepository
             ModesEnum gameType,
             string initState)
         {
-            var game = await _dbContext.AddAsync(new Game
+            await _dbContext.AddAsync(new Game
             {
                 Id = gameId,
                 TargetScore = targetScore,
                 GameType = gameType,
-                GameState = initState
-            });
-
-            for (var i = 0; i < players.Count; i++)
-            {
-                await _dbContext.AddAsync(new GamePlayer
+                GameState = initState,
+                GamePlayers = [.. players.Select((pid, idx) => new GamePlayer
                 {
                     Id = Guid.NewGuid(),
-                    Game = game.Entity,
-                    Player = await _dbContext.Players.FindAsync(players[i])
-                        ?? throw new KeyNotFoundException($"Игрока с {players[i]} не существует"),
-                    PlayerTurn = i + 1
-                });
-            }
+                    Game = new Game { Id = gameId },
+                    Player = _dbContext.Players.Find(pid)
+                        ?? throw new KeyNotFoundException($"Игрока с {pid} не существует"),
+                    PlayerTurn = idx + 1
+                })]
+            });
 
             await _dbContext.SaveChangesAsync();
         }

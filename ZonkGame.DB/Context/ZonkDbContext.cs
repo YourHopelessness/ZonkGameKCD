@@ -14,9 +14,10 @@ namespace ZonkGame.DB.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Game properties
-            modelBuilder.Entity<Game>()
-                .HasMany(g => g.GamePlayers)
-                .WithOne(g => g.Game);
+            modelBuilder.Entity<GamePlayer>()
+               .HasOne(g => g.Game)
+               .WithMany(g => g.GamePlayers)
+               .HasForeignKey("GameId");
 
             modelBuilder.Entity<Game>()
                 .Property(g => g.GameType)
@@ -25,7 +26,7 @@ namespace ZonkGame.DB.Context
             modelBuilder.Entity<Game>()
                 .HasOne(g => g.Winner)
                 .WithMany()
-                .HasForeignKey(g => g.Id);
+                .HasForeignKey("WinnerId");
             #endregion
 
             #region Player properties
@@ -33,9 +34,10 @@ namespace ZonkGame.DB.Context
                 .Property(g => g.PlayerType)
                 .HasConversion<string>();
 
-            modelBuilder.Entity<Player>()
-               .HasMany(g => g.GamePlayers)
-               .WithOne(g => g.Player);
+            modelBuilder.Entity<GamePlayer>()
+               .HasOne(g => g.Player)
+               .WithMany(g => g.GamePlayers)
+               .HasForeignKey("PlayerId");
             #endregion
 
             #region GamePlayer properties

@@ -25,6 +25,7 @@ namespace ZonkGame.DB.Migrations
             modelBuilder.Entity("ZonkGame.DB.Entites.Game", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("GameState")
@@ -38,7 +39,12 @@ namespace ZonkGame.DB.Migrations
                     b.Property<int>("TargetScore")
                         .HasColumnType("integer");
 
+                    b.Property<Guid?>("WinnerId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("WinnerId");
 
                     b.ToTable("Games");
                 });
@@ -139,9 +145,7 @@ namespace ZonkGame.DB.Migrations
                 {
                     b.HasOne("ZonkGame.DB.Entites.Player", "Winner")
                         .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WinnerId");
 
                     b.Navigation("Winner");
                 });

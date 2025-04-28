@@ -30,6 +30,7 @@ namespace ZonkGame.DB.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     GameType = table.Column<string>(type: "text", nullable: false),
+                    WinnerId = table.Column<Guid>(type: "uuid", nullable: true),
                     TargetScore = table.Column<int>(type: "integer", nullable: false),
                     GameState = table.Column<string>(type: "text", nullable: false)
                 },
@@ -37,11 +38,10 @@ namespace ZonkGame.DB.Migrations
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Games_Players_Id",
-                        column: x => x.Id,
+                        name: "FK_Games_Players_WinnerId",
+                        column: x => x.WinnerId,
                         principalTable: "Players",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -123,6 +123,11 @@ namespace ZonkGame.DB.Migrations
                 name: "IX_GamePlayers_PlayerId",
                 table: "GamePlayers",
                 column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_WinnerId",
+                table: "Games",
+                column: "WinnerId");
         }
 
         /// <inheritdoc />
