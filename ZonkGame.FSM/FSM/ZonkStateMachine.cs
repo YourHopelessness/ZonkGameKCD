@@ -13,7 +13,6 @@ namespace ZonkGameCore.FSM
     {
         private BaseGameState _state = null!;
         private bool _isGameStarted = false;
-        private bool _isGameOver = false;
 
         #region Properties
         /// <summary> Идентификатор игры </summary> 
@@ -26,7 +25,7 @@ namespace ZonkGameCore.FSM
         public int RoundCount { get; set; } = 0;
 
         /// <summary> Флаг окончания игры </summary>
-        public bool IsGameOver { get => _isGameOver; set => _isGameOver = _state is GameOverState; }
+        public bool IsGameOver { get; private set; }
 
         /// <summary> Флаг начала игры </summary>
         public bool IsGameStarted => _isGameStarted;
@@ -54,7 +53,7 @@ namespace ZonkGameCore.FSM
             GameId = fsm.GameId;
             _state = this.GetStateByName(fsm.StateName);
             _isGameStarted = fsm.IsGameStarted;
-            _isGameOver = fsm.IsGameOver;
+            IsGameOver = fsm.IsGameOver;
             RoundCount = fsm.RoundCount;
 
             // Создаем контекст игры
@@ -67,6 +66,7 @@ namespace ZonkGameCore.FSM
                     players.First(x => x.PlayerId == fsm.CurrentPlayerId),
                     players,
                     GameId);
+                logger.SetGameContext(GameContext);
             }
         }
 
@@ -109,23 +109,25 @@ namespace ZonkGameCore.FSM
         /// <summary>
         /// Переход в следующее состояние
         /// </summary>
-        public async Task<bool> Handle()
+        public async Task<StateResponse> Handle()
         {
             try
             {
-                if (_isGameOver || !_isGameStarted)
+                if (IsGameOver || !_isGameStarted)
                     throw new Exception("Игра не начата или уже закончена");
 
-                await _state.HandleAsync();
-
-                return true;
+                return await _state.HandleAsync();
             }
             catch (Exception ex)
             {
                 Observer.Error(ex);
-
-                return false;
+                throw;
             }
+        }
+
+        public void SetGameOver()
+        {
+            IsGameOver = _state is GameOverState;
         }
 
         public string GetStateName() => _state.GetStateName();

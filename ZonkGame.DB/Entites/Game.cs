@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using ZonkGame.DB.Enum;
 
 namespace ZonkGame.DB.Entites
@@ -26,6 +27,13 @@ namespace ZonkGame.DB.Entites
         /// <summary> Состояние игры </summary>
         [Required]
         public string GameState { get; set; } = null!;
+
+        /// <summary> Дата начала игры </summary>
+        [Required]
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary> Дата завершения игры </summary>
+        public DateTime? EndedAt { get; set; }
 
         /// <summary>
         /// Список игроков, участвующих в игре

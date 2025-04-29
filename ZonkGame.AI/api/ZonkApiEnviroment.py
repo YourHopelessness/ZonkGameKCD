@@ -20,47 +20,57 @@ class ZonkEnvironment:
     def create_game(self, target_score):
         payload = {
             "players": [
-                {"playerName": "agent1", "playerType": 2},
-                {"playerName": "agent2", "playerType": 2}
+                {"name": "agent1", "type": 2},
+                {"name": "agent2", "type": 2}
             ],
             "mode": 2,
             "targetScore": target_score
         }
         res = requests.post(f"{self.base_url}/Game/CreateGame", json=payload, verify=False)
         res.raise_for_status()
+        
         return res.json()["roomId"]
 
-    def start_game(self, game_id):
-        res = requests.post(f"{self.base_url}/Game/StartGame", params={"gameId": game_id}, verify=False)
+    def change_game_state(self, game_id):
+        res = requests.post(f"{self.base_url}/Game/ChangeGameState", params={"gameId": game_id}, verify=False)
         res.raise_for_status()
+        
+        return res.json()
+
 
     def get_game_state(self, game_id):
         res = requests.get(f"{self.base_url}/Game/GetCurrentGameState", params={"gameId": game_id}, verify=False)
         res.raise_for_status()
+        
         return res.json()
 
     def get_game_winner(self, game_id):
         res = requests.get(f"{self.base_url}/Game/GetGameWinner", params={"gameId": game_id}, verify=False)
         if res.status_code == 200:
             return res.text
+        
         return None
 
-    def send_select_dice_response(self, game_id, selected_dice):
+    def send_select_dice_response(self, game_id, selected_dice, playerId):
         response = {
             "gameId": game_id,
+            "playerId": playerId,
             "selectedDice": selected_dice
         }
         res = requests.post(f"{self.base_url}/AgentResponse/SelectDice", params={"gameId": game_id}, json=response, verify=False)
         res.raise_for_status()
+        
         return self.get_game_state(game_id)
 
-    def send_should_continue_response(self, game_id, decision):
+    def send_should_continue_response(self, game_id, decision, playerId):
         response = {
             "gameId": game_id,
+            "playerId": playerId,
             "shouldContinue": bool(decision) 
         }
         res = requests.post(f"{self.base_url}/AgentResponse/ShouldContinue", json=response, verify=False)
         res.raise_for_status()
+        
         return self.get_game_state(game_id)
     
     def wait_for_available_combinations(self, game_id):

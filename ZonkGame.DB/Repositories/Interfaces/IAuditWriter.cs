@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace ZonkGame.DB.Audit
+namespace ZonkGame.DB.GameRepository.Interfaces
 {
     /// <summary>
     /// Интерфейс для записи в аудит

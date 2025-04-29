@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZonkGameApi.Request;
+using ZonkGameCore.InputHandler;
 
 namespace ZonkGameApi.Controllers
 {
@@ -10,14 +11,14 @@ namespace ZonkGameApi.Controllers
         [HttpPost("SelectDice")]
         public IActionResult SelectDice([FromBody] DiceSelectionRequest dto)
         {
-            RestInputHandler.SetSelectedDice(dto.GameId, dto.SelectedDice);
+            RestInputHandler.SetSelectedDice(dto.GameId, dto.SelectedDice, dto.PlayerId);
             return Ok();
         }
 
         [HttpPost("ShouldContinue")]
         public IActionResult ShouldContinue([FromBody] ContinueDecisionRequest dto)
         {
-            RestInputHandler.SetShouldContinue(dto.GameId, dto.ShouldContinue);
+            RestInputHandler.SetShouldContinue(dto.GameId, dto.ShouldContinue, dto.PlayerId);
             return Ok();
         }
     }

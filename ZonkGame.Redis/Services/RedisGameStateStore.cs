@@ -1,24 +1,22 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using ZonkGame.DB.Audit;
 using ZonkGame.DB.Enum;
-using ZonkGame.DB.GameRepository;
+using ZonkGame.DB.Exceptions;
+using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameAI.RPC;
 using ZonkGameAI.RPC.AIClient;
 using ZonkGameApi.Hubs;
 using ZonkGameCore.Dto;
 using ZonkGameCore.FSM;
 using ZonkGameCore.FSM.States;
+using ZonkGameCore.InputHandler;
 using ZonkGameCore.Observer;
-using ZonkGameCore.Utils;
 using ZonkGameRedis.Utils;
 using ZonkGameSignalR.InputHandler;
 
 namespace ZonkGameRedis.Services
 {
-    public interface IGameStateStore : IDisposable
+    public interface IGameStateStore
     {
         /// <summary>
         /// Сохранить состояние игры
@@ -35,18 +33,43 @@ namespace ZonkGameRedis.Services
         /// </summary>
         /// <param name="gameId">Идентификатор игры</param>
         Task DeleteGameStateAsync(Guid gameId);
+
+        /// <summary>
+        /// Получить игры, которые есть в кеше, из выбранных
+        /// </summary>
+        /// <param name="gamesid"></param>
+        /// <returns></returns>
+        Task<List<Guid>> GetStoredGames(List<Guid> gamesid);
     }
 
     public class RedisGameStateStore(
         IGrpcChannelSingletone channel,
         ZonkGameHub hub,
         BaseObserver baseObserver,
-        IRedisConnectionProvider redisConnection) : IGameStateStore, IDisposable
+        IRedisConnectionProvider redisConnection,
+        ILoggerFactory factory,
+        IGameRepository repository) : IGameStateStore
     {
-        private readonly IGrpcChannelSingletone _channel = channel;
-        private readonly ZonkGameHub _hub = hub;
-        private readonly BaseObserver _baseObserver = baseObserver;
-        private readonly IRedisConnectionProvider _redisConnection = redisConnection;
+        private readonly ILogger<RedisGameStateStore> _logger = factory.CreateLogger<RedisGameStateStore>();
+
+        public async Task<List<Guid>> GetStoredGames(List<Guid> gamesid)
+        {
+            var redisKeys = gamesid.Select(g => (RedisKey)GetKey(g)).ToArray();
+            RedisValue[] results = 
+                await redisConnection.GetDatabase().StringGetAsync(redisKeys);
+
+            var storedGameIds = new List<Guid>();
+
+            for (int i = 0; i < gamesid.Count; i++)
+            {
+                if (results[i].HasValue)
+                {
+                    storedGameIds.Add(gamesid[i]);
+                }
+            }
+
+            return storedGameIds;
+        }
 
         public async Task SaveGameStateAsync(StoredFSM gameState)
         {
@@ -54,34 +77,37 @@ namespace ZonkGameRedis.Services
             var key = GetKey(gameState.GameId);
 
             TimeSpan expiry = gameState.StateName == nameof(GameOverState)
-                ? TimeSpan.FromMinutes(15)
+                ? TimeSpan.FromMinutes(5)
                 : TimeSpan.FromDays(1);
 
-            await _redisConnection.GetDatabase().StringSetAsync(key, json, expiry);
+            await redisConnection.GetDatabase().StringSetAsync(key, json, expiry);
         }
 
         public async Task<ZonkStateMachine?> LoadGameStateAsync(Guid gameId)
         {
-            var json = await _redisConnection.GetDatabase().StringGetAsync(GetKey(gameId));
+            var json = await redisConnection.GetDatabase().StringGetAsync(GetKey(gameId));
+            var game = await repository.GetGameByIdAsync(gameId);
 
-            var desirialized = json.HasValue ? StoredFSMSerializer.Deserialize(json!)
-                : throw new ArgumentNullException("Игра не создана или была удалена ранее");
+            var desirialized = json.HasValue || game != null ? StoredFSMSerializer.Deserialize(json!)
+                : throw new EntityNotFoundException("Игра", new() { { "GameId", gameId.ToString() } });
+
+            desirialized.IsGameOver = game.EndedAt != null || game.Winner != null;
 
             desirialized.Players.ForEach(p =>
             {
                 p.PlayerInputHandler = p.PlayerType == PlayerTypeEnum.RealPlayer
-                        ? new SignalRInputHandler(_hub)
+                        ? new SignalRInputHandler(hub)
                         : p.PlayerType == PlayerTypeEnum.AIAgent
-                        ? new GrpcAgentInputHandler(_channel.GetChannel())
+                        ? new GrpcAgentInputHandler(channel.GetChannel())
                         : new RestInputHandler();
             });
 
-            return new ZonkStateMachine(_baseObserver, desirialized);
+            return new ZonkStateMachine(baseObserver, desirialized);
         }
 
         public async Task DeleteGameStateAsync(Guid gameId)
         {
-            await _redisConnection.GetDatabase().KeyDeleteAsync(GetKey(gameId));
+            await redisConnection.GetDatabase().KeyDeleteAsync(GetKey(gameId));
         }
 
         public static StoredFSM Map(ZonkStateMachine zfsm)
@@ -115,10 +141,5 @@ namespace ZonkGameRedis.Services
         }
 
         private static string GetKey(Guid gameId) => $"game:{gameId}";
-
-        public void Dispose()
-        {
-            _redisConnection.Dispose();
-        }
     }
 }

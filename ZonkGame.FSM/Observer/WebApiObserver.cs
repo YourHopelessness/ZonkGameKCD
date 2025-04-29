@@ -1,19 +1,19 @@
 ﻿using Microsoft.Extensions.Logging;
-using ZonkGame.DB.Audit;
-using ZonkGame.DB.GameRepository;
+using ZonkGame.DB.GameRepository.Interfaces;
+using ZonkGame.DB.Repositories.Interfaces;
 
 namespace ZonkGameCore.Observer
 {
     /// <summary>
     /// Логгер для веб апи
     /// </summary>
-    /// <param name="logger">внутренний логгер</param>
-    public class WebLogger(
-        ILogger<WebLogger> logger,
+    /// <param name="factory">фабрика для логгера</param>
+    public class WebApiObserver(
+        ILoggerFactory factory,
         IAuditWriter audutor,
         IGameRepository repository) : BaseObserver(audutor, repository)
     {
-        private readonly ILogger<WebLogger> _logger = logger;
+        private readonly ILogger<WebApiObserver> _logger = factory.CreateLogger<WebApiObserver>();
 
         public override void Error(Exception e)
         {

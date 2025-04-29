@@ -1,4 +1,5 @@
-﻿using ZonkGameCore.Observer;
+﻿using ZonkGameCore.Dto;
+using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
 {
@@ -19,8 +20,9 @@ namespace ZonkGameCore.FSM.States
         }
 
         /// <summary>
-        /// Обработчик текущего состояния машины состояний
+        /// Обработка состояния
         /// </summary>
-        public abstract Task HandleAsync();
+        /// <returns>Перешла ли машина в новое состояние</returns>
+        public abstract Task<StateResponse> HandleAsync();
     }
 }

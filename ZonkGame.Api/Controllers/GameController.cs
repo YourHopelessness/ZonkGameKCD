@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZonkGameApi.Request;
 using ZonkGameApi.Services;
+using ZonkGameCore.FSM.States;
 using ZonkGameRedis.Services;
 
 namespace ZonkGameApi.Controllers
@@ -37,8 +38,8 @@ namespace ZonkGameApi.Controllers
         /// </summary>
         /// <param name="gameId"></param>
         /// <returns></returns>
-        [HttpPost("StartGame")]
-        public async Task<IActionResult> StartGame([FromQuery] Guid gameId)
+        [HttpPost("ChangeGameState")]
+        public async Task<IActionResult> ChangeGameState([FromQuery] Guid gameId)
         {
             var fsmCached = await _cache.LoadGameStateAsync(gameId);
 
@@ -49,9 +50,9 @@ namespace ZonkGameApi.Controllers
                     return BadRequest("Игра уже закончена, создайте новую");
                 }
 
-                _gameService.RunLoopGame(gameId, fsmCached);
+                var newState = await _gameService.MakeStep(gameId, fsmCached);
 
-                return Ok(_gameService.GetState(gameId, fsmCached));
+                return Ok(newState);
             }
             else
             {
@@ -78,6 +79,21 @@ namespace ZonkGameApi.Controllers
                 return NotFound($"Игра с ID {gameId} не найдена.");
             }
         }
+
+        [HttpPut("FinishGameWithoutWinner")]
+        public async Task<IActionResult> FinishGameWithoutWinner([FromQuery] Guid gameId)
+        {
+            var fsmCached = await _cache.LoadGameStateAsync(gameId);
+            if (fsmCached is not null)
+            {
+                return Ok(_gameService.GetState(gameId, fsmCached));
+            }
+            else
+            {
+                return NotFound($"Игра с ID {gameId} не найдена.");
+            }
+        }
+
         /// <summary>
         /// Получение победителя игры
         /// </summary>

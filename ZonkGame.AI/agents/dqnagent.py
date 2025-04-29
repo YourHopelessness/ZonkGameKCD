@@ -5,7 +5,6 @@ import numpy as np
 from collections import deque
 from tensorflow import reduce_mean
 from tensorflow.keras import layers, models 
-from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
 
 class DQNAgent:
@@ -20,23 +19,11 @@ class DQNAgent:
         self.batch_size = 64
         self.memory = deque(maxlen=2000)
         self.model = self._build_model_v2(learning_rate)
-        self.model.load_weights(saved_model)
+        if saved_model: 
+            self.model.load_weights(saved_model)
 
-    def _build_model(self, learning_rate):
-        input_layer = layers.Input(shape=(self.state_size,))
-        x = layers.Dense(128, activation='relu')(input_layer)
-        x = layers.Dense(128, activation='relu')(x)
-
-        combo_output = layers.Dense(self.combo_output_size, name="combo_output")(x)
-        continue_output = layers.Dense(1, activation='sigmoid', name="continue_output")(x)
-
-        model = models.Model(inputs=input_layer, outputs=[combo_output, continue_output])
-        model.compile(optimizer=Adam(learning_rate=learning_rate),
-                      loss={"combo_output": "mse", "continue_output": "binary_crossentropy"})
-        return model
-    
     def _mean_advantage_fn(self, x):
-        return tf.reduce_mean(x, axis=1, keepdims=True)
+        return reduce_mean(x, axis=1, keepdims=True)
     
     def _build_model_v2(self, learning_rate):
         input_layer = layers.Input(shape=(self.state_size,))
@@ -52,7 +39,7 @@ class DQNAgent:
         advantage_stream = layers.Dense(self.combo_output_size)(x)  # Поток преимущества действий
 
         # Вычисление среднего преимущества через Lambda-слой
-        mean_advantage = layers.Lambda(lambda x: reduce_mean(x, axis=1, keepdims=True))(advantage_stream)
+        mean_advantage = layers.Lambda(self._mean_advantage_fn)(advantage_stream)
 
         # Вычисление Q-значений
         q_values = layers.Add(name="combo_output")([value_stream, layers.Subtract()([advantage_stream, mean_advantage])])

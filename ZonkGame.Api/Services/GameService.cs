@@ -1,6 +1,6 @@
 ﻿using ZonkGame.DB.Entites;
 using ZonkGame.DB.Enum;
-using ZonkGame.DB.GameRepository;
+using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameAI.RPC;
 using ZonkGameAI.RPC.AIClient;
 using ZonkGameApi.Hubs;
@@ -8,6 +8,8 @@ using ZonkGameApi.Request;
 using ZonkGameApi.Response;
 using ZonkGameCore.Dto;
 using ZonkGameCore.FSM;
+using ZonkGameCore.FSM.States;
+using ZonkGameCore.InputHandler;
 using ZonkGameCore.Observer;
 using ZonkGameRedis.Services;
 using ZonkGameSignalR.InputHandler;
@@ -22,7 +24,7 @@ namespace ZonkGameApi.Services
         /// <param name="roomId">Идентификатор комнаты</param>
         /// <param name="stateMachine">Текущая игра</param>
         /// <returns>Состояние игры</returns>
-        Task<CurrentStateResponse> MakeStep(Guid roomId, ZonkStateMachine stateMachine);
+        Task<StateResponse> MakeStep(Guid roomId, ZonkStateMachine stateMachine);
         /// <summary>
         /// Получение состояния игры
         /// </summary>
@@ -37,12 +39,10 @@ namespace ZonkGameApi.Services
         /// <returns></returns>
         Task<CurrentStateResponse> CreateGame(GameCreationRequest request);
         /// <summary>
-        /// Запуск игры в цикле
+        /// Завершить игру досрочно, без победителя
         /// </summary>
-        /// <param name="gameId"></param>
-        /// <param name="stateMachine"></param>
-        /// <returns></returns>
-        CurrentStateResponse? RunLoopGame(Guid gameId, ZonkStateMachine stateMachine);
+        /// <param name="gameId">идентификатор игры</param>
+        Task FinishGame(Guid gameId);
     }
 
     /// <summary>
@@ -50,20 +50,21 @@ namespace ZonkGameApi.Services
     /// </summary>
     public class GameService(
         IGrpcChannelSingletone channel,
-        BaseObserver logger,
         IGameStateStore cache,
-        IServiceProvider serviceProvider,
-        IGameRepository repository) : IGameService
+        ZonkGameHub zonkGameHub,
+        IGameRepository repository,
+        ILoggerFactory factory,
+        BaseObserver baseObserver) : IGameService
     {
-        private readonly BaseObserver _logger = logger;
+        private readonly ILogger<GameService> _logger = factory.CreateLogger<GameService>();
         private readonly IGrpcChannelSingletone _channel = channel;
-        private readonly ZonkGameHub _hub = serviceProvider.GetRequiredService<ZonkGameHub>();
+        private readonly ZonkGameHub _hub = zonkGameHub;
         private readonly IGameStateStore _cache = cache;
         private readonly IGameRepository _repository = repository;
 
         public async Task<CurrentStateResponse> CreateGame(GameCreationRequest request)
         {
-            var game = new ZonkStateMachine(_logger);
+            var game = new ZonkStateMachine(baseObserver);
             List<InputPlayerDto> players = [];
             foreach (var player in request.Players)
             {
@@ -92,6 +93,11 @@ namespace ZonkGameApi.Services
             return GetState(game.GameId, game);
         }
 
+        public Task FinishGame(Guid gameId)
+        {
+            throw new NotImplementedException();
+        }
+
         public CurrentStateResponse GetState(Guid roomId, ZonkStateMachine stateMachine)
         {
             var gameContext = stateMachine.GameContext;
@@ -116,32 +122,13 @@ namespace ZonkGameApi.Services
             return currentState;
         }
 
-        public async Task<CurrentStateResponse> MakeStep(Guid roomId, ZonkStateMachine stateMachine)
+        public async Task<StateResponse> MakeStep(Guid roomId, ZonkStateMachine stateMachine)
         {
-            _ = await stateMachine.Handle();
+            var state = await stateMachine.Handle();
+            if (state.TransitToNewState)
+                await _cache.SaveGameStateAsync(RedisGameStateStore.Map(stateMachine));
 
-            return GetState(roomId, stateMachine);
-        }
-
-        public CurrentStateResponse? RunLoopGame(Guid gameId, ZonkStateMachine stateMachineq)
-        {
-            Task.Run(async () =>
-            {
-                while (!stateMachineq.IsGameOver)
-                {
-                    var state = await stateMachineq.Handle();
-                    if (!state)
-                    {
-                        Thread.Sleep(100);
-                    }
-                    else
-                    {
-                        await _cache.SaveGameStateAsync(RedisGameStateStore.Map(stateMachineq));
-                    }
-                }
-            });
-
-            return GetState(gameId, stateMachineq);
+            return state;
         }
     }
 }

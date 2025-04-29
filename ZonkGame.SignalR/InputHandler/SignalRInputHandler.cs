@@ -14,7 +14,7 @@ namespace ZonkGameSignalR.InputHandler
             _context = context;
         }
 
-        public async Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid)
+        public async Task<IEnumerable<int>?> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid, Guid playerId)
         {
             if (_context.Clients == null)
             {
@@ -29,7 +29,7 @@ namespace ZonkGameSignalR.InputHandler
             return await tcs.Task;
         }
 
-        public async Task<bool> HandleShouldContinueGameInputAsync(Guid gameid)
+        public async Task<bool?> HandleShouldContinueGameInputAsync(Guid gameid, Guid playerId)
         {
             if (_context.Clients == null)
             {

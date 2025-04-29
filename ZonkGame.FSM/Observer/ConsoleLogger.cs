@@ -1,5 +1,5 @@
-﻿using ZonkGame.DB.Audit;
-using ZonkGame.DB.GameRepository;
+﻿using ZonkGame.DB.GameRepository.Interfaces;
+using ZonkGame.DB.Repositories.Interfaces;
 
 namespace ZonkGameCore.Observer
 {

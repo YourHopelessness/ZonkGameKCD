@@ -1,9 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using ZonkGame.DB.Audit;
-using ZonkGame.DB.Context;
-using ZonkGame.DB.Entites;
-using ZonkGame.DB.GameRepository;
+﻿using ZonkGame.DB.GameRepository.Interfaces;
+using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameCore.Context;
 using ZonkGameCore.FSM;
 using ZonkGameCore.FSM.States;
@@ -33,18 +29,23 @@ namespace ZonkGameCore.Observer
         protected string ErrorMessage = "Ошибка в игре: {0}";
         protected string NewTurnMessage = "Новый ход игрока {0}";
 
+        public void SetGameContext(GameContext context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// Новый ход игрока
         /// </summary>
         public async Task NewTurn()
         {
-            Info(string.Format(
-                NewTurnMessage, 
-                _context.CurrentPlayer.PlayerName));
-
             await _gameRepository.UpdateGameStateAsync(
                 _context.GameId,
                 nameof(StartTurnState));
+
+            Info(string.Format(
+                NewTurnMessage,
+                _context.CurrentPlayer.PlayerName));
         }
 
         /// <summary>
@@ -53,10 +54,6 @@ namespace ZonkGameCore.Observer
         public async Task StartGame(GameContext context)
         {
             _context = context;
-            Info(string.Format(
-                StartGameMessage, 
-                _context.TargetScore,
-                _context.CurrentPlayer.PlayerName));
 
             await _gameRepository.CreateNewGameAsync(
                 _context.GameId,
@@ -64,6 +61,11 @@ namespace ZonkGameCore.Observer
                 [.. _context.Players.Select(x => x.PlayerId)],
                 GameModeDefiner.GetGameMode(_context.Players.Select(x => x.PlayerType)),
                 nameof(StartTurnState));
+
+            Info(string.Format(
+                StartGameMessage,
+                _context.TargetScore,
+                _context.CurrentPlayer.PlayerName));
         }
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace ZonkGameCore.Observer
         {
             Info(string.Format(
                 RollDiceMessage,
-                _context.CurrentPlayer.PlayerName, 
+                _context.CurrentPlayer.PlayerName,
                 string.Join(", ", _context.CurrentRoll)));
 
             await _gameRepository.UpdateGameStateAsync(
@@ -87,8 +89,8 @@ namespace ZonkGameCore.Observer
         public async Task IncorrectDiceSelection(IEnumerable<int> selectedDices)
         {
             Info(string.Format(
-                IncorrectDiceSelectionMessage, 
-                _context.CurrentPlayer.PlayerName, 
+                IncorrectDiceSelectionMessage,
+                _context.CurrentPlayer.PlayerName,
                 string.Join(", ", selectedDices)));
 
             await _gameRepository.UpdateGameStateAsync(
@@ -102,14 +104,14 @@ namespace ZonkGameCore.Observer
         public async Task CorrectDiceSelection(IEnumerable<int> selectedDices)
         {
             Info(string.Format(
-                CorrectDiceSelectionMessage, 
-                _context.CurrentPlayer.PlayerName, 
-                _context.CurrentPlayer.TurnScore, 
+                CorrectDiceSelectionMessage,
+                _context.CurrentPlayer.PlayerName,
+                _context.CurrentPlayer.TurnScore,
                 _context.CurrentPlayer.TotalScore));
 
             await _audutor.WriteSelectedDiceAuditAsync(
-                _context.CurrentPlayer.PlayerId,
                 _context.GameId,
+                _context.CurrentPlayer.PlayerId,
                 _context.CurrentPlayer.TurnScore,
                 _context.CurrentPlayer.TotalScore,
                 _context.GetOpponentPlayer().TotalScore,
@@ -132,8 +134,8 @@ namespace ZonkGameCore.Observer
                 _context.CurrentPlayer.PlayerName));
 
             await _audutor.WriteContinueTurnAuditAsync(
-                _context.CurrentPlayer.PlayerId,
                 _context.GameId,
+                _context.CurrentPlayer.PlayerId,
                 _context.CurrentPlayer.TurnScore,
                 _context.CurrentPlayer.TotalScore,
                 _context.GetOpponentPlayer().TotalScore,
@@ -150,12 +152,12 @@ namespace ZonkGameCore.Observer
         public async Task FinishTurn()
         {
             Info(string.Format(
-                FinishTurnMessage, 
+                FinishTurnMessage,
                 _context.CurrentPlayer.PlayerName));
 
             await _audutor.WriteFinishTurnAuditAsync(
-               _context.CurrentPlayer.PlayerId,
                _context.GameId,
+               _context.CurrentPlayer.PlayerId,
                _context.CurrentPlayer.TurnScore,
                _context.CurrentPlayer.TotalScore,
                _context.GetOpponentPlayer().TotalScore,
@@ -172,8 +174,8 @@ namespace ZonkGameCore.Observer
         public async Task EndTurn()
         {
             Info(string.Format(
-                EndTurnMessage, 
-                _context.CurrentPlayer.PlayerName, 
+                EndTurnMessage,
+                _context.CurrentPlayer.PlayerName,
                 _context.CurrentPlayer.TotalScore));
 
             await _gameRepository.UpdateGameStateAsync(
@@ -187,12 +189,12 @@ namespace ZonkGameCore.Observer
         public async Task FailedTurn()
         {
             Info(string.Format(
-                FailedTurnMessage, 
+                FailedTurnMessage,
                 _context.CurrentPlayer.PlayerName));
 
             await _audutor.WriteFailedTurnAuditAsync(
-               _context.CurrentPlayer.PlayerId,
                _context.GameId,
+               _context.CurrentPlayer.PlayerId,
                _context.CurrentPlayer.TurnScore,
                _context.CurrentPlayer.TotalScore,
                _context.GetOpponentPlayer().TotalScore,
@@ -206,7 +208,7 @@ namespace ZonkGameCore.Observer
         {
             Info(string.Format(
                 EndGameMessage,
-                totalscore, 
+                totalscore,
                 winner));
 
             await _gameRepository.UpdateGameStateAsync(
@@ -220,7 +222,7 @@ namespace ZonkGameCore.Observer
         public void CanReroll()
         {
             Info(string.Format(
-                RerollMessage, 
+                RerollMessage,
                 _context.CurrentPlayer.PlayerName));
         }
 

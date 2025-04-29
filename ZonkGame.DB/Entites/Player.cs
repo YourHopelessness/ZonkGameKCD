@@ -20,6 +20,14 @@ namespace ZonkGame.DB.Entites
         [Required, EnumDataType(typeof(PlayerTypeEnum))]
         public PlayerTypeEnum PlayerType { get; set; }
 
+        /// <summary> Отметка о создании пользователя </summary>
+        [Required]
+        public DateTime CreatedAt { get; set; }
+
+        /// <summary> Отметка о изменении пользователя </summary>
+        [Required]
+        public DateTime LastUpdatedAt { get; set; }
+
         /// <summary>
         /// Список игр, в которых участвует игрок
         /// </summary>

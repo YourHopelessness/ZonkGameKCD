@@ -61,22 +61,23 @@ class ZonkTrainer:
             try:
                 game_id = self.env.create_game(target_score)
                 print(f"Игра {episode} - {game_id} с {target_score} началаась")
-                self.env.start_game(game_id)
                 self.epsilon = self.compute_epsilon(episode, episodes, target_score)
 
                 prev_input = None
                 prev_action_idx = None
                 prev_state_vec = None
                 done = False
+                
+                change_state = None
 
                 while not done:
+                    change_state = self.env.change_game_state(game_id)
                     state = self.env.get_game_state(game_id)
                     done = state["isGameOver"]
                     current_player = state["currentPlayerName"]
                     current_state = state["currentState"]
                     round_count = state["roundCount"]
                     total_reward = 0
-
                     if done:
                         break
 
@@ -98,8 +99,7 @@ class ZonkTrainer:
                     agent_state = AgentState(state)
                     input_vectors = agent_state.get_all_input_vectors()
                     
-                    if not input_vectors: # Если комбинаций нет - выходим из цикла
-                        time.sleep(0.05)
+                    if not input_vectors:
                         continue
                     
                     # epsilon-greedy
@@ -111,12 +111,14 @@ class ZonkTrainer:
                         best_idx = np.argmax(combo_qs[:, 0])
                         should_continue = continue_probs[0][0] > 0.5
 
-                    if "SelectDiceState" in current_state and state['availableCombinations']:
+                    if change_state["needDiceSelection"] and state['availableCombinations']:
                         best_combination = state["availableCombinations"][best_idx]
                         input_vector = input_vectors[best_idx]
-
-                        new_state = self.env.send_select_dice_response(game_id, best_combination)
-
+                        new_state = self.env.send_select_dice_response(
+                            game_id, 
+                            best_combination,
+                            state["currentPlayerId"])
+                        
                         if prev_input is not None:
                             reward = (new_state["playerScore"] - prev_state_vec["playerScore"]) / 100.0
                             total_reward += reward
@@ -126,9 +128,12 @@ class ZonkTrainer:
                         prev_action_idx = best_idx
                         prev_state_vec = new_state
 
-                    elif "AskContinueState" in current_state:
-                        new_state = self.env.send_should_continue_response(game_id, should_continue)
-
+                    elif change_state["needContinueDecision"]:
+                        new_state = self.env.send_should_continue_response(
+                            game_id, 
+                            should_continue,
+                            state["currentPlayerId"])
+                        
                         if prev_input is not None:
                             reward = (new_state["playerScore"] - prev_state_vec["playerScore"]) / 100.0
                             total_reward += reward
@@ -137,8 +142,6 @@ class ZonkTrainer:
                         prev_input = input_vector
                         prev_action_idx = 0
                         prev_state_vec = new_state
-
-                    time.sleep(0.05)
 
                 # Финальная награда
                 winner = self.env.get_game_winner(game_id)
@@ -192,5 +195,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"An error occured during training: {traceback.print_exception(e)}")
 
-    agent1.save_model("agent1")
-    agent2.save_model("agent2")
+    agent1.save_model("agent1.keras")
+    agent2.save_model("agent2.keras")

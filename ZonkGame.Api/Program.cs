@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
-using ZonkGame.DB.Audit;
 using ZonkGame.DB.Context;
-using ZonkGame.DB.GameRepository;
+using ZonkGame.DB.GameRepository.Interfaces;
+using ZonkGame.DB.Repositories.Interfaces;
+using ZonkGame.DB.Repositories.Services;
 using ZonkGameAI.RPC;
 using ZonkGameApi.Hubs;
 using ZonkGameApi.Services;
@@ -31,11 +32,15 @@ internal class Program
 
         // Добавляем сервисы
         builder.Services.AddScoped<IGameService, GameService>();
+        builder.Services.AddSingleton<IGameHostedService, GameHostedService>();
+        builder.Services.AddHostedService(sp => (GameHostedService)sp.GetRequiredService<IGameHostedService>());
 
         // Репозитории и база данных
-        builder.Services.AddDbContext<ZonkDbContext>(options =>
+        builder.Services.AddDbContextFactory<ZonkDbContext>(options =>
             options.UseNpgsql(
-                builder.Configuration.GetSection(GameZonkConfiguration.Position).GetSection("DbConnection").Value, x => x.MigrationsAssembly("ZonkGame.DB")));
+                builder.Configuration.GetSection(GameZonkConfiguration.Position).GetSection("DbConnection").Value, 
+                x => x.MigrationsAssembly("ZonkGame.DB")),
+            ServiceLifetime.Scoped);
         builder.Services.AddScoped<IAuditWriter, AuditWriter>();
         builder.Services.AddScoped<IGameRepository, GameRepository>();
 
@@ -45,7 +50,7 @@ internal class Program
 
         // Добавляем логгеры
         builder.Services.AddLogging();
-        builder.Services.AddScoped<BaseObserver, WebLogger>();
+        builder.Services.AddScoped<BaseObserver, WebApiObserver>();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();

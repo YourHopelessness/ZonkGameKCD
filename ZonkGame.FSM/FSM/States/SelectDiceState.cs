@@ -1,4 +1,5 @@
-﻿using ZonkGameCore.Observer;
+﻿using ZonkGameCore.Dto;
+using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
 {
@@ -7,18 +8,35 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class SelectDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public async override Task HandleAsync()
+        public async override Task<StateResponse> HandleAsync()
         {
             // Игрок выбирает кости среди выпавших
             var selectedDices = await _fsm.GameContext
                 .CurrentPlayer
                 .PlayerInputHandler
-                .HandleSelectDiceInputAsync(_fsm.GameContext.CurrentRoll, _fsm.GameId);
+                .HandleSelectDiceInputAsync(
+                _fsm.GameContext.CurrentRoll, 
+                _fsm.GameId, 
+                _fsm.GameContext.CurrentPlayer.PlayerId);
+
+            if (selectedDices == null)
+            {
+                return new StateResponse
+                {
+                    TransitToNewState = false,
+                    NeedDiceSelection = true,
+                };
+            }
 
             // Проверка что есть доступные комбинации и нет ли лишних или неккоректных костей
             if (!selectedDices.HasValidCombos())
             {
                 await _observer.IncorrectDiceSelection(selectedDices);
+
+                return new StateResponse()
+                {
+                    TransitToNewState = false
+                };
             }
             else
             {
@@ -26,7 +44,7 @@ namespace ZonkGameCore.FSM.States
                 var currentScore = CalculateScore(selectedDices);
                 _fsm.GameContext.CurrentPlayer.TurnScore += currentScore;
 
-                await   _observer.CorrectDiceSelection(selectedDices);
+                await _observer.CorrectDiceSelection(selectedDices);
 
                 // Уменьшение костей для дальнейшего броска с учетом отложенных костей
                 _fsm.GameContext.CurrentPlayer.SubstructDices(selectedDices.Count());
@@ -41,6 +59,8 @@ namespace ZonkGameCore.FSM.States
                 }
 
                 _fsm.TransitionTo<AskContinueState>();
+
+                return new StateResponse();
             }
         }
 

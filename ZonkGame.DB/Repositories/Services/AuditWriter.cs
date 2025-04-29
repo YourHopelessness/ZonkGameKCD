@@ -2,12 +2,14 @@
 using ZonkGame.DB.Context;
 using ZonkGame.DB.Entites;
 using ZonkGame.DB.Enum;
+using ZonkGame.DB.GameRepository.Interfaces;
 
-namespace ZonkGame.DB.Audit
+namespace ZonkGame.DB.Repositories.Services
 {
-    public class AuditWriter(ZonkDbContext dbContext) : IAuditWriter
+    public class AuditWriter(IDbContextFactory<ZonkDbContext> dbFactory) : IAuditWriter
     {
-        private readonly ZonkDbContext _dbContext = dbContext;
+        private ZonkDbContext? _dbContext = null;
+        private ZonkDbContext DbContext => _dbContext ??= dbFactory.CreateDbContext();
 
         public async Task WriteFailedTurnAuditAsync(
             Guid gameId,
@@ -19,9 +21,9 @@ namespace ZonkGame.DB.Audit
         {
             var audit = new GameAudit
             {
-                Game = await _dbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
+                Game = await DbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
                     ?? throw new KeyNotFoundException($"{gameId}"),
-                CurrentPlayer = await _dbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
+                CurrentPlayer = await DbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
                     ?? throw new KeyNotFoundException($"{currentPlayerId}"),
                 RecordTime = DateTime.UtcNow,
                 EventType = EventTypeEnum.LostTurn,
@@ -30,8 +32,9 @@ namespace ZonkGame.DB.Audit
                 PlayerTotalScore = totalScore,
                 OpponentTotalScore = opponentScore
             };
-            _dbContext.GameAudits.Add(audit);
-            _dbContext.SaveChanges();
+            DbContext.GameAudits.Add(audit);
+
+            await DbContext.SaveChangesAsync();
         }
 
         public async Task WriteSelectedDiceAuditAsync(
@@ -46,9 +49,9 @@ namespace ZonkGame.DB.Audit
         {
             var audit = new GameAudit
             {
-                Game = await _dbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
+                Game = await DbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
                     ?? throw new KeyNotFoundException($"{gameId}"),
-                CurrentPlayer = await _dbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
+                CurrentPlayer = await DbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
                     ?? throw new KeyNotFoundException($"{currentPlayerId}"),
                 RecordTime = DateTime.UtcNow,
                 EventType = EventTypeEnum.SelectDice,
@@ -59,8 +62,9 @@ namespace ZonkGame.DB.Audit
                 AvaliableCombination = avaliableCombination,
                 SelectedCombination = selectDice,
             };
-            _dbContext.GameAudits.Add(audit);
-            _dbContext.SaveChanges();
+            DbContext.GameAudits.Add(audit);
+
+            await DbContext.SaveChangesAsync();
         }
 
         public async Task WriteContinueTurnAuditAsync(
@@ -73,9 +77,9 @@ namespace ZonkGame.DB.Audit
         {
             var audit = new GameAudit
             {
-                Game = await _dbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
+                Game = await DbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
                     ?? throw new KeyNotFoundException($"{gameId}"),
-                CurrentPlayer = await _dbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
+                CurrentPlayer = await DbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
                     ?? throw new KeyNotFoundException($"{currentPlayerId}"),
                 RecordTime = DateTime.UtcNow,
                 EventType = EventTypeEnum.ContinueTurn,
@@ -84,8 +88,9 @@ namespace ZonkGame.DB.Audit
                 PlayerTotalScore = totalScore,
                 OpponentTotalScore = opponentScore,
             };
-            _dbContext.GameAudits.Add(audit);
-            _dbContext.SaveChanges();
+            DbContext.GameAudits.Add(audit);
+
+            await DbContext.SaveChangesAsync();
         }
 
         public async Task WriteFinishTurnAuditAsync(
@@ -98,9 +103,9 @@ namespace ZonkGame.DB.Audit
         {
             var audit = new GameAudit
             {
-                Game = await _dbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
+                Game = await DbContext.Games.SingleOrDefaultAsync(g => g.Id == gameId)
                     ?? throw new KeyNotFoundException($"{gameId}"),
-                CurrentPlayer = await _dbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
+                CurrentPlayer = await DbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
                     ?? throw new KeyNotFoundException($"{currentPlayerId}"),
                 RecordTime = DateTime.UtcNow,
                 EventType = EventTypeEnum.ContinueTurn,
@@ -109,8 +114,9 @@ namespace ZonkGame.DB.Audit
                 PlayerTotalScore = totalScore,
                 OpponentTotalScore = opponentScore,
             };
-            _dbContext.GameAudits.Add(audit);
-            _dbContext.SaveChanges();
+            DbContext.GameAudits.Add(audit);
+
+            await DbContext.SaveChangesAsync();
         }
     }
 }

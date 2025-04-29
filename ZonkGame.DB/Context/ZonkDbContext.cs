@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Data;
 using System.Text.Json;
 using ZonkGame.DB.Entites;
 
@@ -17,7 +18,17 @@ namespace ZonkGame.DB.Context
             modelBuilder.Entity<GamePlayer>()
                .HasOne(g => g.Game)
                .WithMany(g => g.GamePlayers)
-               .HasForeignKey("GameId");
+               .HasForeignKey("GameId")
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Game>()
+                .Property(g => g.CreatedAt)
+                .HasConversion(typeof(DateTime))
+                .HasDefaultValueSql("timezone('utc', now())");
+
+            modelBuilder.Entity<Game>()
+                .Property(g => g.EndedAt)
+                .HasConversion(typeof(DateTime?));
 
             modelBuilder.Entity<Game>()
                 .Property(g => g.GameType)
@@ -34,13 +45,24 @@ namespace ZonkGame.DB.Context
                 .Property(g => g.PlayerType)
                 .HasConversion<string>();
 
+            modelBuilder.Entity<Player>()
+                .Property(g => g.CreatedAt)
+                .HasConversion(typeof(DateTime))
+                .HasDefaultValueSql("timezone('utc', now())");
+
+            modelBuilder.Entity<Player>()
+                .Property(g => g.LastUpdatedAt)
+                .HasConversion(typeof(DateTime))
+                .HasDefaultValueSql("timezone('utc', now())");
+
             modelBuilder.Entity<GamePlayer>()
                .HasOne(g => g.Player)
                .WithMany(g => g.GamePlayers)
-               .HasForeignKey("PlayerId");
+               .HasForeignKey("PlayerId")
+               .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
-            #region GamePlayer properties
+            #region GameAudit properties
             modelBuilder.Entity<GameAudit>()
                 .Property(g => g.EventType)
                 .HasConversion<string>();
@@ -63,6 +85,11 @@ namespace ZonkGame.DB.Context
             modelBuilder.Entity<GameAudit>()
                .Property(g => g.AvaliableCombination)
                .HasConversion(jaggedConverter);
+
+            modelBuilder.Entity<GameAudit>()
+               .Property(g => g.RecordTime)
+               .HasConversion(typeof(DateTime))
+               .HasDefaultValueSql("timezone('utc', now())");
 
             modelBuilder.Entity<GameAudit>()
                 .HasOne(g => g.Game)

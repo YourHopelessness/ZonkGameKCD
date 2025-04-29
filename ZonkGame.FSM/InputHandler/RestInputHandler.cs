@@ -1,41 +1,54 @@
-﻿using ZonkGameCore.InputParams;
+﻿using System.Collections.Concurrent;
+using ZonkGameCore.InputParams;
 
-public class RestInputHandler : IInputAsyncHandler
+namespace ZonkGameCore.InputHandler
 {
-    private static readonly Dictionary<Guid, TaskCompletionSource<List<int>>> _diceSelections = [];
-    private static readonly Dictionary<Guid, TaskCompletionSource<bool>> _continueDecisions = [];
-
-    public async Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid)
+    public class RestInputHandler : IInputAsyncHandler
     {
-        var tcs = new TaskCompletionSource<List<int>>();
-        _diceSelections[gameid] = tcs;
+        private static readonly ConcurrentDictionary<(Guid gameId, Guid playerId), List<int>?> _diceSelections = [];
+        private static readonly ConcurrentDictionary<(Guid gameId, Guid playerId), bool?> _continueDecisions = [];
 
-        return await tcs.Task;
-    }
-
-    public async Task<bool> HandleShouldContinueGameInputAsync(Guid gameid)
-    {
-        var tcs = new TaskCompletionSource<bool>();
-        _continueDecisions[gameid] = tcs;
-
-        return await tcs.Task;
-    }
-
-    public static void SetSelectedDice(Guid gameId, List<int> selectedDice)
-    {
-        if (_diceSelections.TryGetValue(gameId, out var tcs))
+        public async Task<IEnumerable<int>?> HandleSelectDiceInputAsync(
+            IEnumerable<int> roll,
+            Guid gameid,
+            Guid playerId)
         {
-            tcs.SetResult(selectedDice);
-            _diceSelections.Remove(gameId);
+            if (_diceSelections.TryGetValue((gameid, playerId), out var list))
+            {
+                _diceSelections.TryRemove((gameid, playerId), out _);
+
+                return list;
+            }
+
+            return null;
         }
-    }
 
-    public static void SetShouldContinue(Guid gameId, bool decision)
-    {
-        if (_continueDecisions.TryGetValue(gameId, out var tcs))
+        public async Task<bool?> HandleShouldContinueGameInputAsync(Guid gameid, Guid playerId)
         {
-            tcs.SetResult(decision);
-            _continueDecisions.Remove(gameId);
+            if (_continueDecisions.TryGetValue((gameid, playerId), out var decision))
+            {
+                _continueDecisions.TryRemove((gameid, playerId), out _);
+
+                return decision;
+            }
+
+            return null;
+        }
+
+        public static void SetSelectedDice(Guid gameId, List<int> selectedDice, Guid playerId)
+        {
+            if (!_diceSelections.TryGetValue((gameId, playerId), out _))
+            {
+                _diceSelections.TryAdd((gameId, playerId), selectedDice);
+            }
+        }
+
+        public static void SetShouldContinue(Guid gameId, bool decision, Guid playerId)
+        {
+            if (!_continueDecisions.TryGetValue((gameId, playerId), out _))
+            {
+                _continueDecisions.TryAdd((gameId, playerId), decision);
+            }
         }
     }
 }
