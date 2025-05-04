@@ -1,11 +1,14 @@
 from agents.config_agent import config_gpu_agents
 config_gpu_agents()
 import random
+import logging
 import numpy as np
 from collections import deque
-from tensorflow import reduce_mean
+from tensorflow import reduce_mean, get_logger
 from tensorflow.keras import layers, models 
 from tensorflow.keras.optimizers import Adam
+
+get_logger().setLevel(logging.ERROR)
 
 class DQNAgent:
     def __init__(self, state_size=4, epsilon=1.0, epsilon_min=0.1, epsilon_decay=0.995,

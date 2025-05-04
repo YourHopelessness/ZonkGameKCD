@@ -69,6 +69,7 @@ namespace ZonkGame.DB.Repositories.Services
             var gamePlayer = await GetGamePlayerAsync(gameId, playerId);
             gamePlayer.Game.Winner = gamePlayer.Player;
             gamePlayer.Game.EndedAt = DateTime.UtcNow;
+            gamePlayer.Game.GameState = "GameOverState";
 
             await SaveChangesAsync();
         }
@@ -76,6 +77,8 @@ namespace ZonkGame.DB.Repositories.Services
         public async Task<GamePlayer> GetGamePlayerAsync(Guid gameId, Guid playerId)
         {
             var gamePlayer = await DbContext.GamePlayers
+                .Include(x => x.Game)
+                .Include(x => x.Player)
                 .FirstOrDefaultAsync(x => x.Game.Id == gameId && x.Player.Id == playerId);
 
             return gamePlayer ?? throw new EntityNotFoundException(
@@ -133,7 +136,7 @@ namespace ZonkGame.DB.Repositories.Services
             await SaveChangesAsync();
         }
 
-        public async Task FinishGame(Guid gameId)
+        public async Task FinishGameAsync(Guid gameId)
         {
             var game = await DbContext.Games
                 .Where(g => g.Id == gameId && g.Winner == null)

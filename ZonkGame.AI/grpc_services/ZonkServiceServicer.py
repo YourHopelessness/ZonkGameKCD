@@ -28,7 +28,7 @@ class ZonkServiceServicer(zonkgameservice_pb2_grpc.ZonkServiceServicer):
         input_array = np.array(input_vectors)
 
         # Предсказание
-        combo_qs, continue_probs = self.agent.model.predict(input_array, verbose=0)
+        combo_qs, _ = self.agent.model.predict(input_array, verbose=0)
         best_idx = np.argmax(combo_qs[:, 0])
         best_combination = state["availableCombinations"][best_idx]
 

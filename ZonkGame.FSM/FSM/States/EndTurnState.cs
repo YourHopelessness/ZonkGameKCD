@@ -16,13 +16,15 @@ namespace ZonkGameCore.FSM.States
 
             await _observer.EndTurn();
 
-            // Проверка на конец игры
             if (_fsm.GameContext.CurrentPlayer.TurnsCount == _fsm.GameContext.GetOpponentPlayer().TurnsCount)
             {
+                // Проверка на конец игры
                 if (_fsm.GameContext.Players.Any(p => p.TotalScore >= _fsm.GameContext.TargetScore))
                 {
                     // Игра окончена, кто-то из игроков достиг целевого счета
                     _fsm.TransitionTo<GameOverState>();
+
+                    return new StateResponse();
                 }
                 _fsm.RoundCount++;
             }

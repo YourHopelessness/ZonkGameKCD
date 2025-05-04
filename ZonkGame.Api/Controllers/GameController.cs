@@ -86,7 +86,8 @@ namespace ZonkGameApi.Controllers
             var fsmCached = await _cache.LoadGameStateAsync(gameId);
             if (fsmCached is not null)
             {
-                return Ok(_gameService.GetState(gameId, fsmCached));
+                await _gameService.FinishGame(gameId);
+                return Ok();
             }
             else
             {

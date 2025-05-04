@@ -66,6 +66,7 @@ class ZonkTrainer:
                 prev_input = None
                 prev_action_idx = None
                 prev_state_vec = None
+                new_state = None
                 done = False
                 
                 change_state = None
@@ -75,9 +76,9 @@ class ZonkTrainer:
                     state = self.env.get_game_state(game_id)
                     done = state["isGameOver"]
                     current_player = state["currentPlayerName"]
-                    current_state = state["currentState"]
                     round_count = state["roundCount"]
                     total_reward = 0
+                    
                     if done:
                         break
 
@@ -85,6 +86,8 @@ class ZonkTrainer:
                     if round_count > max_rounds:
                         done = True
                         winner = self.env.get_game_winner(game_id)
+                        if winner is None:
+                            self.env.finish_game(game_id)
                         scores = {
                             "agent1": state.get("agent1Score", 0),
                             "agent2": state.get("agent2Score", 0),
@@ -99,7 +102,9 @@ class ZonkTrainer:
                     agent_state = AgentState(state)
                     input_vectors = agent_state.get_all_input_vectors()
                     
-                    if not input_vectors:
+                    if not input_vectors or \
+                       (not change_state["needDiceSelection"] and \
+                       not change_state["needContinueDecision"]):
                         continue
                     
                     # epsilon-greedy
@@ -118,30 +123,20 @@ class ZonkTrainer:
                             game_id, 
                             best_combination,
                             state["currentPlayerId"])
-                        
-                        if prev_input is not None:
-                            reward = (new_state["playerScore"] - prev_state_vec["playerScore"]) / 100.0
-                            total_reward += reward
-                            current_agent.remember(prev_input, prev_action_idx, reward, input_vector, False)
-
-                        prev_input = input_vector
-                        prev_action_idx = best_idx
-                        prev_state_vec = new_state
-
                     elif change_state["needContinueDecision"]:
                         new_state = self.env.send_should_continue_response(
                             game_id, 
                             should_continue,
                             state["currentPlayerId"])
                         
-                        if prev_input is not None:
-                            reward = (new_state["playerScore"] - prev_state_vec["playerScore"]) / 100.0
-                            total_reward += reward
-                            current_agent.remember(prev_input, prev_action_idx, reward, input_vector, False)
-
-                        prev_input = input_vector
-                        prev_action_idx = 0
-                        prev_state_vec = new_state
+                    if prev_input is not None:
+                        reward = (new_state["playerScore"] - prev_state_vec["playerScore"]) / 100.0
+                        total_reward += reward
+                        current_agent.remember(prev_input, prev_action_idx, reward, input_vector, False)
+                    
+                    prev_input = input_vectors[best_idx]
+                    prev_action_idx = 0
+                    prev_state_vec = new_state
 
                 # Финальная награда
                 winner = self.env.get_game_winner(game_id)

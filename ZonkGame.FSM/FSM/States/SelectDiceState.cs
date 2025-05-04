@@ -41,7 +41,7 @@ namespace ZonkGameCore.FSM.States
             else
             {
                 // Расчет текущего счета игрока, на основании выбранных костей
-                var currentScore = CalculateScore(selectedDices);
+                var currentScore = DicesCombinationsExtension.CalculateScore(selectedDices);
                 _fsm.GameContext.CurrentPlayer.TurnScore += currentScore;
 
                 await _observer.CorrectDiceSelection(selectedDices);
@@ -62,58 +62,6 @@ namespace ZonkGameCore.FSM.States
 
                 return new StateResponse();
             }
-        }
-
-        /// <summary>
-        /// Расчет счета игрока
-        /// </summary>
-        /// <param name="dices">отложенные кости</param>
-        /// <returns>счет за выбранные кости</returns>
-        private static int CalculateScore(IEnumerable<int> dices)
-        {
-            var groupedDices = dices.GroupBy(d => d).ToDictionary(g => g.Key, g => g.Count());
-
-            if (dices.Intersect([1, 2, 3, 4, 5, 6]).Count() == 6)
-            {
-                // Стрит
-                return 1500;
-            }
-            else if (dices.Intersect([1, 2, 3, 4, 5]).Count() >= 5)
-            {
-                // Малый стрит без 6
-                return 500;
-            }
-            else if (dices.Intersect([2, 3, 4, 5, 6]).Count() >= 5)
-            {
-                // Малый стрит без 1
-                return 750;
-            }
-
-            int score = 0;
-
-            // Считаем по группам костей
-            foreach (var kvp in groupedDices)
-            {
-                int dice = kvp.Key;
-                int count = kvp.Value;
-
-                if (count >= 3)
-                {
-                    // Расчет множителя очков, за каждую кость * 2
-                    int multiplier = (int)Math.Pow(2, count - 3);
-                    score += (dice == 1 ? 1000 : dice * 100) * multiplier;
-                    count -= 3;
-                }
-
-                // Считаем все единицы, которых меньше 3х
-                if (dice == 1)
-                    score += count * 100;
-                // Считаем все 5, которых меньше 3х
-                else if (dice == 5)
-                    score += count * 50;
-            }
-
-            return score;
         }
     }
 }

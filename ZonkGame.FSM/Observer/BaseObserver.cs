@@ -1,4 +1,5 @@
-﻿using ZonkGame.DB.GameRepository.Interfaces;
+﻿using ZonkGame.DB.Exceptions;
+using ZonkGame.DB.GameRepository.Interfaces;
 using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameCore.Context;
 using ZonkGameCore.FSM;
@@ -204,16 +205,14 @@ namespace ZonkGameCore.Observer
         /// <summary>
         /// Завершение игры
         /// </summary>
-        public async Task EndGame(string winner, int totalscore)
+        public async Task EndGame(Guid winnerId, string winnerName, int totalscore)
         {
             Info(string.Format(
                 EndGameMessage,
                 totalscore,
-                winner));
+                winnerName));
 
-            await _gameRepository.UpdateGameStateAsync(
-                _context.GameId,
-                nameof(GameOverState));
+            await _gameRepository.SetGameWinner(_context.GameId, winnerId);
         }
 
         /// <summary>

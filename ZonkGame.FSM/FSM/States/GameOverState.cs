@@ -18,7 +18,7 @@ namespace ZonkGameCore.FSM.States
                 ?? throw new InvalidOperationException("Конец игры невозможен без достижения одним из игроков целевого счета");
             winner.IsWinner = true;
 
-            await _observer.EndGame(winner.PlayerName, winner.TotalScore);
+            await _observer.EndGame(winner.PlayerId, winner.PlayerName, winner.TotalScore);
 
             return new StateResponse();
         }

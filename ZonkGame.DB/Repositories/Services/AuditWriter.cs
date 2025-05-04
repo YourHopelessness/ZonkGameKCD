@@ -108,7 +108,7 @@ namespace ZonkGame.DB.Repositories.Services
                 CurrentPlayer = await DbContext.Players.SingleOrDefaultAsync(g => g.Id == currentPlayerId)
                     ?? throw new KeyNotFoundException($"{currentPlayerId}"),
                 RecordTime = DateTime.UtcNow,
-                EventType = EventTypeEnum.ContinueTurn,
+                EventType = EventTypeEnum.EndTurn,
                 RemainingDice = remainingDice,
                 PlayerTurnScore = turnScore,
                 PlayerTotalScore = totalScore,

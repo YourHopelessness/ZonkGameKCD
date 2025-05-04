@@ -93,9 +93,9 @@ namespace ZonkGameApi.Services
             return GetState(game.GameId, game);
         }
 
-        public Task FinishGame(Guid gameId)
+        public async Task FinishGame(Guid gameId)
         {
-            throw new NotImplementedException();
+            await _repository.FinishGameAsync(gameId);
         }
 
         public CurrentStateResponse GetState(Guid roomId, ZonkStateMachine stateMachine)

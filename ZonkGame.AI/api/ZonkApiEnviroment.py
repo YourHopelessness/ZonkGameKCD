@@ -62,6 +62,10 @@ class ZonkEnvironment:
         
         return self.get_game_state(game_id)
 
+    def finish_game(self, game_id):
+        res = requests.put(f"{self.base_url}/Game/FinishGameWithoutWinner", params={"gameId": game_id}, verify=False)
+        res.raise_for_status()
+
     def send_should_continue_response(self, game_id, decision, playerId):
         response = {
             "gameId": game_id,

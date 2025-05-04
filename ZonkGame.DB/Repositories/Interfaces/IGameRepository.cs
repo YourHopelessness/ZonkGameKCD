@@ -19,7 +19,7 @@ namespace ZonkGame.DB.Repositories.Interfaces
         /// <summary> Получение игры по идентификатору </summary>
         Task<Game?> GetGameByIdAsync(Guid gameId);
 
-        /// <summary> Названичение победителя игры </summary>
+        /// <summary> Назначение победителя игры </summary>
         Task SetGameWinner(Guid gameId, Guid playerId);
 
         /// <summary> Получени игрока-связи по их идентификаторам
@@ -41,6 +41,6 @@ namespace ZonkGame.DB.Repositories.Interfaces
         Task<List<Game>> GetAllNotFinishedGames();
 
         /// <summary> Завершить игру без победителя досрочно </summary>
-        Task FinishGame(Guid gameId);
+        Task FinishGameAsync(Guid gameId);
     }
 }
