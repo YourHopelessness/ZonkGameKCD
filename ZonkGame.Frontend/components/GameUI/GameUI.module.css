@@ -1,0 +1,94 @@
+/* components/GameUI.module.css */
+.container {
+  background-color: #E0E0E0;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.headerPanel {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E0E0E0;
+  padding-bottom: 8px;
+}
+
+.scoreBox {
+  text-align: center;
+}
+
+.scoreLabel {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.scoreValue {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #111111;
+}
+
+.roundInfo {
+  text-align: center;
+}
+
+.roundLabel {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.roundValue {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #111111;
+}
+
+.actionsPanel {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #E0E0E0;
+  padding-top: 8px;
+}
+
+.actionButton {
+  padding: 8px;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.actionButton:hover {
+  background-color: #E0E0E0;
+}
+
+.diceContainer {
+  position: relative;
+  margin: 16px auto;      /* добавили вертикальный отступ сверху */
+  width: 60vw;
+  max-width: 400px;
+  height: 60vw;
+  max-height: 400px;
+  overflow: hidden;
+  background-color: #E0E0E0;
+  border-radius: 8px;
+}
+
+.diceWrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}

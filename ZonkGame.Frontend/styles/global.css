@@ -1,0 +1,141 @@
+/* styles.css */
+/* ========== RESET & BASE ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  color: #333333;
+  background-color: #FFFFFF;
+  line-height: 1.5;
+}
+
+/* ========== HEADER ========== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 60px;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E0E0E0;
+}
+.header .logo img {
+  height: 32px;
+}
+.header nav {
+  display: flex;
+  align-items: center;
+}
+.header nav a {
+  margin-right: 16px;
+  text-decoration: none;
+  color: #333333;
+  font-weight: 500;
+  font-size: 14px;
+}
+.header nav .btn {
+  padding: 6px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #CCCCCC;
+  cursor: pointer;
+}
+.header nav .btn.profile {
+  background-color: #FFFFFF;
+  color: #333333;
+  margin-right: 8px;
+}
+.header nav .btn.logout {
+  background-color: #333333;
+  color: #FFFFFF;
+  border: none;
+}
+
+/* ========== HERO ========== */
+.hero {
+  text-align: center;
+  padding: 80px 24px;
+  background-color: #FAFAFA; /* или заменить на ваш паттерн */
+}
+.hero-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #111111;
+}
+.hero-subtitle {
+  font-size: 18px;
+  color: #666666;
+  margin-bottom: 24px;
+}
+.toggle-group {
+  display: inline-flex;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.toggle-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  background-color: #F0F0F0;
+  color: #333333;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+.toggle-button.active {
+  background-color: #333333;
+  color: #FFFFFF;
+}
+
+/* ========== MAIN CONTENT GRID ========== */
+.content {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333333;
+}
+
+/* Leaderboard */
+.leaderboard ul {
+  list-style: none;
+}
+.leaderboard li {
+  padding: 6px 8px;
+  font-size: 14px;
+  color: #333333;
+}
+.leaderboard li.highlight {
+  background-color: #EEEEEE;
+  border-radius: 4px;
+}
+
+/* Recent Games & Active Games */
+.recent-games ul,
+.active-games ul {
+  list-style: none;
+}
+.recent-games li,
+.active-games li {
+  padding: 6px 8px;
+  font-size: 14px;
+  color: #333333;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}
