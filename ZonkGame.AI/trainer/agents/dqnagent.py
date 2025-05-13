@@ -1,18 +1,21 @@
-from agents.config_agent import config_gpu_agents
+from trainer.agents.config_agent import config_gpu_agents
 config_gpu_agents()
 import random
 import logging
 import numpy as np
+import os
 from collections import deque
 from tensorflow import reduce_mean, get_logger
 from tensorflow.keras import layers, models 
 from tensorflow.keras.optimizers import Adam
 
 get_logger().setLevel(logging.ERROR)
+SAVE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "weights")
+os.makedirs(SAVE_PATH, exist_ok=True)
 
 class DQNAgent:
     def __init__(self, state_size=4, epsilon=1.0, epsilon_min=0.1, epsilon_decay=0.995,
-                 gamma=0.95, learning_rate=0.001, combo_output_size=10, saved_model=None):
+                 gamma=0.95, learning_rate=0.001, combo_output_size=10, model_name='agent', use_saved_model=False):
         self.state_size = state_size
         self.combo_output_size = combo_output_size
         self.epsilon = epsilon
@@ -22,8 +25,9 @@ class DQNAgent:
         self.batch_size = 64
         self.memory = deque(maxlen=2000)
         self.model = self._build_model_v2(learning_rate)
-        if saved_model: 
-            self.model.load_weights(saved_model)
+        self.model_name = model_name
+        if use_saved_model: 
+            self.model.load_weights(os.path.join(SAVE_PATH, f"{self.model_name}.keras"))
 
     def _mean_advantage_fn(self, x):
         return reduce_mean(x, axis=1, keepdims=True)
@@ -83,5 +87,5 @@ class DQNAgent:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
-    def save_model(self, name):
-        self.model.save(f"{name}.keras")  
+    def save_model(self):
+        self.model.save(os.path.join(SAVE_PATH, f"{self.model_name}.keras"))

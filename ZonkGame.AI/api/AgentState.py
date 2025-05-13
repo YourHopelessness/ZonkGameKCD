@@ -1,4 +1,4 @@
-from agents.normilizer import Normilize
+from trainer.agents.normilizer import Normilize
 
 class AgentState:
     def __init__(self, state_data: dict):

@@ -17,11 +17,11 @@ class ZonkEnvironment:
         
         raise RuntimeError("Unable to connect to server...")
 
-    def create_game(self, target_score):
+    def create_game(self, target_score, agent1_name, agent2_name):
         payload = {
             "players": [
-                {"name": "agent1", "type": 2},
-                {"name": "agent2", "type": 2}
+                {"name": agent1_name, "type": 2},
+                {"name": agent2_name, "type": 2}
             ],
             "mode": 2,
             "targetScore": target_score

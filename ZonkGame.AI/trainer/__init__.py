@@ -1,3 +1,4 @@
 # =============================================
-# grpc_services/zonk_servicer.py - grpc server for model predictions
+# trainer/zonk_trainer.py - train models
+# trainer/training_plotter.py - helper for plotting
 # ---------------------------------------------

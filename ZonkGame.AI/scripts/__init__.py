@@ -1,3 +1,3 @@
 # =============================================
-# grpc_services/zonk_servicer.py - grpc server for model predictions
+# scripts/entry_point_train.py - script for run a train
 # ---------------------------------------------

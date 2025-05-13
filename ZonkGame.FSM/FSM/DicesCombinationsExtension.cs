@@ -60,6 +60,11 @@
                     results.Add([key]);
             }
 
+
+
+
+
+
             // Стриты и полустриты
             var distinct = new HashSet<int>(diceList);
             if (distinct.SetEquals(fullStreetCombo)) // фулл-стрит
