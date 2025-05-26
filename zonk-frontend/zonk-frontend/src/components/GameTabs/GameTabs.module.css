@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.tabBar {
+  @apply flex border-b border-[#3b4754] px-4 gap-8;
+}
+
+.tab {
+  @apply flex flex-col items-center justify-center pb-[13px] pt-4
+         text-sm font-bold tracking-wide cursor-pointer select-none;
+}
+
+.tabActive {
+  @apply border-b-[3px] border-white text-white;
+}
+
+.tabInactive {
+  @apply border-b-[3px] border-transparent text-[#9cabba];
+}
+
+.panelBox {
+  @apply px-4 py-6;
+}

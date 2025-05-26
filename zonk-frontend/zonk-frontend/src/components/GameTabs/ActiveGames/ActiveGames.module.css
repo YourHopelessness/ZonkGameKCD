@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wrapper {
+  @apply flex flex-col gap-4;
+}
+
+.row {
+  @apply flex items-center justify-between bg-[#232932] rounded-lg p-3;
+}
+
+.title {
+  @apply text-white font-bold;
+}
+
+.badge {
+  @apply text-[#9cabba] text-xs;
+}
+
+.btn {
+  @apply bg-[#3d98f4] text-white rounded px-3 py-1 text-xs font-bold;
+}
+
+.emptyBox {
+  @apply flex flex-col items-center gap-6 py-8;
+}
+
+.emptyImg {
+  @apply w-full max-w-[360px] aspect-video bg-cover bg-center rounded-lg;
+}
+
+.emptyHead {
+  @apply text-white text-lg font-bold text-center;
+}
+
+.emptyText {
+  @apply text-white text-sm text-center;
+}
+
+.emptyBtn {
+  @apply flex min-w-[84px] max-w-[480px] items-center justify-center
+         rounded-lg h-10 px-4 bg-[#283039] text-white text-sm font-bold;
+}

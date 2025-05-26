@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wrapper {
+  @apply flex flex-col gap-12 items-stretch;
+}
+
+.panelHolder {
+  @apply self-center; 
+}
+
+.tabsHolder {
+  @apply self-stretch px-4 sm:px-8 lg:px-16;
+}

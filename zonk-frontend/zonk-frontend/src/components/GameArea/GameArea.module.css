@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.diceRow  { @apply flex gap-3 flex-wrap justify-center; }
+.die      {
+  @apply w-14 h-14 rounded-lg bg-[#232932] text-white text-2xl font-bold
+         flex items-center justify-center cursor-pointer select-none;
+}
+.selected { @apply bg-[#3d98f4]; }
+
+.actionRow { @apply flex gap-4; }
+.rollBtn   { @apply bg-[#3d98f4] text-white font-bold px-6 py-2 rounded-lg; }
+.stayBtn   { @apply bg-[#283039] text-white font-bold px-6 py-2 rounded-lg; }

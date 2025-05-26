@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card  { @apply flex flex-col gap-3 bg-[#232932] rounded-lg p-4; }
+.title { @apply text-white text-lg font-bold mb-2; }
+.row   { @apply flex justify-between items-center bg-[#1b2127] rounded-md px-3 py-2; }
+.name  { @apply text-[#9cabba] font-medium; }
+.active { @apply text-white; }
+.score { @apply text-white font-bold; }

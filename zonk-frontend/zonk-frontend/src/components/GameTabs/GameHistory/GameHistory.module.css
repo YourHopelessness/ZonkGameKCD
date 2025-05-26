@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wrapper {
+  @apply flex flex-col gap-2 w-full max-w-[480px] mx-auto;
+}
+
+.row {
+  @apply flex items-center gap-3 bg-[#232932] rounded-lg p-3;
+}
+
+.avatar {
+  @apply w-10 h-10 rounded-full bg-cover bg-center;
+}
+
+.name {
+  @apply text-white font-bold;
+}
+
+.score {
+  @apply text-[#9cabba] text-xs;
+}
