@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZonkGame.DB.Context;
 using ZonkGame.DB.Entites;
+using ZonkGame.DB.Entites.Zonk;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.GameRepository.Interfaces;
 

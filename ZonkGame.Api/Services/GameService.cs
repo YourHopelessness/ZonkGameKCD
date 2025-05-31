@@ -1,4 +1,4 @@
-﻿using ZonkGame.DB.Entites;
+﻿using ZonkGame.DB.Entites.Zonk;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameAI.RPC;
@@ -6,10 +6,9 @@ using ZonkGameAI.RPC.AIClient;
 using ZonkGameApi.Hubs;
 using ZonkGameApi.Request;
 using ZonkGameApi.Response;
-using ZonkGameCore.Dto;
 using ZonkGameCore.FSM;
-using ZonkGameCore.FSM.States;
 using ZonkGameCore.InputHandler;
+using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 using ZonkGameRedis.Services;
 using ZonkGameSignalR.InputHandler;
@@ -24,7 +23,7 @@ namespace ZonkGameApi.Services
         /// <param name="roomId">Идентификатор комнаты</param>
         /// <param name="stateMachine">Текущая игра</param>
         /// <returns>Состояние игры</returns>
-        Task<StateResponse> MakeStep(Guid roomId, ZonkStateMachine stateMachine);
+        Task<StateResponseModel> MakeStep(Guid roomId, ZonkStateMachine stateMachine);
         /// <summary>
         /// Получение состояния игры
         /// </summary>
@@ -65,7 +64,7 @@ namespace ZonkGameApi.Services
         public async Task<CurrentStateResponse> CreateGame(GameCreationRequest request)
         {
             var game = new ZonkStateMachine(baseObserver);
-            List<InputPlayerDto> players = [];
+            List<InputPlayerModel> players = [];
             foreach (var player in request.Players)
             {
                 var existingPlayer = await _repository.GetPlayerByNameAsync(player.Name)
@@ -76,7 +75,7 @@ namespace ZonkGameApi.Services
                         PlayerType = player.Type
                     });
 
-                players.Add(new InputPlayerDto(
+                players.Add(new InputPlayerModel(
                        existingPlayer.PlayerName,
                        existingPlayer.PlayerType == PlayerTypeEnum.AIAgent
                             ? new GrpcAgentInputHandler(_channel.GetChannel()) // gRPC вызовы с агентом
@@ -122,7 +121,7 @@ namespace ZonkGameApi.Services
             return currentState;
         }
 
-        public async Task<StateResponse> MakeStep(Guid roomId, ZonkStateMachine stateMachine)
+        public async Task<StateResponseModel> MakeStep(Guid roomId, ZonkStateMachine stateMachine)
         {
             var state = await stateMachine.Handle();
             if (state.TransitToNewState)

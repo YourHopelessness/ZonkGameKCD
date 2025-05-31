@@ -1,9 +1,9 @@
-﻿namespace ZonkGameCore.Dto
+﻿namespace ZonkGameCore.Model
 {
     /// <summary>
     /// Модель, которую вовзращают состояния
     /// </summary>
-    public class StateResponse
+    public class StateResponseModel
     {
         /// <summary>
         /// Перешла ли машина в следующее состояние

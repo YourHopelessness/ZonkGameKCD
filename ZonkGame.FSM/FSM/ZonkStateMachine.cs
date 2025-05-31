@@ -1,5 +1,5 @@
 ﻿using ZonkGameCore.Context;
-using ZonkGameCore.Dto;
+using ZonkGameCore.Model;
 using ZonkGameCore.FSM.States;
 using ZonkGameCore.Observer;
 using ZonkGameCore.Utils;
@@ -47,7 +47,7 @@ namespace ZonkGameCore.FSM
         /// <summary>
         /// Конструктор для восстановления состояния игры
         /// </summary>
-        public ZonkStateMachine(BaseObserver logger, StoredFSM fsm)
+        public ZonkStateMachine(BaseObserver logger, StoredFSMModel fsm)
         {
             Observer = logger;
             GameId = fsm.GameId;
@@ -75,7 +75,7 @@ namespace ZonkGameCore.FSM
         /// </summary>
         /// <param name="targetScore">Целевой счет</param>
         /// <param name="players">Игроки</param>
-        public async Task InitStartGame(int targetScore, List<InputPlayerDto> players)
+        public async Task InitStartGame(int targetScore, List<InputPlayerModel> players)
         {
             if (players.Count != 2 || players[0].PlayerId == players[1].PlayerId)
             {
@@ -109,7 +109,7 @@ namespace ZonkGameCore.FSM
         /// <summary>
         /// Переход в следующее состояние
         /// </summary>
-        public async Task<StateResponse> Handle()
+        public async Task<StateResponseModel> Handle()
         {
             try
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZonkGame.DB.Context;
-using ZonkGame.DB.Entites;
+using ZonkGame.DB.Entites.Zonk;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.Exceptions;
 using ZonkGame.DB.Repositories.Interfaces;
@@ -18,7 +18,6 @@ namespace ZonkGame.DB.Repositories.Services
 
             await _dbContext.DisposeAsync();
         }
-
 
         public async Task CreateNewGameAsync(
             Guid gameId,
@@ -141,8 +140,8 @@ namespace ZonkGame.DB.Repositories.Services
             var game = await DbContext.Games
                 .Where(g => g.Id == gameId && g.Winner == null)
                 .FirstOrDefaultAsync() ?? throw new EntityNotFoundException(
-                    "Игра", 
-                    new() { { "Id", gameId.ToString() }, { "незавершенная и без победителя, Winner",  "null" } } );
+                    "Игра",
+                    new() { { "Id", gameId.ToString() }, { "незавершенная и без победителя, Winner", "null" } });
 
             game.EndedAt = DateTime.UtcNow;
 

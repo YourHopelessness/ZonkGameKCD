@@ -2,9 +2,9 @@
 using ZonkGame.DB.Enum;
 using ZonkGameCore.InputParams;
 
-namespace ZonkGameCore.Dto
+namespace ZonkGameCore.Model
 {
-    public class StoredPlayer
+    public class StoredPlayerModel
     {
         /// <summary> Идентификатор игрока </summary>
         public Guid PlayerId { get; set; }
@@ -17,7 +17,7 @@ namespace ZonkGameCore.Dto
         public IInputAsyncHandler PlayerInputHandler { get; set; } = null!;
 
         /// <summary> Имя игрока </summary>
-        public string PlayerName { get; set; }
+        public string PlayerName { get; set; } = null!;
 
         /// <summary> Счет игрока </summary>
         public int TotalScore { get; set; }

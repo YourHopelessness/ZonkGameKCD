@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ZonkGameApi.Request;
 using ZonkGameApi.Services;
-using ZonkGameCore.FSM.States;
 using ZonkGameRedis.Services;
 
 namespace ZonkGameApi.Controllers

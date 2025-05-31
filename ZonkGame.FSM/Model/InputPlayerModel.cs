@@ -1,7 +1,7 @@
 ﻿using ZonkGame.DB.Enum;
 using ZonkGameCore.InputParams;
 
-namespace ZonkGameCore.Dto
+namespace ZonkGameCore.Model
 {
     /// <summary>
     /// Информация о игроке
@@ -9,7 +9,7 @@ namespace ZonkGameCore.Dto
     /// <param name="name">Имя игрока</param>
     /// <param name="inputHandler">Обработчик пользовательского ввода</param>
     /// <param name="id">Идентификатор игрока</param>
-    public class InputPlayerDto(string name, IInputAsyncHandler inputHandler, PlayerTypeEnum playerType, Guid? id)
+    public class InputPlayerModel(string name, IInputAsyncHandler inputHandler, PlayerTypeEnum playerType, Guid? id)
     {
         /// <summary> Идентификатор игрока </summary>
         public Guid PlayerId { get; set; } = id ?? Guid.NewGuid();

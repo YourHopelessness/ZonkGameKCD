@@ -1,4 +1,4 @@
-﻿using ZonkGameCore.Dto;
+﻿using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
@@ -8,7 +8,7 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class AskContinueState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public async override Task<StateResponse> HandleAsync()
+        public async override Task<StateResponseModel> HandleAsync()
         {
             // Вопрос о продолжении игры
             var desision = await _fsm.GameContext.CurrentPlayer.PlayerInputHandler
@@ -16,7 +16,7 @@ namespace ZonkGameCore.FSM.States
 
             if (desision == null)
             {
-                return new StateResponse()
+                return new StateResponseModel()
                 {
                     TransitToNewState = false,
                     NeedContinueDecision = true
@@ -33,7 +33,7 @@ namespace ZonkGameCore.FSM.States
                 _fsm.TransitionTo<EndTurnState>();
             }
 
-            return new StateResponse();
+            return new StateResponseModel();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ZonkGame.DB.Enum;
-using ZonkGameCore.Dto;
+using ZonkGameCore.Model;
 using ZonkGameCore.InputParams;
 
 namespace ZonkGameCore.Context
@@ -9,7 +9,7 @@ namespace ZonkGameCore.Context
     /// </summary>
     public class PlayerState
     {
-        public PlayerState(StoredPlayer storedPlayer)
+        public PlayerState(StoredPlayerModel storedPlayer)
         {
             PlayerId = storedPlayer.PlayerId;
             PlayerName = storedPlayer.PlayerName;
@@ -22,7 +22,7 @@ namespace ZonkGameCore.Context
             TurnsCount = storedPlayer.TurnsCount;
         }
 
-        public PlayerState(InputPlayerDto player)
+        public PlayerState(InputPlayerModel player)
         {
             PlayerId = player.PlayerId;
             PlayerName = player.PlayerName;

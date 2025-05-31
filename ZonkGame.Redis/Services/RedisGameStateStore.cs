@@ -6,10 +6,10 @@ using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameAI.RPC;
 using ZonkGameAI.RPC.AIClient;
 using ZonkGameApi.Hubs;
-using ZonkGameCore.Dto;
 using ZonkGameCore.FSM;
 using ZonkGameCore.FSM.States;
 using ZonkGameCore.InputHandler;
+using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 using ZonkGameRedis.Utils;
 using ZonkGameSignalR.InputHandler;
@@ -22,7 +22,7 @@ namespace ZonkGameRedis.Services
         /// Сохранить состояние игры
         /// </summary>
         /// <param name="gameState">Состояние игры</param>
-        Task SaveGameStateAsync(StoredFSM gameState);
+        Task SaveGameStateAsync(StoredFSMModel gameState);
         /// <summary>
         /// Загрузить состояние игры
         /// </summary>
@@ -55,7 +55,7 @@ namespace ZonkGameRedis.Services
         public async Task<List<Guid>> GetStoredGames(List<Guid> gamesid)
         {
             var redisKeys = gamesid.Select(g => (RedisKey)GetKey(g)).ToArray();
-            RedisValue[] results = 
+            RedisValue[] results =
                 await redisConnection.GetDatabase().StringGetAsync(redisKeys);
 
             var storedGameIds = new List<Guid>();
@@ -71,7 +71,7 @@ namespace ZonkGameRedis.Services
             return storedGameIds;
         }
 
-        public async Task SaveGameStateAsync(StoredFSM gameState)
+        public async Task SaveGameStateAsync(StoredFSMModel gameState)
         {
             var json = StoredFSMSerializer.Serialize(gameState);
             var key = GetKey(gameState.GameId);
@@ -110,9 +110,9 @@ namespace ZonkGameRedis.Services
             await redisConnection.GetDatabase().KeyDeleteAsync(GetKey(gameId));
         }
 
-        public static StoredFSM Map(ZonkStateMachine zfsm)
+        public static StoredFSMModel Map(ZonkStateMachine zfsm)
         {
-            return new StoredFSM
+            return new StoredFSMModel
             {
                 CurrentPlayerId = zfsm.GameContext.CurrentPlayer.PlayerId,
                 CurrentRoll = [.. zfsm.GameContext.CurrentRoll],
@@ -122,7 +122,7 @@ namespace ZonkGameRedis.Services
                     ModesEnum.PvE,
                 IsGameOver = zfsm.IsGameOver,
                 IsGameStarted = zfsm.IsGameStarted,
-                Players = [.. zfsm.GameContext.Players.Select(p => new StoredPlayer
+                Players = [.. zfsm.GameContext.Players.Select(p => new StoredPlayerModel
             {
                 PlayerId = p.PlayerId,
                 PlayerName = p.PlayerName,

@@ -2,27 +2,30 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ZonkGame.DB.Context;
 
 #nullable disable
 
-namespace ZonkGame.DB.Migrations
+namespace ZonkGame.DB.Migrations.Zonk
 {
     [DbContext(typeof(ZonkDbContext))]
-    partial class ZonkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250528123146_RemoveDates")]
+    partial class RemoveDates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.Game", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.Game", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +60,7 @@ namespace ZonkGame.DB.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.GameAudit", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.GameAudit", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,7 +111,7 @@ namespace ZonkGame.DB.Migrations
                     b.ToTable("GameAudits");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.GamePlayer", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.GamePlayer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,21 +135,11 @@ namespace ZonkGame.DB.Migrations
                     b.ToTable("GamePlayers");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.Player", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.Player", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("timezone('utc', now())");
-
-                    b.Property<DateTime>("LastUpdatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("timezone('utc', now())");
 
                     b.Property<string>("PlayerName")
                         .IsRequired()
@@ -156,29 +149,32 @@ namespace ZonkGame.DB.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.ToTable("Players");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.Game", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.Game", b =>
                 {
-                    b.HasOne("ZonkGame.DB.Entites.Player", "Winner")
+                    b.HasOne("ZonkGame.DB.Entites.Zonk.Player", "Winner")
                         .WithMany()
                         .HasForeignKey("WinnerId");
 
                     b.Navigation("Winner");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.GameAudit", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.GameAudit", b =>
                 {
-                    b.HasOne("ZonkGame.DB.Entites.Player", "CurrentPlayer")
+                    b.HasOne("ZonkGame.DB.Entites.Zonk.Player", "CurrentPlayer")
                         .WithMany()
                         .HasForeignKey("CurrentPlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ZonkGame.DB.Entites.Game", "Game")
+                    b.HasOne("ZonkGame.DB.Entites.Zonk.Game", "Game")
                         .WithMany()
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -189,15 +185,15 @@ namespace ZonkGame.DB.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.GamePlayer", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.GamePlayer", b =>
                 {
-                    b.HasOne("ZonkGame.DB.Entites.Game", "Game")
+                    b.HasOne("ZonkGame.DB.Entites.Zonk.Game", "Game")
                         .WithMany("GamePlayers")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ZonkGame.DB.Entites.Player", "Player")
+                    b.HasOne("ZonkGame.DB.Entites.Zonk.Player", "Player")
                         .WithMany("GamePlayers")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -208,12 +204,12 @@ namespace ZonkGame.DB.Migrations
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.Game", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.Game", b =>
                 {
                     b.Navigation("GamePlayers");
                 });
 
-            modelBuilder.Entity("ZonkGame.DB.Entites.Player", b =>
+            modelBuilder.Entity("ZonkGame.DB.Entites.Zonk.Player", b =>
                 {
                     b.Navigation("GamePlayers");
                 });

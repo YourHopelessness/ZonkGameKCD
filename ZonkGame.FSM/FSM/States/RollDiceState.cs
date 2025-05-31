@@ -1,4 +1,4 @@
-﻿using ZonkGameCore.Dto;
+﻿using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
@@ -8,7 +8,7 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class RollDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public override async Task<StateResponse> HandleAsync()
+        public override async Task<StateResponseModel> HandleAsync()
         {
             // Бросок костей
             _fsm.GameContext.CurrentRoll = [.. RollDice()];
@@ -29,7 +29,7 @@ namespace ZonkGameCore.FSM.States
                 _fsm.TransitionTo<SelectDiceState>();
             }
 
-            return new StateResponse();
+            return new StateResponseModel();
         }
 
         private IEnumerable<int> RollDice()

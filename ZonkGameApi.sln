@@ -11,11 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGameCore", "ZonkGame.FS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGameSignalR", "ZonkGame.SignalR\ZonkGameSignalR.csproj", "{EC425118-0C76-6223-9000-5C362B04B947}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGameConsole", "ZonkGame.Console\ZonkGameConsole.csproj", "{497AC89D-963A-1F24-11F1-91888810AAB0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGameRedis", "ZonkGame.Redis\ZonkGameRedis.csproj", "{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGame.DB", "ZonkGame.DB\ZonkGame.DB.csproj", "{468260F7-58F0-4560-825F-F2F1B7BE9975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZonkGame.Auth", "ZonkGame.Auth\ZonkGame.Auth.csproj", "{B5994D95-7282-4EC0-A8A4-864AF8DF89C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,10 +39,6 @@ Global
 		{EC425118-0C76-6223-9000-5C362B04B947}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC425118-0C76-6223-9000-5C362B04B947}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC425118-0C76-6223-9000-5C362B04B947}.Release|Any CPU.Build.0 = Release|Any CPU
-		{497AC89D-963A-1F24-11F1-91888810AAB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{497AC89D-963A-1F24-11F1-91888810AAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{497AC89D-963A-1F24-11F1-91888810AAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{497AC89D-963A-1F24-11F1-91888810AAB0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{785E4A69-E2E9-4B5E-80E5-2A2D97786DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{468260F7-58F0-4560-825F-F2F1B7BE9975}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{468260F7-58F0-4560-825F-F2F1B7BE9975}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{468260F7-58F0-4560-825F-F2F1B7BE9975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5994D95-7282-4EC0-A8A4-864AF8DF89C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5994D95-7282-4EC0-A8A4-864AF8DF89C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5994D95-7282-4EC0-A8A4-864AF8DF89C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5994D95-7282-4EC0-A8A4-864AF8DF89C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

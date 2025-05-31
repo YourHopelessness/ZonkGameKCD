@@ -1,4 +1,4 @@
-﻿using ZonkGameCore.Dto;
+﻿using ZonkGameCore.Model;
 
 namespace ZonkGameCore.Context
 {
@@ -9,7 +9,7 @@ namespace ZonkGameCore.Context
     {
         public GameContext(
             int targetScore, 
-            List<InputPlayerDto> players,
+            List<InputPlayerModel> players,
             Guid gameId)
         {
             Players = [new(players[0]), new(players[1])];

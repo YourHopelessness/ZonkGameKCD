@@ -1,4 +1,4 @@
-﻿using ZonkGameCore.Dto;
+﻿using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
@@ -8,7 +8,7 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class SelectDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public async override Task<StateResponse> HandleAsync()
+        public async override Task<StateResponseModel> HandleAsync()
         {
             // Игрок выбирает кости среди выпавших
             var selectedDices = await _fsm.GameContext
@@ -21,7 +21,7 @@ namespace ZonkGameCore.FSM.States
 
             if (selectedDices == null)
             {
-                return new StateResponse
+                return new StateResponseModel
                 {
                     TransitToNewState = false,
                     NeedDiceSelection = true,
@@ -33,7 +33,7 @@ namespace ZonkGameCore.FSM.States
             {
                 await _observer.IncorrectDiceSelection(selectedDices);
 
-                return new StateResponse()
+                return new StateResponseModel()
                 {
                     TransitToNewState = false
                 };
@@ -60,7 +60,7 @@ namespace ZonkGameCore.FSM.States
 
                 _fsm.TransitionTo<AskContinueState>();
 
-                return new StateResponse();
+                return new StateResponseModel();
             }
         }
     }

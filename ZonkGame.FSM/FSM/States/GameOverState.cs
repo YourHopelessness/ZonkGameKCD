@@ -1,4 +1,4 @@
-﻿using ZonkGameCore.Dto;
+﻿using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
@@ -8,7 +8,7 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class GameOverState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public override async Task<StateResponse> HandleAsync()
+        public override async Task<StateResponseModel> HandleAsync()
         {
             // Флаг конца игры
             _fsm.SetGameOver();
@@ -20,7 +20,7 @@ namespace ZonkGameCore.FSM.States
 
             await _observer.EndGame(winner.PlayerId, winner.PlayerName, winner.TotalScore);
 
-            return new StateResponse();
+            return new StateResponseModel();
         }
     }
 }

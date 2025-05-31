@@ -1,5 +1,4 @@
-﻿using ZonkGame.DB.Context;
-using ZonkGameCore.Dto;
+﻿using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
@@ -9,7 +8,7 @@ namespace ZonkGameCore.FSM.States
     /// </summary>
     public class EndTurnState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
-        public override async Task<StateResponse> HandleAsync()
+        public override async Task<StateResponseModel> HandleAsync()
         {
             // Плюсуем очки за ход в общий счет игрока
             _fsm.GameContext.CurrentPlayer.AddingTotalScore();
@@ -24,7 +23,7 @@ namespace ZonkGameCore.FSM.States
                     // Игра окончена, кто-то из игроков достиг целевого счета
                     _fsm.TransitionTo<GameOverState>();
 
-                    return new StateResponse();
+                    return new StateResponseModel();
                 }
                 _fsm.RoundCount++;
             }
@@ -33,7 +32,7 @@ namespace ZonkGameCore.FSM.States
             _fsm.GameContext.NextPlayer();
             _fsm.TransitionTo<StartTurnState>();
 
-            return new StateResponse();
+            return new StateResponseModel();
         }
     }
 }

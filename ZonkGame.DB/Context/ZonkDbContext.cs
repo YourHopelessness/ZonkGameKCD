@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Data;
+using System.Runtime.InteropServices;
 using System.Text.Json;
-using ZonkGame.DB.Entites;
+using ZonkGame.DB.Entites.Zonk;
 
 namespace ZonkGame.DB.Context
 {
@@ -15,10 +16,10 @@ namespace ZonkGame.DB.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Game properties
-            modelBuilder.Entity<GamePlayer>()
-               .HasOne(g => g.Game)
-               .WithMany(g => g.GamePlayers)
-               .HasForeignKey("GameId")
+            modelBuilder.Entity<Game>()
+               .HasMany(g => g.GamePlayers)
+               .WithOne(g => g.Game)
+               .HasForeignKey("game_id")
                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Game>()
@@ -37,7 +38,7 @@ namespace ZonkGame.DB.Context
             modelBuilder.Entity<Game>()
                 .HasOne(g => g.Winner)
                 .WithMany()
-                .HasForeignKey("WinnerId");
+                .HasForeignKey("winner_id");
             #endregion
 
             #region Player properties
@@ -46,19 +47,9 @@ namespace ZonkGame.DB.Context
                 .HasConversion<string>();
 
             modelBuilder.Entity<Player>()
-                .Property(g => g.CreatedAt)
-                .HasConversion(typeof(DateTime))
-                .HasDefaultValueSql("timezone('utc', now())");
-
-            modelBuilder.Entity<Player>()
-                .Property(g => g.LastUpdatedAt)
-                .HasConversion(typeof(DateTime))
-                .HasDefaultValueSql("timezone('utc', now())");
-
-            modelBuilder.Entity<GamePlayer>()
-               .HasOne(g => g.Player)
-               .WithMany(g => g.GamePlayers)
-               .HasForeignKey("PlayerId")
+               .HasMany(g => g.GamePlayers)
+               .WithOne(g => g.Player)
+               .HasForeignKey("player_id")
                .OnDelete(DeleteBehavior.Cascade);
             #endregion
 
@@ -88,16 +79,16 @@ namespace ZonkGame.DB.Context
 
             modelBuilder.Entity<GameAudit>()
                .Property(g => g.RecordTime)
-               .HasConversion(typeof(DateTime))
+               .HasConversion<DateTime>()
                .HasDefaultValueSql("timezone('utc', now())");
 
             modelBuilder.Entity<GameAudit>()
                 .HasOne(g => g.Game)
-                .WithMany();
+                .WithMany(g => g.GameAudit);
 
             modelBuilder.Entity<GameAudit>()
                 .HasOne(g => g.CurrentPlayer)
-                .WithMany();
+                .WithMany(g => g.GameAudit);
             #endregion
         }
     }

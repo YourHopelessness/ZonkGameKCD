@@ -1,5 +1,8 @@
 ﻿namespace ZonkGame.DB.Exceptions
 {
+    /// <summary>
+    /// Исключение, выбрасываемое при отсутствии сущности в базе данных
+    /// </summary>
     public class EntityNotFoundException : Exception
     {
         public string Description { get; set; }

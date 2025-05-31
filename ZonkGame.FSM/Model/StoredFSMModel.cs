@@ -1,11 +1,11 @@
 ﻿using ZonkGame.DB.Enum;
 
-namespace ZonkGameCore.Dto
+namespace ZonkGameCore.Model
 {
     /// <summary>
     /// Хранит состояние игры
     /// </summary>
-    public class StoredFSM
+    public class StoredFSMModel
     {
         /// <summary> Идентификатор игры </summary>
         public Guid GameId { get; set; }
@@ -17,7 +17,7 @@ namespace ZonkGameCore.Dto
         public Guid CurrentPlayerId { get; set; }
 
         /// <summary> Игроки </summary>
-        public List<StoredPlayer> Players { get; set; } = new();
+        public List<StoredPlayerModel> Players { get; set; } = new();
 
         /// <summary> Текущий бросок </summary>
         public List<int> CurrentRoll { get; set; } = new();

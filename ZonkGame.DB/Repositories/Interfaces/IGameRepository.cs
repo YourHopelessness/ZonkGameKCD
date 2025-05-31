@@ -1,4 +1,4 @@
-﻿using ZonkGame.DB.Entites;
+﻿using ZonkGame.DB.Entites.Zonk;
 using ZonkGame.DB.Enum;
 
 namespace ZonkGame.DB.Repositories.Interfaces

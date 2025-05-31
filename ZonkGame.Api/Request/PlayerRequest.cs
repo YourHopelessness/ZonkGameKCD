@@ -8,14 +8,11 @@ namespace ZonkGameApi.Request
     /// </summary>
     public class PlayerRequest
     {
-        /// <summary>
-        /// Тип игрока
-        /// </summary>
+        /// <summary> Тип игрока </summary>
         [Required, EnumDataType(typeof(PlayerTypeEnum))]
         public PlayerTypeEnum Type { get; set; }
-        /// <summary>
-        /// Имя игрока
-        /// </summary>
+
+        /// <summary> Имя игрока </summary>
         [Required, MinLength(3), MaxLength(255)]
         public required string Name { get; set; }
     }

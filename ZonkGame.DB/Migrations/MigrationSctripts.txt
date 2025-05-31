@@ -1,0 +1,8 @@
+﻿
+# Скрипт для миграции для Auth
+Add-Migration MigrationName -Context AuthContext -OutputDir Migrations\Auth
+Update-Database -Context AuthContext
+
+# Скрипт для миграции для ZonkGame
+Add-Migration MigrationName -Context ZonkDbContext -OutputDir Migrations\Zonk
+Update-Database -Context ZonkDbContext

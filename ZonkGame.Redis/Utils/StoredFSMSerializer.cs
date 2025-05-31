@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using ZonkGameCore.Dto;
+using ZonkGameCore.Model;
 
 namespace ZonkGameRedis.Utils
 {
@@ -14,14 +14,14 @@ namespace ZonkGameRedis.Utils
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        public static string Serialize(StoredFSM state)
+        public static string Serialize(StoredFSMModel state)
         {
             return JsonSerializer.Serialize(state, Options);
         }
 
-        public static StoredFSM Deserialize(string json)
+        public static StoredFSMModel Deserialize(string json)
         {
-            return JsonSerializer.Deserialize<StoredFSM>(json, Options)!;
+            return JsonSerializer.Deserialize<StoredFSMModel>(json, Options)!;
         }
     }
 }
