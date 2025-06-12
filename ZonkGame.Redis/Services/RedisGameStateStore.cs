@@ -88,10 +88,18 @@ namespace ZonkGameRedis.Services
             var json = await redisConnection.GetDatabase().StringGetAsync(GetKey(gameId));
             var game = await repository.GetGameByIdAsync(gameId);
 
-            var desirialized = json.HasValue || game != null ? StoredFSMSerializer.Deserialize(json!)
-                : throw new EntityNotFoundException("Игра", new() { { "GameId", gameId.ToString() } });
+            if (!json.HasValue)
+            {
+                if (game == null)
+                {
+                    throw new EntityNotFoundException("Игра", new() { { "GameId", gameId.ToString() } });
+                }
 
-            desirialized.IsGameOver = game.EndedAt != null || game.Winner != null;
+                return null;
+            }
+
+            var desirialized = StoredFSMSerializer.Deserialize(json!);
+            desirialized.IsGameOver = game?.EndedAt != null || game?.Winner != null;
 
             desirialized.Players.ForEach(p =>
             {
