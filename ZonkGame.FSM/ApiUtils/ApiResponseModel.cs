@@ -9,6 +9,8 @@ namespace ZonkGameCore.ApiUtils
     {
         public HttpStatusCode StatusCode { get; set; }
 
+        public Guid? LogId { get; set; }
+
         public object? Response { get; set; }
     }
 }

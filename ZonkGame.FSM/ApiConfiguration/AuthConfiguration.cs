@@ -1,11 +1,20 @@
-﻿namespace ZonkGame.Auth.Models
+﻿using ZonkGame.DB.Enum;
+
+namespace ZonkGameCore.ApiConfiguration
 {
     /// <summary>
     /// Конфигурация аутентификации
     /// </summary>
     public class AuthConfiguration
     {
-        public static string Position = "AuthConfiguration";
+        /// <summary> Позиция в конфигурации, используется для идентификации в системе </summary>
+        public const string Position = "AuthConfiguration";
+
+        /// <summary> Строка подключения к базе данных аутентификации </summary>
+        public const string ConnectionString = "AuthDbConnection";
+
+        /// <summary> Маршрут API для аутентификации </summary>
+        public const ApiEnumRoute ApiRoute = ApiEnumRoute.AuthApi;
 
         /// <summary> Строка подключения к базе данных аутентификации </summary>
         public string AuthDbConnection { get; set; } = null!;

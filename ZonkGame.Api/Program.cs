@@ -1,15 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using ZonkGame.DB.Context;
+using ZonkGame.DB.Enum;
 using ZonkGame.DB.GameRepository.Interfaces;
 using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGame.DB.Repositories.Services;
 using ZonkGameAI.RPC;
 using ZonkGameApi.Hubs;
 using ZonkGameApi.Services;
+using ZonkGameCore.ApiConfiguration;
 using ZonkGameCore.ApiUtils;
+using ZonkGameCore.ApiUtils.ApiClients;
+using ZonkGameCore.ApiUtils.Authorization;
 using ZonkGameCore.Observer;
-using ZonkGameCore.Utils;
 using ZonkGameCore.Utils.Resource;
 using ZonkGameRedis;
 using ZonkGameRedis.Services;
@@ -20,8 +23,18 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Конфигурация приложения
         builder.Services.Configure<GameZonkConfiguration>(
             builder.Configuration.GetSection(GameZonkConfiguration.Position));
+
+        // Конфигурация доступа к внешним приложениям
+        builder.Services.Configure<ExternalApiConfiguration>(
+            builder.Configuration.GetSection(ExternalApiConfiguration.Position));
+
+        // Добавляем авторизацию
+        builder.Services.AddControllers(opt => opt.Filters.Add<ZonkAuthorizeFilter>());
+        builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
+        ZonkAuthorizeFilter.ApiEnumRoute = ApiEnumRoute.ZonkBaseGameApi;
 
         // Добавляем Grpc
         builder.Services.AddGrpc();
@@ -82,7 +95,7 @@ internal class Program
         await ResourceUpdater.UpdateResources(
             Assembly.GetExecutingAssembly(),
             app.Services, 
-            ZonkGame.DB.Enum.ApiEnumRoute.ZonkBaseGameApi);
+            ApiEnumRoute.ZonkBaseGameApi);
 
         app.Run();
     }

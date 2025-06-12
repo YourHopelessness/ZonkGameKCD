@@ -76,17 +76,24 @@ namespace ZonkGameCore.ApiUtils
                 status = ex.StatusCode;
                 resultData = ex.Errors;
             }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogWarning(ex, "RequestErrorException: {LogId}", logId);
+                status = ex.StatusCode ?? HttpStatusCode.InternalServerError;
+                resultData = ex.Message;
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled Exception: {LogId}", logId);
                 status = HttpStatusCode.InternalServerError;
-                resultData = $"Unhandled exception occurred. See log ID: {logId}";
+                resultData = $"Unhandled exception occurred.";
             }
 
             var wrapped = new ApiResponseModel
             {
                 StatusCode = status,
-                Response = resultData
+                Response = resultData,
+                LogId = logId
             };
 
             context.Response.Headers.ContentLength = null;

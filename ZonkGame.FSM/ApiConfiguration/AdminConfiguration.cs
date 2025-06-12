@@ -1,4 +1,6 @@
-﻿namespace ZonkGameCore.Utils
+﻿using ZonkGame.DB.Enum;
+
+namespace ZonkGameCore.ApiConfiguration
 {
     /// <summary>
     /// Конфигурация администратора
@@ -6,7 +8,7 @@
     public class AdminConfiguration
     {
         /// <summary> Позиция в конфигурации, используется для идентификации в системе </summary>
-        public static string Position { get; set; } = "AdminConfiguration";
+        public const string Position = "AdminConfiguration";
 
         /// <summary> Имя разрешения, используется для идентификации в системе </summary>
         public string AdminPermissionName { get; set; } = null!;

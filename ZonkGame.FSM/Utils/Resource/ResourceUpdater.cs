@@ -5,6 +5,7 @@ using ZonkGame.DB.Context;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGame.DB.Repositories.Services;
+using ZonkGameCore.ApiConfiguration;
 
 namespace ZonkGameCore.Utils.Resource
 {

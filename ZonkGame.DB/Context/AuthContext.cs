@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 using ZonkGame.DB.Entites.Auth;
+using ZonkGame.DB.Entites.Auth.View;
 using ZonkGame.DB.Entites.Zonk;
 
 namespace ZonkGame.DB.Context
@@ -14,6 +15,7 @@ namespace ZonkGame.DB.Context
         public DbSet<UserRole> UserRoles { get; set; } = default!;
         public DbSet<ApiResource> ApiResource { get; set; } = default!;
         public DbSet<ApiResourcePermission> ApiResourcePermissions { get; set; } = default!;
+        public DbSet<ResourcePermissionView> ResourcePermissionView { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -83,6 +85,10 @@ namespace ZonkGame.DB.Context
             builder.Entity<ApiResource>()
                    .Property(g => g.ApiName)
                    .HasConversion<string>();
+
+            builder.Entity<ResourcePermissionView>()
+                   .HasNoKey()
+                   .ToView("resource_permission_view");
         }
     }
 }

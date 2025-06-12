@@ -38,17 +38,8 @@ namespace ZonkGame.Auth.Service.Services
                 TokenValidationParameters.DefaultAuthenticationType,
                 Claims.Name, Claims.Role);
 
-            var roleNames = await permissionService.GetRoleNames(user.Id);
-
             identity.AddClaim(Claims.Subject, user.Id.ToString());
             identity.AddClaim(Claims.Name, user.UserName ?? string.Empty);
-            foreach (var roleName in roleNames)
-            {
-                if (!string.IsNullOrEmpty(roleName))
-                {
-                    identity.AddClaim(Claims.Role, roleName);
-                }
-            }
 
             var principal = new ClaimsPrincipal(identity);
 

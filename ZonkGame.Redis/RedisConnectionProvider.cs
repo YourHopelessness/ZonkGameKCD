@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using StackExchange.Redis;
-using ZonkGameCore.Utils;
+using ZonkGameCore.ApiConfiguration;
 
 namespace ZonkGameRedis
 {

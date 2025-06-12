@@ -6,9 +6,13 @@ using ZonkGame.Auth.Service.Interfaces;
 using ZonkGame.Auth.Service.Services;
 using ZonkGame.DB.Context;
 using ZonkGame.DB.Entites.Auth;
+using ZonkGame.DB.Enum;
 using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGame.DB.Repositories.Services;
+using ZonkGameCore.ApiConfiguration;
 using ZonkGameCore.ApiUtils;
+using ZonkGameCore.ApiUtils.ApiClients;
+using ZonkGameCore.ApiUtils.Authorization;
 using ZonkGameCore.Utils.Resource;
 
 internal class Program
@@ -21,10 +25,18 @@ internal class Program
             builder.Services,
             builder.Configuration
                    .GetSection(AuthConfiguration.Position)
-                   .GetSection("AuthDbConnection").Value
-            ?? throw new ArgumentNullException("AuthDbConnection"));
+                   .GetConnectionString(AuthConfiguration.ConnectionString)
+            ?? throw new ArgumentNullException(AuthConfiguration.Position + AuthConfiguration.ConnectionString));
 
-        builder.Services.AddControllers();
+        // Конфигурация доступа к внешним приложениям
+        builder.Services.Configure<ExternalApiConfiguration>(
+            builder.Configuration.GetSection(ExternalApiConfiguration.Position));
+
+        builder.Services.AddControllers(opt => opt.Filters.Add<ZonkAuthorizeFilter>());
+        builder.Services.AddHttpClient();
+        builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
+        ZonkAuthorizeFilter.ApiEnumRoute = ApiEnumRoute.AuthApi;
+
         builder.Services.AddOpenApi();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

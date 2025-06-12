@@ -2,7 +2,7 @@
 using Grpc.Net.Client;
 using Microsoft.Extensions.Options;
 using System.Threading.Channels;
-using ZonkGameCore.Utils;
+using ZonkGameCore.ApiConfiguration;
 
 namespace ZonkGameAI.RPC
 {

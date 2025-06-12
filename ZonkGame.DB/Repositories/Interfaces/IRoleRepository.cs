@@ -1,4 +1,5 @@
 ﻿using ZonkGame.DB.Entites.Auth;
+using ZonkGame.DB.Enum;
 using ZonkGame.DB.Models;
 
 namespace ZonkGame.DB.Repositories.Interfaces
@@ -41,7 +42,7 @@ namespace ZonkGame.DB.Repositories.Interfaces
         /// Получает все роли и их права доступа.
         /// </summary>
         /// <returns></returns>
-        Task<List<ApiResoursePermission>> GetResourcesAndPermissions();
+        Task<List<ApiResoursePermissionModel>> GetResourcesAndPermissions(ApiEnumRoute api);
         /// <summary>
         /// Получает все права доступа к ресурсам API.
         /// </summary>

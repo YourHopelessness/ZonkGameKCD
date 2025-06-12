@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using OpenIddict.Server.AspNetCore;
-using Swashbuckle.AspNetCore.SwaggerGen;
+﻿using Microsoft.AspNetCore.Mvc;
 using ZonkGame.Auth.Models.Response;
 using ZonkGame.Auth.Service.Interfaces;
 using ZonkGame.DB.Enum;
@@ -18,8 +14,8 @@ namespace ZonkGame.Auth.Controllers
         /// </summary>
         /// <returns> Карта всех разрешений </returns>
         [HttpGet("[action]")]
-        public async Task<List<PermissionMapResponse>> GetAllResourceAndPermissions()
-            => await adminService.GetAllResourceAndPermissionsAsync();
+        public async Task<List<PermissionMapResponse>> GetAllResourceAndPermissions([FromQuery] ApiEnumRoute api)
+            => await adminService.GetAllResourceAndPermissionsAsync(api);
 
         /// <summary>
         /// Получить список ролей
@@ -36,8 +32,8 @@ namespace ZonkGame.Auth.Controllers
         [HttpGet("[action]")]
         public Dictionary<ApiEnumRoute, string> GetApiNames()
             => new()
-            { 
-                [ApiEnumRoute.AuthApi] = "Авторизация и упраление аккаунтом" ,
+            {
+                [ApiEnumRoute.AuthApi] = "Авторизация и упраление аккаунтом",
                 [ApiEnumRoute.ZonkBaseGameApi] = "Игра"
             };
     }

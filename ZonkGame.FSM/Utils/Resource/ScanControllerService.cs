@@ -6,6 +6,7 @@ using System.Security;
 using ZonkGame.DB.Entites.Auth;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.Repositories.Interfaces;
+using ZonkGameCore.ApiConfiguration;
 
 namespace ZonkGameCore.Utils.Resource
 {
@@ -49,7 +50,7 @@ namespace ZonkGameCore.Utils.Resource
                             Controller = controllerName,
                             Action = method.Name,
                             HttpMethod = httpAttr.HttpMethods.First(),
-                            Route = httpAttr.Template ?? $"{controllerName}/{method.Name}",
+                            Route = $"/{controllerName}/{method.Name}",
                             ApiName = api
                         });
                     }

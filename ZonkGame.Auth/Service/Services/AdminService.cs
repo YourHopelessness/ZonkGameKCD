@@ -1,15 +1,15 @@
 ﻿using ZonkGame.Auth.Models.Response;
 using ZonkGame.Auth.Service.Interfaces;
-using ZonkGame.DB.Entites.Auth;
+using ZonkGame.DB.Enum;
 using ZonkGame.DB.Repositories.Interfaces;
 
 namespace ZonkGame.Auth.Service.Services
 {
     public class AdminService(IRoleRepository roleRepository) : IAdminService
     {
-        public async Task<List<PermissionMapResponse>> GetAllResourceAndPermissionsAsync()
+        public async Task<List<PermissionMapResponse>> GetAllResourceAndPermissionsAsync(ApiEnumRoute api)
         {
-            var permissionsRoles = await roleRepository.GetResourcesAndPermissions();
+            var permissionsRoles = await roleRepository.GetResourcesAndPermissions(api);
 
             return [.. permissionsRoles.Select(x => new PermissionMapResponse
             {
@@ -21,10 +21,10 @@ namespace ZonkGame.Auth.Service.Services
                 },
                 Permissions = [.. x.Permissions.Select(p => new PermissionResponse
                 {
-                    PermissionId = p.Id,
-                    PermissionName = p.Name,
-                    PermissionDescription = p.Description,
-                    IsChecked = true
+                    PermissionId = p.Permission.Id,
+                    PermissionName = p.Permission.Name,
+                    PermissionDescription = p.Permission.Description,
+                    IsChecked = p.IsChecked
                 })]
             })];
         }

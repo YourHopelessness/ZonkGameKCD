@@ -1,4 +1,6 @@
-﻿namespace ZonkGame.Auth.Service.Interfaces
+﻿using ZonkGameCore.ApiUtils.Requests;
+
+namespace ZonkGame.Auth.Service.Interfaces
 {
     /// <summary>
     /// Сервис для работы с ролями и правами доступа.
@@ -24,5 +26,11 @@
         /// <param name="userId">Id пользователя</param>
         /// <returns>Роль по-умолчанию</returns>
         Task SetDefaultRole(Guid userId);
+        /// <summary>
+        /// Есть ли доступ у пользователя
+        /// </summary>
+        /// <param name="hasAccessRequest"></param>
+        /// <returns></returns>
+        Task<bool> HasAccessAsync(HasAccessRequest hasAccessRequest);
     }
 }
