@@ -1,40 +1,40 @@
-﻿using ZonkGame.DB.Enum;
+using ZonkGame.DB.Enum;
 
 namespace ZonkGameCore.Model
 {
     /// <summary>
-    /// Хранит состояние игры
+    /// Keeps the state of the game
     /// </summary>
     public class StoredFSMModel
     {
-        /// <summary> Идентификатор игры </summary>
+        /// <summary>Identifier of the game</summary>
         public Guid GameId { get; set; }
 
-        /// <summary> Название состояния </summary>
+        /// <summary>The name of the state</summary>
         public string StateName { get; set; } = string.Empty;
 
-        /// <summary> Идентификатор игрока </summary>
+        /// <summary>The player identifier</summary>
         public Guid CurrentPlayerId { get; set; }
 
-        /// <summary> Игроки </summary>
+        /// <summary>Players</summary>
         public List<StoredPlayerModel> Players { get; set; } = new();
 
-        /// <summary> Текущий бросок </summary>
+        /// <summary>The current throw</summary>
         public List<int> CurrentRoll { get; set; } = new();
 
-        /// <summary> Окончена ли игра </summary>
+        /// <summary>Is the game finished</summary>
         public bool IsGameOver { get; set; } = false;
 
-        /// <summary> Началась ли игра </summary>
+        /// <summary>Whether the game has begun</summary>
         public bool IsGameStarted { get; set; } = false;
 
-        /// <summary> Целевой счет </summary>
+        /// <summary>Target account</summary>
         public int TargetScore { get; set; } = 0;
 
-        /// <summary> Название режима игры </summary>
+        /// <summary>The name of the game mode</summary>
         public ModesEnum GameMode { get; set; } = ModesEnum.PvP;
 
-        /// <summary> Количество раундов в игре </summary>
+        /// <summary>The number of rounds in the game</summary>
         public int RoundCount { get; set; } = 0;
     }
 }

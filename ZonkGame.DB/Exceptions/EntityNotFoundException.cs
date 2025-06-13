@@ -1,7 +1,7 @@
-﻿namespace ZonkGame.DB.Exceptions
+namespace ZonkGame.DB.Exceptions
 {
     /// <summary>
-    /// Исключение, выбрасываемое при отсутствии сущности в базе данных
+    /// The exception thrown out in the absence of an essence in the database
     /// </summary>
     public class EntityNotFoundException : Exception
     {
@@ -9,8 +9,8 @@
 
         public EntityNotFoundException(string entityName, Dictionary<string, string?> parametrs) : base()
         {
-            Description = $"Сущность {entityName} с параметр" 
-                + (parametrs.Count < 2 ? "ом " : "ами ")
+            Description = $"Essence {entityName} with parameter" 
+                + (parametrs.Count < 2 ? "Ohm" : "Ami")
                 + $"{string.Join(", ", parametrs.Select(x => $"{x.Key} = {x.Value}"))}";
         }
     }

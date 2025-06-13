@@ -1,28 +1,28 @@
-﻿using ZonkGame.DB.Enum;
+using ZonkGame.DB.Enum;
 
 namespace ZonkGameCore.ApiConfiguration
 {
     /// <summary>
-    /// Конфигурация аутентификации
+    /// Authentication configuration
     /// </summary>
     public class AuthConfiguration
     {
-        /// <summary> Позиция в конфигурации, используется для идентификации в системе </summary>
+        /// <summary>The position in the configuration is used for identification in the system</summary>
         public const string Position = "AuthConfiguration";
 
-        /// <summary> Строка подключения к базе данных аутентификации </summary>
+        /// <summary>Connection string to the authentication database</summary>
         public const string ConnectionString = "AuthDbConnection";
 
-        /// <summary> Маршрут API для аутентификации </summary>
+        /// <summary>API route for authentication</summary>
         public const ApiEnumRoute ApiRoute = ApiEnumRoute.AuthApi;
 
-        /// <summary> Строка подключения к базе данных аутентификации </summary>
+        /// <summary>Connection string to the authentication database</summary>
         public string AuthDbConnection { get; set; } = null!;
 
-        /// <summary> Токен для агентов </summary>
+        /// <summary>Token for agents</summary>
         public string AgentToken { get; set; } = "AuthDbConnection";
 
-        /// <summary> Роль для всех сохданных пользователей по умолчанию </summary>
+        /// <summary>The role for all the obscene users by default</summary>
         public string DefaultRoleName { get; set; } = "Player";
     }
 }

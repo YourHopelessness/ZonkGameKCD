@@ -1,4 +1,4 @@
-﻿using AspNet.Security.OpenIdConnect.Primitives;
+using AspNet.Security.OpenIdConnect.Primitives;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,7 @@ namespace ZonkGame.Auth.Controllers
         IPermissionService permissionService) : ControllerBase
     {
         /// <summary>
-        /// Аутентификация пользователя по имени пользователя и паролю
+        /// User authentication named User and Password
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -32,7 +32,7 @@ namespace ZonkGame.Auth.Controllers
         }
 
         /// <summary>
-        /// Регистрация нового пользователя
+        /// Registration of a new user
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -46,9 +46,9 @@ namespace ZonkGame.Auth.Controllers
         }
 
         /// <summary>
-        /// Проверка на наличие доступа у пользователя к запрашиваему ресурсу
+        /// Check for the availability of access from the user to request a resource
         /// </summary>
-        /// <param name="hasAccessRequest">Параметры запроса</param>
+        /// <param name="hasAccessRequest">Request parameters</param>
         [HttpGet("hasAccess")]
         [AllowAnonymous]
         public async Task<bool> HasAccess([FromQuery] HasAccessRequest hasAccessRequest)
@@ -59,7 +59,7 @@ namespace ZonkGame.Auth.Controllers
         }
 
         /// <summary>
-        /// Выйти из аккаунта
+        /// Leave the account
         /// </summary>
         /// <returns></returns>
         [HttpPost("logout")]

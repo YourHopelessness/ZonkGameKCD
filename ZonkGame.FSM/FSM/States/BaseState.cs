@@ -1,10 +1,10 @@
-﻿using ZonkGameCore.Model;
+using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
 {
     /// <summary>
-    /// Базовый класс состояния
+    /// The basic class of condition
     /// </summary>
     public abstract class BaseGameState
     {
@@ -20,9 +20,9 @@ namespace ZonkGameCore.FSM.States
         }
 
         /// <summary>
-        /// Обработка состояния
+        /// Condition processing
         /// </summary>
-        /// <returns>Перешла ли машина в новое состояние</returns>
+        /// <returns>Whether the car has passed into a new state</returns>
         public abstract Task<StateResponseModel> HandleAsync();
     }
 }

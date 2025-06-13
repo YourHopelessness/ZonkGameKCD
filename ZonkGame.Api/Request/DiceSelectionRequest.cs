@@ -1,14 +1,14 @@
-﻿namespace ZonkGameApi.Request
+namespace ZonkGameApi.Request
 {
     public class DiceSelectionRequest
     {
-        /// <summary> Игра </summary>
+        /// <summary>Game</summary>
         public Guid GameId { get; set; }
 
-        /// <summary> Игрок </summary>
+        /// <summary>Player</summary>
         public Guid PlayerId { get; set; }
 
-        /// <summary> Отложенные кости </summary>
+        /// <summary>Delayed bones</summary>
         public List<int> SelectedDice { get; set; }
     }
 }

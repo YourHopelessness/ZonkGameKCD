@@ -1,15 +1,15 @@
-﻿namespace ZonkGame.DB.Enum
+namespace ZonkGame.DB.Enum
 {
     /// <summary>
-    /// Тип игрока
+    /// The type of player
     /// </summary>
     public enum PlayerTypeEnum
     {
-        /// <summary> Игрок - человек</summary>
+        /// <summary>The player is a man</summary>
         RealPlayer,
-        /// <summary> Игрок - ИИ</summary>
+        /// <summary>Player - AI</summary>
         AIAgent,
-        /// <summary> Игрок - ИИ с использованием Rest</summary>
+        /// <summary>Player - AI using REST</summary>
         AITraining,
     }
 }

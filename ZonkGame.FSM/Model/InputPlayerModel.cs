@@ -1,26 +1,26 @@
-﻿using ZonkGame.DB.Enum;
+using ZonkGame.DB.Enum;
 using ZonkGameCore.InputParams;
 
 namespace ZonkGameCore.Model
 {
     /// <summary>
-    /// Информация о игроке
+    /// Information about the player
     /// </summary>
-    /// <param name="name">Имя игрока</param>
-    /// <param name="inputHandler">Обработчик пользовательского ввода</param>
-    /// <param name="id">Идентификатор игрока</param>
+    /// <param name="name">The name of the player</param>
+    /// <param name="inputHandler">User input handler</param>
+    /// <param name="id">The player identifier</param>
     public class InputPlayerModel(string name, IInputAsyncHandler inputHandler, PlayerTypeEnum playerType, Guid? id)
     {
-        /// <summary> Идентификатор игрока </summary>
+        /// <summary>The player identifier</summary>
         public Guid PlayerId { get; set; } = id ?? Guid.NewGuid();
 
-        /// <summary> Обработчик ввода игрока </summary>
+        /// <summary>The player input handler</summary>
         public IInputAsyncHandler PlayerInputHandler { get; set; } = inputHandler;
 
-        /// <summary> Имя игрока </summary>
+        /// <summary>The name of the player</summary>
         public string PlayerName { get; set; } = name;
 
-        /// <summary> Тип игрока </summary>
+        /// <summary>The type of player</summary>
         public PlayerTypeEnum PlayerType { get; set; } = playerType;
     }
 }

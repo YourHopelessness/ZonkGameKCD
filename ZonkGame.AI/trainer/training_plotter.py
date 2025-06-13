@@ -1,12 +1,12 @@
 # =============================================
 # trainer/training_plotter.py
 # ---------------------------------------------
-#   Contains TrainingPlotter – a helper class that keeps
+# Contains TrainingPlotter a helper class that keeps
 #   metrics during training and draws three informative
 #   plots:
-#     1. Per‑episode reward for each agent (rolling‑mean optional)
-#     2. Cumulative reward ("суммарные награды") for each agent
-#     3. Win‑rate comparison of the two agents
+# 1. Per episode reward for each agent (rolling mean optional)
+# 2. Cumulative reward for each agent
+# 3. Win rate comparison of the two agents
 # =============================================
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ class TrainingPlotter:
         Parameters
         ----------
         path : str | PathLike
-            Destination file – any extension supported by Matplotlib (".png", ".pdf", ...).
+            Destination file any extension supported by Matplotlib (".png", ".pdf", ...).
         rolling : int, optional
             Window for the rolling mean displayed on the reward plot. Set to 1 to disable.
         """
@@ -78,17 +78,17 @@ class TrainingPlotter:
         ax2 = fig.add_subplot(gs[0, 1])
         ax2.set_title("Cumulative reward")
         ax2.set_xlabel("Episode")
-        ax2.set_ylabel("Σ reward")
+        ax2.set_ylabel("Reward")
         ax2.plot(episodes, rewards_1.cumsum(), label="agent1")
         ax2.plot(episodes, rewards_2.cumsum(), label="agent2")
         ax2.grid(True)
         ax2.legend()
 
-        # 3) Win‑rate comparison --------------------------------------------------
+        # 3) WinRate comparison --------------------------------------------------
         ax3 = fig.add_subplot(gs[0, 2])
-        ax3.set_title("Win‑rate (cumulative)")
+        ax3.set_title("WinRate (cumulative)")
         ax3.set_xlabel("Episode")
-        ax3.set_ylabel("Win‑rate")
+        ax3.set_ylabel("WinRate")
 
         wins_1 = np.cumsum([1 if w == "agent1" else 0 for w in self.winners])
         wins_2 = np.cumsum([1 if w == "agent2" else 0 for w in self.winners])
@@ -101,6 +101,6 @@ class TrainingPlotter:
         ax3.grid(True)
         ax3.legend()
 
-        fig.suptitle("Zonk agents – training progress", fontsize=14)
+        fig.suptitle("Zonk agents in training progress", fontsize=14)
         fig.savefig(path)
         plt.close(fig)

@@ -1,14 +1,14 @@
-﻿using System.Net;
+using System.Net;
 
 namespace ZonkGame.DB.GameRepository.Interfaces
 {
     /// <summary>
-    /// Интерфейс для записи в аудит
+    /// Interface for recording an audit
     /// </summary>
     public interface IAuditWriter
     {
         /// <summary>
-        /// Запись в аудит проваленного хода
+        /// Record in the audit of a failed passage
         /// </summary>
         Task WriteFailedTurnAuditAsync(
             Guid gameId,
@@ -19,7 +19,7 @@ namespace ZonkGame.DB.GameRepository.Interfaces
             IEnumerable<int> currentRoll);
 
         /// <summary>
-        /// Запись в аудит выбранных костей
+        /// Record in the audit of the selected bones
         /// </summary>
         Task WriteSelectedDiceAuditAsync(
            Guid gameId,
@@ -32,7 +32,7 @@ namespace ZonkGame.DB.GameRepository.Interfaces
            IEnumerable<int> currentRoll);
 
         /// <summary>
-        /// Запись в аудит продолжения хода
+        /// Record in the audit continuation
         /// </summary>
         Task WriteContinueTurnAuditAsync(
             Guid gameId,
@@ -43,7 +43,7 @@ namespace ZonkGame.DB.GameRepository.Interfaces
             int remainingDice);
 
         /// <summary>
-        /// Запись в аудит завершения хода
+        /// Record in the audit of completion
         /// </summary>
         Task WriteFinishTurnAuditAsync(
            Guid gameId,

@@ -1,13 +1,13 @@
-﻿namespace ZonkGame.DB.Enum
+namespace ZonkGame.DB.Enum
 {
     /// <summary>
-    /// Перечисление для маршрутов API
+    /// Listing for API routes
     /// </summary>
     public enum ApiEnumRoute
     {
-        /// <summary> Маршрут для API авторизации </summary>
+        /// <summary>Route for API authorization</summary>
         AuthApi,
-        /// <summary> Маршрут для API игры </summary>
+        /// <summary>Route for API Game</summary>
         ZonkBaseGameApi
     }
 }

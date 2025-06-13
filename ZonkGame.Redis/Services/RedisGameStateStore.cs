@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.Exceptions;
@@ -19,23 +19,23 @@ namespace ZonkGameRedis.Services
     public interface IGameStateStore
     {
         /// <summary>
-        /// Сохранить состояние игры
+        /// Save the state of the game
         /// </summary>
-        /// <param name="gameState">Состояние игры</param>
+        /// <param name="gameState">The state of the game</param>
         Task SaveGameStateAsync(StoredFSMModel gameState);
         /// <summary>
-        /// Загрузить состояние игры
+        /// Download the state of the game
         /// </summary>
-        /// <param name="gameId">Идентификатор игры</param>
+        /// <param name="gameId">Identifier of the game</param>
         Task<ZonkStateMachine?> LoadGameStateAsync(Guid gameId);
         /// <summary>
-        /// Удалить состояние игры
+        /// Delete the state of the game
         /// </summary>
-        /// <param name="gameId">Идентификатор игры</param>
+        /// <param name="gameId">Identifier of the game</param>
         Task DeleteGameStateAsync(Guid gameId);
 
         /// <summary>
-        /// Получить игры, которые есть в кеше, из выбранных
+        /// Get games that are in the cache from the selected
         /// </summary>
         /// <param name="gamesid"></param>
         /// <returns></returns>
@@ -89,7 +89,7 @@ namespace ZonkGameRedis.Services
             var game = await repository.GetGameByIdAsync(gameId);
 
             var desirialized = json.HasValue || game != null ? StoredFSMSerializer.Deserialize(json!)
-                : throw new EntityNotFoundException("Игра", new() { { "GameId", gameId.ToString() } });
+                : throw new EntityNotFoundException("Game", new() { { "GameId", gameId.ToString() } });
 
             desirialized.IsGameOver = game.EndedAt != null || game.Winner != null;
 

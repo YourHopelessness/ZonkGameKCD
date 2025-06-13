@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
 using ZonkGame.DB.Entites;
 using ZonkGame.DB.GameRepository.Interfaces;
@@ -14,13 +14,13 @@ namespace ZonkGameApi.Services
     public interface IGameHostedService
     {
         /// <summary>
-        /// Запустить очистку "зависших игр"
+        /// Run the cleaning of "hovering games"
         /// </summary>
         Task CleanGamesAsync(CancellationToken token);
     }
 
     /// <summary>
-    /// Сервис для отчиски "зависших" игр
+    /// Service for the Fatherland of "Hovering" Games
     /// </summary>
     /// <param name="scopeFactory"></param>
     /// <param name="factory"></param>
@@ -33,7 +33,7 @@ namespace ZonkGameApi.Services
         {
             try
             {
-                _log.LogInformation($"Запущена отчистка от незавершенных игр");
+                _log.LogInformation($"The cleaning from incomplete games has been launched");
                 using var scope = _scopeFactory.CreateScope();
 
                 var stored = scope.ServiceProvider.GetRequiredService<IGameStateStore>();
@@ -43,16 +43,16 @@ namespace ZonkGameApi.Services
                 var storedGames = await stored.GetStoredGames([.. games.Select(g => g.Id)]);
                 await repo.DeleteGamesAsync([.. games.Where(g => storedGames.Contains(g.Id))]);
 
-                _log.LogInformation($"Найдено {games.Count}, удалено {storedGames.Count} незавершенных игр");
+                _log.LogInformation($"Found {Games.count}, deleted {storedgames.count} unfinished games");
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, "Ошибка при очистке игр");
+                _log.LogError(ex, "Error when cleaning games");
             }
         }
 
         /// <summary>
-        /// Очитка от зависших игр раз в 1 день
+        /// Cleaning from hovering games every 1 day
         /// </summary>
         /// <param name="stoppingToken"></param>
         /// <returns></returns>

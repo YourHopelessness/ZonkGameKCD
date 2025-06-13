@@ -1,17 +1,17 @@
-﻿namespace ZonkGame.Auth.Models
+namespace ZonkGame.Auth.Models
 {
     /// <summary>
-    /// Модель для регистрации нового пользователя
+    /// Model for registering a new user
     /// </summary>
     public class RegisterRequestModel
     {
-        /// <summary> Имя пользователя для регистрации </summary>
+        /// <summary>User name for registration</summary>
         public string Username { get; set; } = null!;
 
-        /// <summary> Электронная почта пользователя для регистрации </summary>
+        /// <summary>User e -mail for registration</summary>
         public string Email { get; set; } = null!;
 
-        /// <summary> Пароль пользователя для регистрации </summary>
+        /// <summary>User password for registration</summary>
         public string Password { get; set; } = null!;
     }
 }

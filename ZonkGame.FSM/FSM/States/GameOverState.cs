@@ -1,21 +1,21 @@
-﻿using ZonkGameCore.Model;
+using ZonkGameCore.Model;
 using ZonkGameCore.Observer;
 
 namespace ZonkGameCore.FSM.States
 {
     /// <summary>
-    /// Состояние окончания игры
+    /// The end of the end of the game
     /// </summary>
     public class GameOverState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
         public override async Task<StateResponseModel> HandleAsync()
         {
-            // Флаг конца игры
+            // The flag of the end of the game
             _fsm.SetGameOver();
 
-            // Определение победителя
+            // Definition of the winner
             var winner = _fsm.GameContext.Players.FirstOrDefault(p => p.TotalScore >= _fsm.GameContext.TargetScore)
-                ?? throw new InvalidOperationException("Конец игры невозможен без достижения одним из игроков целевого счета");
+                ?? throw new InvalidOperationException("The end of the game is impossible without achieving one of the players of the target account");
             winner.IsWinner = true;
 
             await _observer.EndGame(winner.PlayerId, winner.PlayerName, winner.TotalScore);

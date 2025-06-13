@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ZonkGame.DB.Context;
 using ZonkGame.DB.Entites.Auth;
 using ZonkGame.DB.Exceptions;
@@ -17,7 +17,7 @@ namespace ZonkGame.DB.Repositories.Services
                     ?? throw new EntityNotFoundException("Permission",
                     new()
                     {
-                        ["Имя"] = name
+                        ["Name"] = name
                     });
         }
     }

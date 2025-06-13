@@ -1,25 +1,25 @@
-﻿using ZonkGame.DB.Enum;
+using ZonkGame.DB.Enum;
 
 namespace ZonkGameCore.ApiConfiguration
 {
     /// <summary>
-    /// Конфигурация приложения
+    /// Application configuration
     /// </summary>
     public class GameZonkConfiguration
     {
-        /// <summary> Позиция в конфигурации, используется для идентификации в системе </summary>
+        /// <summary>The position in the configuration is used for identification in the system</summary>
         public const string Position = "GameZonkConfiguration";
 
-        /// <summary> Название строки подключения </summary>
+        /// <summary>The name of the connection line</summary>
         public const string ConnectionString = "ZonkDbConnection";
 
-        /// <summary> Маршрут для Апи </summary>
+        /// <summary>Route for API</summary>
         public const ApiEnumRoute ApiRoute = ApiEnumRoute.ZonkBaseGameApi;
 
-        /// <summary>/ Адрес канала </summary>
+        /// <summary>/ Channel address</summary>
         public string? AIChannelAdress { get; set; }
 
-        /// <summary> Адрес кеша редис </summary>
+        /// <summary>Kesh Radis address</summary>
         public string? RedisConnectionString { get; set; }
     }
 }

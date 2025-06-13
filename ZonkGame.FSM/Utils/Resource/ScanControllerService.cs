@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
 using System.Reflection;
@@ -11,11 +11,11 @@ using ZonkGameCore.ApiConfiguration;
 namespace ZonkGameCore.Utils.Resource
 {
     /// <summary>
-    /// Сервис для сканирования контроллеров и получения информации о ресурсах API
+    /// Service for scanning controllers and obtaining information about API resources
     /// </summary>
     public interface IScanControllerService
     {
-        /// <summary> Сканирует все контроллеры в приложении и возвращает список ресурсов API </summary>
+        /// <summary>Scanning all controllers in the application and returns a list of API resources</summary>
         Task<List<ApiResource>> ScanAllControllers(Assembly assembly, ApiEnumRoute api);
     }
 

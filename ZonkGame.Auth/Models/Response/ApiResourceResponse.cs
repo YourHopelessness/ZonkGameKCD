@@ -1,17 +1,17 @@
-﻿namespace ZonkGame.Auth.Models.Response
+namespace ZonkGame.Auth.Models.Response
 {
     /// <summary>
-    /// Ответ на запрос ресурса API
+    /// Reply to a request for a resource API
     /// </summary>
     public class ApiResourceResponse
     {
-        /// <summary> Идентификатор ресурса API </summary>
+        /// <summary>API resource identifier</summary>
         public Guid ApiResourceId { get; set; }
 
-        /// <summary> Имя ресурса API </summary>
+        /// <summary>API resource name</summary>
         public string ApiResourceName { get; set; } = null!;
 
-        /// <summary> Метод API, к которому относится ресурс </summary>
+        /// <summary>API method to which the resource belongs</summary>
         public string ApiMethod { get; set; } = null!;
     }
 }

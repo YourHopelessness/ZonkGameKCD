@@ -1,20 +1,20 @@
-﻿namespace ZonkGameCore.ApiUtils.Requests
+namespace ZonkGameCore.ApiUtils.Requests
 {
     /// <summary>
-    /// Параметры для запроса на права доступа
+    /// Parameters for a request for access rights
     /// </summary>
     public class HasAccessRequest
     {
-        /// <summary> Id ресурса </summary>
+        /// <summary>ID resource</summary>
         public Guid? ResourceId { get; set; }
 
-        /// <summary> Путь к методу </summary>
+        /// <summary>The path to the method</summary>
         public string? ResourceRoute { get; set; }
 
-        /// <summary> Id пользователя </summary>
+        /// <summary>User ID</summary>
         public Guid? UserId { get; set; }
 
-        /// <summary> Имя пользователя </summary>
+        /// <summary>User name</summary>
         public string? UserName { get; set; }
     }
 }

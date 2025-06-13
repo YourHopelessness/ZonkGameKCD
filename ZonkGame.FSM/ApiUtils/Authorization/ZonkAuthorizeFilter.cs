@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ namespace ZonkGameCore.ApiUtils.Authorization
             if (endpoint?.Metadata.GetMetadata<AllowAnonymousAttribute>() != null)
                 return;
 
-            // Аутентификация через OpenIdDict
+            // Authentication via Openiddict
             var result = await
                 authService.AuthenticateAsync(
                         httpContext,

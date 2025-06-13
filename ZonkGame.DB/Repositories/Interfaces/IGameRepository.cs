@@ -1,11 +1,11 @@
-﻿using ZonkGame.DB.Entites.Zonk;
+using ZonkGame.DB.Entites.Zonk;
 using ZonkGame.DB.Enum;
 
 namespace ZonkGame.DB.Repositories.Interfaces
 {
     public interface IGameRepository
     {
-        /// <summary> Создание новой игры </summary>
+        /// <summary>Creating a new game</summary>
         Task CreateNewGameAsync(
             Guid gameId,
             int targetScore,
@@ -13,34 +13,34 @@ namespace ZonkGame.DB.Repositories.Interfaces
             ModesEnum gameType,
             string initState);
 
-        /// <summary> Обновление состояния игры </summary>
+        /// <summary>Updating the state of the game</summary>
         Task UpdateGameStateAsync(Guid gameId, string newState);
 
-        /// <summary> Получение игры по идентификатору </summary>
+        /// <summary>Obtaining a game by identifier</summary>
         Task<Game?> GetGameByIdAsync(Guid gameId);
 
-        /// <summary> Назначение победителя игры </summary>
+        /// <summary>The appointment of the winner of the game</summary>
         Task SetGameWinner(Guid gameId, Guid playerId);
 
-        /// <summary> Получени игрока-связи по их идентификаторам
+        /// <summary> receipt of a player-livaries by their identifiers
         Task<GamePlayer> GetGamePlayerAsync(Guid gameId, Guid playerId);
 
-        /// <summary> Получение игрока по идентификатору </summary>
+        /// <summary>Obtaining a player by identifier</summary>
         Task<Player?> GetPlayerAsync(Guid playerId);
 
-        /// <summary> Получение игрока по имени </summary>
+        /// <summary>Obtaining a player by name</summary>
         Task<Player?> GetPlayerByNameAsync(string playerName);
 
-        /// <summary> Создание или обновление игрока </summary>
+        /// <summary>Creation or updating the player</summary>
         Task<Player> CreateOrUpdatePlayerAsync(Player player);
 
-        /// <summary> Удаление игр </summary>
+        /// <summary>Removing games</summary>
         Task DeleteGamesAsync(List<Game> games);
 
-        /// <summary> Поиск всех незавершенных игр </summary>
+        /// <summary>Search for all incomplete games</summary>
         Task<List<Game>> GetAllNotFinishedGames();
 
-        /// <summary> Завершить игру без победителя досрочно </summary>
+        /// <summary>Complete the game without the winner ahead of schedule</summary>
         Task FinishGameAsync(Guid gameId);
     }
 }

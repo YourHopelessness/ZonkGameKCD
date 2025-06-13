@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ZonkGameApi.Request;
 using ZonkGameApi.Services;
 using ZonkGameRedis.Services;
@@ -15,10 +15,10 @@ namespace ZonkGameApi.Controllers
         private readonly IGameService _gameService = gameService;
 
         /// <summary>
-        /// Создание новой игры
+        /// Creating a new game
         /// </summary>
-        /// <param name="request">запрос для новой игры</param>
-        /// <returns>Id созданной игры</returns>
+        /// <param name="request">Request for a new game</param>
+        /// <returns>ID of the created game</returns>
         [HttpPost("CreateGame")]
         public async Task<IActionResult> CreateGame([FromBody] GameCreationRequest request)
         {
@@ -33,7 +33,7 @@ namespace ZonkGameApi.Controllers
         }
 
         /// <summary>
-        /// Обработка хода
+        /// Taking stroke
         /// </summary>
         /// <param name="gameId"></param>
         /// <returns></returns>
@@ -46,7 +46,7 @@ namespace ZonkGameApi.Controllers
             {
                 if (fsmCached.IsGameOver)
                 {
-                    return BadRequest("Игра уже закончена, создайте новую");
+                    return BadRequest("The game is already over, create a new");
                 }
 
                 var newState = await _gameService.MakeStep(gameId, fsmCached);
@@ -55,15 +55,15 @@ namespace ZonkGameApi.Controllers
             }
             else
             {
-                return NotFound($"Игра с ID {gameId} не найдена.");
+                return NotFound($"The game with ID {Gameid} was not found.");
             }
         }
 
         /// <summary>
-        /// Получение текущего состояния игры
+        /// Getting the current state of the game
         /// </summary>
-        /// <param name="gameId">номер игры</param>
-        /// <returns>Состояние игры</returns>
+        /// <param name="gameId">The number of the game</param>
+        /// <returns>The state of the game</returns>
         [HttpGet("GetCurrentGameState")]
         public async Task<IActionResult> GetCurrentGameState([FromQuery] Guid gameId)
         {
@@ -75,7 +75,7 @@ namespace ZonkGameApi.Controllers
             }
             else
             {
-                return NotFound($"Игра с ID {gameId} не найдена.");
+                return NotFound($"The game with ID {Gameid} was not found.");
             }
         }
 
@@ -90,15 +90,15 @@ namespace ZonkGameApi.Controllers
             }
             else
             {
-                return NotFound($"Игра с ID {gameId} не найдена.");
+                return NotFound($"The game with ID {Gameid} was not found.");
             }
         }
 
         /// <summary>
-        /// Получение победителя игры
+        /// Obtaining the winner of the game
         /// </summary>
-        /// <param name="gameId">Идентификатор игры</param>
-        /// <returns>Победитель игры</returns>
+        /// <param name="gameId">Identifier of the game</param>
+        /// <returns>The winner of the game</returns>
         [HttpGet("GetGameWinner")]
         public async Task<IActionResult> GetGameWinner([FromQuery] Guid gameId)
         {
@@ -113,12 +113,12 @@ namespace ZonkGameApi.Controllers
                 }
                 else
                 {
-                    return BadRequest("Игра еще не закончена");
+                    return BadRequest("The game is not over yet");
                 }
             }
             else
             {
-                return NotFound($"Игра с ID {gameId} не найдена.");
+                return NotFound($"The game with ID {Gameid} was not found.");
             }
         }
     }

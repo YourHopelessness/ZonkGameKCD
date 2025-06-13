@@ -9,4 +9,4 @@ def config_gpu_agents(max_limit=12288):
                 [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=max_limit)]
             )
         except RuntimeError as e:
-            print(f"GPU конфигурация уже установлена: {e}")
+            print(f"GPU Configuration has already been installed: {e}")

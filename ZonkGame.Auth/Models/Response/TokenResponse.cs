@@ -1,16 +1,16 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 
 namespace ZonkGame.Auth.Models.Response
 {
     /// <summary>
-    /// Ответ на запрос токена
+    /// Reply to a token request
     /// </summary>
     public class TokenResponse
     {
-        /// <summary> Токен доступа, полученный в ответ на запрос </summary>
+        /// <summary>Access token received in response to a request</summary>
         public ClaimsPrincipal Principal { get; set; } = default!;
 
-        /// <summary> Способ аутентификации </summary>
+        /// <summary>Authentication method</summary>
         public string AuthenticationScheme { get; set; } = default!;
     }
 }

@@ -1,17 +1,17 @@
-﻿namespace ZonkGameCore.InputParams
+namespace ZonkGameCore.InputParams
 {
     /// <summary>
-    /// Асинхронный обработчик пользовательского ввода
+    /// Asynchronous processor of user input
     /// </summary>
     public interface IInputAsyncHandler
     {
         /// <summary>
-        /// Обработчик пользовательского ввода пользователя выбора костей
+        /// User input processor of the user selection of bones
         /// </summary>
         Task<IEnumerable<int>?> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid, Guid playerId);
 
         /// <summary>
-        /// Обработчик пользовательского ввода пользователя выбора продолжения игры
+        /// User input processor of the user selection of continuation of the game
         /// </summary>
         Task<bool?> HandleShouldContinueGameInputAsync(Guid gameid, Guid playerId);
     }

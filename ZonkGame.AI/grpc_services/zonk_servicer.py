@@ -16,23 +16,23 @@ class ZonkServiceServicer(zonkgameservice_pb2_grpc.ZonkServiceServicer):
     def GetSelectedDices(self, request, context):
         game_id = request.game_id
 
-        # Получаем состояние игры
+        # We get the state of the game
         state = self.env.get_game_state(game_id)
 
         if not state["availableCombinations"]:
             return zonkgameservice_pb2.SelectedDicesResponse(dices=[])
 
-        # Получаем вектора признаков
+        # We get the vectors of signs
         agent_state = AgentState(state)
         input_vectors = agent_state.get_all_input_vectors()
         input_array = np.array(input_vectors)
 
-        # Предсказание
+        # Prediction
         combo_qs, _ = self.agent.model.predict(input_array, verbose=0)
         best_idx = np.argmax(combo_qs[:, 0])
         best_combination = state["availableCombinations"][best_idx]
 
-        # Сохраняем индекс и комбинации для второго запроса
+        # We save the index and combinations for the second request
         self.predictions[game_id] = (best_idx, state["availableCombinations"])
 
         return zonkgameservice_pb2.SelectedDicesResponse(dices=best_combination)
@@ -40,25 +40,25 @@ class ZonkServiceServicer(zonkgameservice_pb2_grpc.ZonkServiceServicer):
     def GetContinuationDecision(self, request, context):
         game_id = request.game_id
 
-        # Проверяем, было ли предсказание
+        # We check if there was a prediction
         if game_id not in self.predictions:
             return zonkgameservice_pb2.ContinuationDecisionResponse(continue_game=False)
 
         best_idx, _ = self.predictions[game_id]
 
-        # Получаем состояние игры
+        # We get the state of the game
         state = self.env.get_game_state(game_id)
         agent_state = AgentState(state)
         input_vectors = agent_state.get_all_input_vectors()
         input_array = np.array(input_vectors)
 
-        # Повторно предсказываем, так как continue_probs зависит от input_vectors
+        # We repeatedly predict, since Continue_Probs depends on the Input_Vectors
         _, continue_probs = self.agent.model.predict(input_array, verbose=0)
 
-        # Получаем вероятность продолжения
+        # We get the probability of continuation
         continue_game = continue_probs[best_idx][0] > 0.5
 
-        # Удаляем сохранённые данные
+        # We delete the saved data
         del self.predictions[game_id]
 
         return zonkgameservice_pb2.ContinuationDecisionResponse(continue_game=continue_game)
@@ -76,5 +76,5 @@ def create_grpc_service(model_path):
     )
     server.add_insecure_port('[::]:50051')
     server.start()
-    print("gRPC сервер запущен на порту 50051")
+    print("GRPC server launched on port 50051")
     server.wait_for_termination()

@@ -21,6 +21,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Add resource updater 
         ResourceUpdater.RegisterResorceUpdater(
             builder.Services,
             builder.Configuration
@@ -28,10 +29,11 @@ internal class Program
                    .GetConnectionString(AuthConfiguration.ConnectionString)
             ?? throw new ArgumentNullException(AuthConfiguration.Position + AuthConfiguration.ConnectionString));
 
-        // Конфигурация доступа к внешним приложениям
+        // Add external api config
         builder.Services.Configure<ExternalApiConfiguration>(
             builder.Configuration.GetSection(ExternalApiConfiguration.Position));
 
+        // Register auth
         builder.Services.AddControllers(opt => opt.Filters.Add<ZonkAuthorizeFilter>());
         builder.Services.AddHttpClient();
         builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
@@ -41,18 +43,20 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Add repositories
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
+        // Register services
         builder.Services.AddScoped<IPermissionService, PermissionService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IAdminService, AdminService>();
-
         builder.Services
                .AddIdentity<ApplicationUser, IdentityRole>()
                .AddEntityFrameworkStores<AuthContext>()
                .AddDefaultTokenProviders();
 
-        builder.Services.AddOpenIddict() // Регистрируем опениддикт для аутентификации
+        // Register OpenIdDict for the authorization
+        builder.Services.AddOpenIddict()
             .AddCore(options =>
             {
                 options.UseEntityFrameworkCore()
@@ -74,7 +78,7 @@ internal class Program
 
                 options.UseReferenceAccessTokens();
 
-                // Ключ нужен для авторизации агентов при обучении 
+                // Add encrypt for agents
                 options.AddEncryptionKey(new SymmetricSecurityKey(
                     Convert.FromBase64String(
                         builder.Configuration
@@ -92,7 +96,6 @@ internal class Program
         var app = builder.Build();
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi(); // Настраиваем свагер только для отладочной среды
             app.UseSwagger();
             app.UseSwaggerUI();
         }
@@ -100,8 +103,8 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
-        app.UseMiddleware<ApiResponseMiddleware>(); // Стандартизируем ответы от апи и ловим исключения
 
+        // Update resources
         await ResourceUpdater.UpdateResources(
             Assembly.GetExecutingAssembly(),
             app.Services,

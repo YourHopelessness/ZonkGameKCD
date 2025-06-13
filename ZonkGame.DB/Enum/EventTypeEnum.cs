@@ -1,17 +1,17 @@
-﻿namespace ZonkGame.DB.Enum
+namespace ZonkGame.DB.Enum
 {
     /// <summary>
-    /// Тип события
+    /// Type of event
     /// </summary>
     public enum EventTypeEnum
     {
-        /// <summary> Выбор костей </summary>
+        /// <summary>The choice of bones</summary>
         SelectDice,
-        /// <summary> Продолжить хода </summary>
+        /// <summary>Continue the move</summary>
         ContinueTurn,
-        /// <summary> Завершить ход </summary>
+        /// <summary>Complete the move</summary>
         EndTurn,
-        /// <summary> Неудачный ход </summary>
+        /// <summary>Unsuccessful move</summary>
         LostTurn
     }
 }

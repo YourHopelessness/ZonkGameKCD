@@ -1,10 +1,10 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using ZonkGameCore.Model;
 
 namespace ZonkGameRedis.Utils
 {
     /// <summary>
-    /// Сериализатор состояния игры
+    /// The serializer of the state of the game
     /// </summary>
     public static class StoredFSMSerializer
     {

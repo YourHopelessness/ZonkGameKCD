@@ -1,16 +1,16 @@
-﻿using System.Net;
+using System.Net;
 
 namespace ZonkGameCore.Exceptions
 {
     /// <summary>
-    /// Исключение, возникающее при ошибке запроса к API.
+    /// An exception arising from the error of the request to the API.
     /// </summary>
     public class RequestErrorException(HttpStatusCode code, object errors) : Exception
     {
-        /// <summary> Код состояния HTTP, полученный в ответ на запрос. </summary>
+        /// <summary>HTTP status code received in response to a request.</summary>
         public HttpStatusCode StatusCode { get; set; } = code;
 
-        /// <summary> Сообщение об ошибке, полученное в ответ на запрос. </summary>
+        /// <summary>An error message received in response to a request.</summary>
         public object Errors { get; set; } = errors;
     }
 }

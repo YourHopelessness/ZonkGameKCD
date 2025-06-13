@@ -1,41 +1,41 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ZonkGame.DB.Enum;
 
 namespace ZonkGame.DB.Entites.Auth
 {
     /// <summary>
-    /// Сущность, представляющая API ресурс
+    /// The essence representing the API resource
     /// </summary>
     [Table("api_resource")]
     public class ApiResource
     {
-        /// <summary> Идентификатор API ресурса </summary>
+        /// <summary>Identifier of the API resource</summary>
         [Required]
         [Column("id")]
         public Guid Id { get; set; }
 
-        /// <summary> Имя API ресурса </summary>
+        /// <summary>The name of the API resource</summary>
         [Required]
         [Column("controller")]
         public string Controller { get; set; } = null!;
 
-        /// <summary> Имя действия в контроллере </summary>
+        /// <summary>Action name in the controller</summary>
         [Required]
         [Column("action")]
         public string Action { get; set; } = null!;
 
-        /// <summary> HTTP метод, используемый для доступа к ресурсу </summary>
+        /// <summary>Http method used to access the resource</summary>
         [Required]
         [Column("http_method")]
         public string HttpMethod { get; set; } = "GET";
 
-        /// <summary> Путь до метода контроллера </summary>
+        /// <summary>The path to the controller method</summary>
         [Required]
         [Column("route")]
         public string Route { get; set; } = null!;
 
-        /// <summary> Имя API ресурса, используется для идентификации в системе </summary>
+        /// <summary>The name of the API resource is used for identification in the system</summary>
         [Required, EnumDataType(typeof(ApiEnumRoute))]
         [Column("api_name")]
         public ApiEnumRoute ApiName { get; set; }

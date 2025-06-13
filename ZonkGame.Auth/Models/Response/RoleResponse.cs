@@ -1,17 +1,17 @@
-﻿namespace ZonkGame.Auth.Models.Response
+namespace ZonkGame.Auth.Models.Response
 {
     /// <summary>
-    /// Ответ роль
+    /// The answer is the role
     /// </summary>
     public class RoleResponse
     {
-        /// <summary> Идентификатор роли </summary>
+        /// <summary>Role identifier</summary>
         public Guid RoleId { get; set; }
 
-        /// <summary> Имя роли </summary>
+        /// <summary>The name of the role</summary>
         public string? RoleName { get; set; }
 
-        /// <summary> Описание роли </summary>
+        /// <summary>Description of the role</summary>
         public string? RoleDescription { get; set; }
     }
 }

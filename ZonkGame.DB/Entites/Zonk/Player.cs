@@ -1,40 +1,40 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ZonkGame.DB.Enum;
 
 namespace ZonkGame.DB.Entites.Zonk
 {
     /// <summary>
-    /// Класс - игрок
+    /// Class is a player
     /// </summary>
     [Table("player")]
     public class Player
     {
-        /// <summary> Идентификатор игрока </summary>
+        /// <summary>The player identifier</summary>
         [Required]
         [Column("id")]
         public Guid Id { get; set; }
 
-        /// <summary> Имя игрока </summary>
+        /// <summary>The name of the player</summary>
         [Required]
         [Column("player_name")]
         public string PlayerName { get; set; } = null!;
 
-        /// <summary> Тип игрока </summary>
+        /// <summary>The type of player</summary>
         [Required, EnumDataType(typeof(PlayerTypeEnum))]
         [Column("player_type")]
         public PlayerTypeEnum PlayerType { get; set; }
 
-        /// <summary> Пользователь игрока </summary>
+        /// <summary>Player user</summary>
         [Column("user_id")]
         public Guid? UserId { get; set; }
 
         /// <summary>
-        /// Список игр, в которых участвует игрок
+        /// List of games in which the player participates
         /// </summary>
         public virtual ICollection<GamePlayer> GamePlayers { get; set; } = null!;
         /// <summary>
-        /// Список аудитов игры, в которых участвует игрок
+        /// List of audits of the game in which the player participates
         /// </summary>
         public virtual ICollection<GameAudit> GameAudit { get; set; } = null!;
     }
