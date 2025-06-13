@@ -7,6 +7,10 @@ namespace ZonkGame.Auth.Service.Services
 {
     public class AdminService(IRoleRepository roleRepository) : IAdminService
     {
+        /// <summary>
+        /// Returns all API resources with their permissions.
+        /// </summary>
+        /// <param name="api">API identifier</param>
         public async Task<List<PermissionMapResponse>> GetAllResourceAndPermissionsAsync(ApiEnumRoute api)
         {
             var permissionsRoles = await roleRepository.GetResourcesAndPermissions(api);
@@ -29,6 +33,9 @@ namespace ZonkGame.Auth.Service.Services
             })];
         }
 
+        /// <summary>
+        /// Returns available roles.
+        /// </summary>
         public async Task<List<RoleResponse>> GetRolesAsync()
         {
             var roles = await roleRepository.GetAllRoles();

@@ -12,6 +12,11 @@ namespace ZonkGame.DB.Repositories.Services
         EntityRepository<Role, AuthContext>(contextFactory),
         IRoleRepository
     {
+        /// <summary>
+        /// Retrieves a role entity by its name.
+        /// </summary>
+        /// <param name="roleName">Role name</param>
+        /// <returns>Role entity</returns>
         public async Task<Role> GetRoleByNameAsync(string roleName)
         {
             return await _context.Role
@@ -22,6 +27,11 @@ namespace ZonkGame.DB.Repositories.Services
                         new() { { "Name", roleName } });
         }
 
+        /// <summary>
+        /// Gets user roles optionally filtered by user id.
+        /// </summary>
+        /// <param name="userId">User identifier or null</param>
+        /// <returns>List of user roles</returns>
         public async Task<List<UserRole>> GetUserRolesAsync(Guid? userId)
         {
             return await _context.UserRoles
@@ -30,6 +40,9 @@ namespace ZonkGame.DB.Repositories.Services
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Returns all roles.
+        /// </summary>
         public async Task<List<Role>> GetAllRoles()
         {
             return await _context.Role
@@ -37,6 +50,11 @@ namespace ZonkGame.DB.Repositories.Services
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retrieves a role by identifier.
+        /// </summary>
+        /// <param name="roleId">Role identifier</param>
+        /// <returns>Role entity</returns>
         public async Task<Role> GetRoleByIdAsync(Guid roleId)
         {
             return await _context.Role
@@ -48,6 +66,11 @@ namespace ZonkGame.DB.Repositories.Services
                         new() { { "Id", roleId.ToString() } });
         }
 
+        /// <summary>
+        /// Assigns a role to a user.
+        /// </summary>
+        /// <param name="role">Role to assign</param>
+        /// <param name="user">User entity</param>
         public async Task SetRoleToUserAsync(Role role, ApplicationUser user)
         {
             var userRole = new UserRole
@@ -61,6 +84,11 @@ namespace ZonkGame.DB.Repositories.Services
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Gets permissions mapping for API resources.
+        /// </summary>
+        /// <param name="api">API identifier</param>
+        /// <returns>List of resource-permission mappings</returns>
         public async Task<List<ApiResoursePermissionModel>> GetResourcesAndPermissions(ApiEnumRoute api)
         {
             return await _context.ApiResource
@@ -88,6 +116,12 @@ namespace ZonkGame.DB.Repositories.Services
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Checks if a user has access to a given resource.
+        /// </summary>
+        /// <param name="userId">User identifier</param>
+        /// <param name="resorceId">Resource identifier</param>
+        /// <returns>True if access is granted</returns>
         public async Task<bool> HasUserAccessAsync(Guid userId, Guid resorceId)
         {
             return await _context.UserRoles

@@ -22,14 +22,19 @@ namespace ZonkGameAI.RPC
     public class GrpcChannelSingletone(IOptions<GameZonkConfiguration> configuration) : IDisposable, IGrpcChannelSingletone
     {
         private readonly GrpcChannel? _channel;
-        private readonly string _address = configuration.Value?.AIChannelAdress 
+        private readonly string _address = configuration.Value?.AIChannelAdress
             ?? throw new ArgumentNullException("GRPC server address is not set");
 
+        /// <summary>
+        /// Provides a gRPC channel instance.
+        /// </summary>
+        /// <returns>Initialized gRPC channel</returns>
         public GrpcChannel GetChannel()
         {
             return _channel ?? GrpcChannel.ForAddress(_address);
         }
 
+        /// <inheritdoc />
         public void Dispose() => _channel?.Dispose();
     }
 }

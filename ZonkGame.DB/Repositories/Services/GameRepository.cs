@@ -19,6 +19,14 @@ namespace ZonkGame.DB.Repositories.Services
             await _dbContext.DisposeAsync();
         }
 
+        /// <summary>
+        /// Creates a new game record in the database.
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="targetScore">Target score to finish the game</param>
+        /// <param name="players">List of participating players</param>
+        /// <param name="gameType">Type of game</param>
+        /// <param name="initState">Initial state name</param>
         public async Task CreateNewGameAsync(
             Guid gameId,
             int targetScore,
@@ -47,6 +55,11 @@ namespace ZonkGame.DB.Repositories.Services
             await SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Updates the state string of an existing game.
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="newState">New state name</param>
         public async Task UpdateGameStateAsync(Guid gameId, string newState)
         {
             var game = await GetGameByIdAsync(gameId) ?? throw new KeyNotFoundException($"Games with {gameId} does not exist");
@@ -55,6 +68,11 @@ namespace ZonkGame.DB.Repositories.Services
             await SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Retrieves a game by its identifier.
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <returns>Game entity or null</returns>
         public async Task<Game?> GetGameByIdAsync(Guid gameId)
         {
             var game = await DbContext.Games
@@ -63,6 +81,11 @@ namespace ZonkGame.DB.Repositories.Services
             return game;
         }
 
+        /// <summary>
+        /// Sets the winner for the game.
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="playerId">Winner player identifier</param>
         public async Task SetGameWinner(Guid gameId, Guid playerId)
         {
             var gamePlayer = await GetGamePlayerAsync(gameId, playerId);
@@ -73,6 +96,12 @@ namespace ZonkGame.DB.Repositories.Services
             await SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Returns the relation entity for a player in a game.
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
+        /// <param name="playerId">Player identifier</param>
+        /// <returns>Game player relation</returns>
         public async Task<GamePlayer> GetGamePlayerAsync(Guid gameId, Guid playerId)
         {
             var gamePlayer = await DbContext.GamePlayers
@@ -85,6 +114,11 @@ namespace ZonkGame.DB.Repositories.Services
                     new() { { "GameId", gameId.ToString() }, { "PlayerId", playerId.ToString() } });
         }
 
+        /// <summary>
+        /// Loads a player by identifier.
+        /// </summary>
+        /// <param name="playerId">Player identifier</param>
+        /// <returns>Player or null</returns>
         public async Task<Player?> GetPlayerAsync(Guid playerId)
         {
             var player = await DbContext.Players
@@ -93,6 +127,11 @@ namespace ZonkGame.DB.Repositories.Services
             return player;
         }
 
+        /// <summary>
+        /// Creates a player or updates an existing one.
+        /// </summary>
+        /// <param name="player">Player entity</param>
+        /// <returns>Upserted player</returns>
         public async Task<Player> CreateOrUpdatePlayerAsync(Player player)
         {
             var existingPlayer = await DbContext.Players
@@ -112,12 +151,20 @@ namespace ZonkGame.DB.Repositories.Services
             return player;
         }
 
+        /// <summary>
+        /// Gets a player by name.
+        /// </summary>
+        /// <param name="playerName">Name of the player</param>
+        /// <returns>Player or null</returns>
         public async Task<Player?> GetPlayerByNameAsync(string playerName)
         {
             return await DbContext.Players
                 .FirstOrDefaultAsync(x => x.PlayerName == playerName);
         }
 
+        /// <summary>
+        /// Returns all games that are not yet finished.
+        /// </summary>
         public async Task<List<Game>> GetAllNotFinishedGames()
         {
             var games = await DbContext.Games
@@ -128,6 +175,10 @@ namespace ZonkGame.DB.Repositories.Services
             return games;
         }
 
+        /// <summary>
+        /// Deletes the provided games from the database.
+        /// </summary>
+        /// <param name="games">Games to remove</param>
         public async Task DeleteGamesAsync(List<Game> games)
         {
             DbContext.RemoveRange(games);
@@ -135,6 +186,10 @@ namespace ZonkGame.DB.Repositories.Services
             await SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Completes the specified game without a winner.
+        /// </summary>
+        /// <param name="gameId">Game identifier</param>
         public async Task FinishGameAsync(Guid gameId)
         {
             var game = await DbContext.Games
