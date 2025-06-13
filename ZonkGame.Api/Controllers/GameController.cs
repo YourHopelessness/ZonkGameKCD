@@ -55,7 +55,7 @@ namespace ZonkGameApi.Controllers
             }
             else
             {
-                return NotFound($"The game with ID {Gameid} was not found.");
+                return NotFound($"The game with ID {gameId} was not found.");
             }
         }
 
@@ -75,7 +75,7 @@ namespace ZonkGameApi.Controllers
             }
             else
             {
-                return NotFound($"The game with ID {Gameid} was not found.");
+                return NotFound($"The game with ID {gameId} was not found.");
             }
         }
 
@@ -90,7 +90,7 @@ namespace ZonkGameApi.Controllers
             }
             else
             {
-                return NotFound($"The game with ID {Gameid} was not found.");
+                return NotFound($"The game with ID {gameId} was not found.");
             }
         }
 
@@ -118,7 +118,7 @@ namespace ZonkGameApi.Controllers
             }
             else
             {
-                return NotFound($"The game with ID {Gameid} was not found.");
+                return NotFound($"The game with ID {gameId} was not found.");
             }
         }
     }

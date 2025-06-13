@@ -17,15 +17,15 @@ namespace ZonkGameCore.Observer
         private readonly IAuditWriter _audutor = audutor;
         private readonly IGameRepository _gameRepository = repository;
 
-        protected string RerollMessage = "The player {0} put off all the bones. You can throw the bones";
+        protected string RerollMessage = "The player {0} put off all the dices. You can throw the dices";
         protected string ContinueTurnMessage = "The player {0} continued to move";
         protected string CorrectDiceSelectionMessage = "The player {0} scored {1} points for the course. The final account {2}";
         protected string EndGameMessage = "The game is completed with a score {0}, winner {1}";
         protected string EndTurnMessage = "The player {0} completed the move. The final account {1}";
-        protected string FailedTurnMessage = "The player {0} made an unsuccessful throw of bones, there are no available combinations";
+        protected string FailedTurnMessage = "The player {0} made an unsuccessful throw of dices, there are no available combinations";
         protected string FinishTurnMessage = "The player {0} decided to finish the move";
-        protected string IncorrectDiceSelectionMessage = "The player {0} chose incorrect bones: {1}";
-        protected string RollDiceMessage = "The player {0} threw the bones: {1}";
+        protected string IncorrectDiceSelectionMessage = "The player {0} chose incorrect dices: {1}";
+        protected string RollDiceMessage = "The player {0} threw the dices: {1}";
         protected string StartGameMessage = "The beginning of the new game. Target account {0}. Player {1}";
         protected string ErrorMessage = "Error in the game: {0}";
         protected string NewTurnMessage = "New move of the player {0}";
@@ -85,7 +85,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// The choice of bones is incorrect
+        /// The choice of dices is incorrect
         /// </summary>
         public async Task IncorrectDiceSelection(IEnumerable<int> selectedDices)
         {
@@ -100,7 +100,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// The choice of bones is true
+        /// The choice of dices is true
         /// </summary>
         public async Task CorrectDiceSelection(IEnumerable<int> selectedDices)
         {
@@ -216,7 +216,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// You can throw the bones
+        /// You can throw the dices
         /// </summary>
         public void CanReroll()
         {

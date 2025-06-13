@@ -101,7 +101,7 @@ namespace ZonkGameCore.FSM
                 stateType,
                 Observer,
                 this)! ?? throw new InvalidOperationException(
-                $"It was not possible to create a state {stattype.name}"
+                $"It was not possible to create a state {stateType.Name}"
             );
         }
 

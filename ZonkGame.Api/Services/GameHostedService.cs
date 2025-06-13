@@ -43,7 +43,7 @@ namespace ZonkGameApi.Services
                 var storedGames = await stored.GetStoredGames([.. games.Select(g => g.Id)]);
                 await repo.DeleteGamesAsync([.. games.Where(g => storedGames.Contains(g.Id))]);
 
-                _log.LogInformation($"Found {Games.count}, deleted {storedgames.count} unfinished games");
+                _log.LogInformation($"Found {games.Count}, deleted {storedGames.Count} unfinished games");
             }
             catch (Exception ex)
             {

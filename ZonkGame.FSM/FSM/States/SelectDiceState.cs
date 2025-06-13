@@ -4,13 +4,13 @@ using ZonkGameCore.Observer;
 namespace ZonkGameCore.FSM.States
 {
     /// <summary>
-    /// The condition with the cat is the choice of bones and counting the player's glasses
+    /// The state in which dice are selected and the player's points are calculated
     /// </summary>
     public class SelectDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
         public async override Task<StateResponseModel> HandleAsync()
         {
-            // The player chooses the bones among the fallen
+            // The player chooses the dice from the ones that have fallen out
             var selectedDices = await _fsm.GameContext
                 .CurrentPlayer
                 .PlayerInputHandler
@@ -28,7 +28,7 @@ namespace ZonkGameCore.FSM.States
                 };
             }
 
-            // Checking that there are available combinations and are there any extra or non -competitive bones
+            // Checking that there are available combinations and are there any extra or non-competitive dices
             if (!selectedDices.HasValidCombos())
             {
                 await _observer.IncorrectDiceSelection(selectedDices);
@@ -40,21 +40,21 @@ namespace ZonkGameCore.FSM.States
             }
             else
             {
-                // Calculation of the current account of the player, on the basis of the selected bones
+                // Calculation of the current account of the player, on the basis of the selected dices
                 var currentScore = DicesCombinationsExtension.CalculateScore(selectedDices);
                 _fsm.GameContext.CurrentPlayer.TurnScore += currentScore;
 
                 await _observer.CorrectDiceSelection(selectedDices);
 
-                // Reduction of bones for further throw, taking into account the deferred bones
+                // Reduction of dices for further throw, taking into account the deferred dices
                 _fsm.GameContext.CurrentPlayer.SubstructDices(selectedDices.Count());
 
-                // Check whether all bones are postponed
+                // Check whether all dices are postponed
                 if (_fsm.GameContext.CurrentPlayer.RemainingDice == 0)
                 {
                     _observer.CanReroll();
 
-                    // All the bones are laid out, you can throw all the bones again
+                    // All the dices are laid out, you can throw all the dices again
                     _fsm.GameContext.CurrentPlayer.ResetDices();
                 }
 

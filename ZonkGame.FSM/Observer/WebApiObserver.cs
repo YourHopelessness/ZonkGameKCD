@@ -17,7 +17,7 @@ namespace ZonkGameCore.Observer
 
         public override void Error(Exception e)
         {
-            _logger.LogError(e, $"Error in the game: {E.Message}");
+            _logger.LogError(e, $"Error in the game: {e.Message}");
         }
 
         protected override void Info(string message)

@@ -10,7 +10,7 @@ namespace ZonkGameCore.Observer
     {
         public override void Error(Exception e)
         {
-            Console.WriteLine($"Error: {E.Message}");
+            Console.WriteLine($"Error: {e.Message}");
         }
 
         protected override void Info(string message)

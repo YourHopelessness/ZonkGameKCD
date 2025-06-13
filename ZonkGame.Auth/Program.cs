@@ -96,13 +96,16 @@ internal class Program
         var app = builder.Build();
         if (app.Environment.IsDevelopment())
         {
+            app.MapOpenApi();
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+        app.UseMiddleware<ApiResponseMiddleware>();
 
         // Update resources
         await ResourceUpdater.UpdateResources(

@@ -32,7 +32,7 @@ namespace ZonkGameCore.Utils
                 .Select(x => Activator.CreateInstance(x, fsm.Observer, fsm))
                 .FirstOrDefault();
 
-            return state ?? throw new ArgumentException($"State named {statename} was not found");
+            return state ?? throw new ArgumentException($"State named {stateName} was not found");
         }
     }
 }

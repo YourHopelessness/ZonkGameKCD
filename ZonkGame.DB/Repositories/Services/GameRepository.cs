@@ -49,7 +49,7 @@ namespace ZonkGame.DB.Repositories.Services
 
         public async Task UpdateGameStateAsync(Guid gameId, string newState)
         {
-            var game = await GetGameByIdAsync(gameId) ?? throw new KeyNotFoundException($"Games with {Gameid} does not exist");
+            var game = await GetGameByIdAsync(gameId) ?? throw new KeyNotFoundException($"Games with {gameId} does not exist");
             game.GameState = newState;
 
             await SaveChangesAsync();

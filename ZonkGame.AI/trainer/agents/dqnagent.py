@@ -37,21 +37,19 @@ class DQNAgent:
         x = layers.Dense(256, activation='relu')(input_layer)
         x = layers.Dense(128, activation='relu')(x)
         x = layers.Dense(256, activation='relu')(x)
- # RќRѕSђRAR ° P »RER · P ° C † ROO
- # P "s"s, ° Сћ ‚pґr" c · p ± rµrir ° ° River · p ° С † † † ip "river ° °.
+        
+        # Output layer for choosing combination based on q values
+        # Dueling DQN: combining Value and Advantage streams
+        value_stream = layers.Dense(1)(x) # State value stream
+        advantage_stream = layers.Dense(self.combo_output_size)(x) # Action advantage stream
 
-        # R’C ‹... RѕRґPѕRѕR № Cѓr» R ѕP № Rґr »Сџ‹ ‹± Рѕsђr ° РРѕР ° Р ° С § ° ° Ср ° РѕРѕРРРРО q values
-        # Dueling DQN: R ± CљrµRґRRIRѕRHRIRERELEL Сї Сarch СРєРѕРі РО РО Advantage
-  # Rџr С.1 · · p · r ° С ‡ РµРѕрrѕrѕsm pan Сџ Сџ РѕРр џ
-  # Rџrѕs pan ѕ р їsђrµrµrerјs ‰ ‰ Сµ ° ° ° ° Р # Сѓsmarnir №
-
-        # R’C ‹С ‡ Rusѓr» РµРѕ ѓsђ ѓsђrґrґhrѕrѕrѕr їysђhђr microјcѓs> rimes °s ° С ‡ РµSђr · lambda-sѓr "rfa ѕP ѕP No.
+        # Calculating the average advantage via Lambda layer
         mean_advantage = layers.Lambda(self._mean_advantage_fn)(advantage_stream)
 
-        # R’S ‹С ‡ rosѓr» РµP µ qr · r · r ° С ‡ РµPѕRER No.
+        # Calculating Q-values
         q_values = layers.Add(name="combo_output")([value_stream, layers.Subtract()([advantage_stream, mean_advantage])])
         
-        # R’C ‹... RѕRґPѕRѕR № Sѓr» R ѕR № Rґr »Сџ їsђrѕrѕP» r¶rµRѕRESџ RERISHS ‹
+        # Output layer to continue the game
         continue_output = layers.Dense(1, activation='sigmoid', name="continue_output")(x)
 
         model = models.Model(inputs=input_layer, outputs=[q_values, continue_output])
@@ -74,13 +72,13 @@ class DQNAgent:
             if done:
                 target_combo = current_combo_qs
                 target_combo[0][action_idx] = reward
-  # 0 ryrµSђRѕs С.1 Р‚ Рѕ С С С їsђhrґhhr »Р¶РµРѕirl
+                target_continue = np.array([[0.0]]) # 0 probability of continuation
             else:
                 future_combo_qs, future_continue_prob = self.model.predict(np.array([next_state]), verbose=0)
                 target = reward + self.gamma * np.max(future_combo_qs[0])
                 target_combo = current_combo_qs
                 target_combo[0][action_idx] = target
-  # RARѕR¶RѕRѕ CѓR »Сѓs ‡ С € osm
+                target_continue = current_continue_prob
 
             self.model.fit(np.array([state]), [target_combo, target_continue], epochs=1, verbose=0)
 
