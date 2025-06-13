@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using ZonkGameCore.FSM;
 using ZonkGameCore.FSM.States;
 
@@ -18,7 +18,7 @@ namespace ZonkGameCore.Utils
         }
 
         /// <summary>
-        /// Получает состояние по имени
+        /// Receives a condition by name
         /// </summary>
         public static BaseGameState GetStateByName(this ZonkStateMachine fsm, string stateName)
         {
@@ -32,7 +32,7 @@ namespace ZonkGameCore.Utils
                 .Select(x => Activator.CreateInstance(x, fsm.Observer, fsm))
                 .FirstOrDefault();
 
-            return state ?? throw new ArgumentException($"Состояние с именем {stateName} не найдено");
+            return state ?? throw new ArgumentException($"State named {statename} was not found");
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using ZonkGame.DB.GameRepository.Interfaces;
+using ZonkGame.DB.GameRepository.Interfaces;
 using ZonkGame.DB.Repositories.Interfaces;
 
 namespace ZonkGameCore.Observer
 {
     /// <summary>
-    /// Логгирование в консоль
+    /// Logging to the console
     /// </summary>
     public class ConsoleLogger(IAuditWriter auditWriter, IGameRepository repository) : BaseObserver(auditWriter, repository)
     {
         public override void Error(Exception e)
         {
-            Console.WriteLine($"Ошибка: {e.Message}");
+            Console.WriteLine($"Error: {E.Message}");
         }
 
         protected override void Info(string message)

@@ -23,33 +23,33 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Конфигурация приложения
+        // Add configuration
         builder.Services.Configure<GameZonkConfiguration>(
             builder.Configuration.GetSection(GameZonkConfiguration.Position));
 
-        // Конфигурация доступа к внешним приложениям
+        // Add configuration to the external api
         builder.Services.Configure<ExternalApiConfiguration>(
             builder.Configuration.GetSection(ExternalApiConfiguration.Position));
 
-        // Добавляем авторизацию
+        // Register Authorization
         builder.Services.AddControllers(opt => opt.Filters.Add<ZonkAuthorizeFilter>());
         builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
         ZonkAuthorizeFilter.ApiEnumRoute = ApiEnumRoute.ZonkBaseGameApi;
 
-        // Добавляем Grpc
+        // Register GRPC
         builder.Services.AddGrpc();
         builder.Services.AddSingleton<IGrpcChannelSingletone, GrpcChannelSingletone>();
 
-        // Добавляем SignalR
+        // Register signalr hub
         builder.Services.AddSignalR();
         builder.Services.AddSingleton<ZonkGameHub>();
 
-        // Добавляем сервисы
+        // Register services
         builder.Services.AddScoped<IGameService, GameService>();
         builder.Services.AddSingleton<IGameHostedService, GameHostedService>();
         builder.Services.AddHostedService(sp => (GameHostedService)sp.GetRequiredService<IGameHostedService>());
 
-        // Репозитории и база данных
+        // Register database context
         builder.Services.AddDbContextFactory<ZonkDbContext>(options =>
             options.UseNpgsql(
                 builder.Configuration.GetSection(GameZonkConfiguration.Position).GetSection("DbConnection").Value,
@@ -57,14 +57,16 @@ internal class Program
                 .UseLazyLoadingProxies()
                 .UseSnakeCaseNamingConvention(),
             ServiceLifetime.Scoped);
+
+        // Register repositories
         builder.Services.AddScoped<IAuditWriter, AuditWriter>();
         builder.Services.AddScoped<IGameRepository, GameRepository>();
 
-        // Добавляем кеш
+        // Register Redis
         builder.Services.AddSingleton<IRedisConnectionProvider, RedisConnectionProvider>();
         builder.Services.AddScoped<IGameStateStore, RedisGameStateStore>();
 
-        // Добавляем логгеры
+        // Add logging
         builder.Services.AddLogging();
         builder.Services.AddScoped<BaseObserver, WebApiObserver>();
 
@@ -72,6 +74,7 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Add resourse updater
         ResourceUpdater.RegisterResorceUpdater(
             builder.Services,
             builder.Configuration
@@ -82,16 +85,16 @@ internal class Program
         var app = builder.Build();
         if (app.Environment.IsDevelopment())
         {
+            // Swagger for dev
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
-        app.MapHub<ZonkGameHub>("/gamehub"); // регистрирем хаб SignalR
         app.MapControllers();
-        app.UseMiddleware<ApiResponseMiddleware>(); // Стандартизируем ответы от апи и ловим исключения
 
+        // Update resources
         await ResourceUpdater.UpdateResources(
             Assembly.GetExecutingAssembly(),
             app.Services, 

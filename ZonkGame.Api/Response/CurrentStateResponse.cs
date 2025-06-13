@@ -1,44 +1,44 @@
-﻿namespace ZonkGameApi.Response
+namespace ZonkGameApi.Response
 {
     /// <summary>
-    /// Ответ с текущим состоянием игры
+    /// Answer with the current state of the game
     /// </summary>
     public class CurrentStateResponse
     {
-        /// <summary> Идентификатор игры </summary>
+        /// <summary>Identifier of the game</summary>
         public Guid RoomId { get; set; }
 
-        /// <summary> Флаг окончания игры </summary>
+        /// <summary>The ending flag of the game</summary>
         public bool IsGameOver { get; set; }
 
-        /// <summary> Текущий игрок </summary>
+        /// <summary>The current player</summary>
         public Guid CurrentPlayerId { get; set; }
 
-        /// <summary> Имя текущего игрока </summary>
+        /// <summary>The name of the current player</summary>
         public string CurrentPlayerName { get; set; } = string.Empty;
 
-        /// <summary> Текущий счет игрока </summary>
+        /// <summary>The player's current account</summary>
         public int PlayerScore { get; set; }
 
-        /// <summary> Текущий счет противника </summary>
+        /// <summary>The current account of the enemy</summary>
         public int OpponentScore { get; set; }
 
-        /// <summary> Остаток кубиков </summary>
+        /// <summary>The rest of the cubes</summary>
         public int RemainingDice { get; set; }
 
-        /// <summary> Текущий бросок кубиков </summary>
+        /// <summary>The current throw of cubes</summary>
         public int[] CurrentRoll { get; set; } = [];
 
-        /// <summary> Доступные очковые комбинации, которые можно выбрать </summary>
+        /// <summary>Available point combinations that you can choose</summary>
         public List<int[]> AvailableCombinations { get; set; } = new();
 
-        /// <summary> Количество отыгранных раундов </summary>
+        /// <summary>The number of rounded rounds</summary>
         public int RoundCount { get; set; }
 
-        /// <summary> Целевой счет для завершения игры </summary>
+        /// <summary>Target account to complete the game</summary>
         public int TargetScore { get; internal set; }
 
-        /// <summary> Текущее состояние </summary>
+        /// <summary>Current condition</summary>
         public string CurrentState { get; set; }
     }
 }

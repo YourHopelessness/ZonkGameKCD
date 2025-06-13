@@ -1,22 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using ZonkGame.DB.Enum;
 
 namespace ZonkGameApi.Request
 {
     /// <summary>
-    /// Модель при создании игры
+    /// Model when creating a game
     /// </summary>
     public class GameCreationRequest
     {
-        /// <summary> Игроки </summary>
+        /// <summary>Players</summary>
         [Required, MaxLength(2), MinLength(2)]
         public required List<PlayerRequest> Players { get; set; }
 
-        /// <summary> Выбранный режим игры </summary>
+        /// <summary>Selected game mode</summary>
         [Required, EnumDataType(typeof(ModesEnum))]
         public ModesEnum Mode { get; set; }
 
-        /// <summary> Целевой счет </summary>
+        /// <summary>Target account</summary>
         [Required, Range(500, 10000)]
         public int TargetScore { get; set; }
     }

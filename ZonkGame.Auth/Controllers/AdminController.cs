@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ZonkGame.Auth.Models.Response;
 using ZonkGame.Auth.Service.Interfaces;
 using ZonkGame.DB.Enum;
@@ -10,15 +10,15 @@ namespace ZonkGame.Auth.Controllers
     public class AdminController(IAdminService adminService) : ControllerBase
     {
         /// <summary>
-        /// Получить список разрешений
+        /// Get a list of permits
         /// </summary>
-        /// <returns> Карта всех разрешений </returns>
+        /// <returns>A map of all permits</returns>
         [HttpGet("[action]")]
         public async Task<List<PermissionMapResponse>> GetAllResourceAndPermissions([FromQuery] ApiEnumRoute api)
             => await adminService.GetAllResourceAndPermissionsAsync(api);
 
         /// <summary>
-        /// Получить список ролей
+        /// Get a list of roles
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
@@ -26,15 +26,15 @@ namespace ZonkGame.Auth.Controllers
             => await adminService.GetRolesAsync();
 
         /// <summary>
-        /// Получить список API и их названий
+        /// Get a list of API and their names
         /// </summary>
         /// <returns></returns>
         [HttpGet("[action]")]
         public Dictionary<ApiEnumRoute, string> GetApiNames()
             => new()
             {
-                [ApiEnumRoute.AuthApi] = "Авторизация и упраление аккаунтом",
-                [ApiEnumRoute.ZonkBaseGameApi] = "Игра"
+                [ApiEnumRoute.AuthApi] = "Authorization and management of an account",
+                [ApiEnumRoute.ZonkBaseGameApi] = "Game"
             };
     }
 }

@@ -1,9 +1,9 @@
-﻿using System.Net;
+using System.Net;
 
 namespace ZonkGameCore.ApiUtils
 {
     /// <summary>
-    /// Модель ответа API, используемая для стандартизации ответов контроллеров.
+    /// The API response model used to standardize the response of controllers.
     /// </summary>
     public class ApiResponseModel
     {

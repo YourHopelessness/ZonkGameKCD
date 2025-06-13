@@ -1,4 +1,4 @@
-﻿using Grpc.Core;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Options;
 using System.Threading.Channels;
@@ -9,21 +9,21 @@ namespace ZonkGameAI.RPC
     public interface IGrpcChannelSingletone
     {
         /// <summary>
-        /// Получить канал для подключения к GRC сервису
+        /// Get a channel for connecting to a GRC service
         /// </summary>
-        /// <returns>Канал для подключения</returns>
+        /// <returns>Channel for connection</returns>
         GrpcChannel GetChannel();
     }
 
     /// <summary>
-    /// Класс синглтон для хранеиня подключения
+    /// Single -line
     /// </summary>
-    /// <param name="configuration">конфигурация апи</param>
+    /// <param name="configuration">API configuration</param>
     public class GrpcChannelSingletone(IOptions<GameZonkConfiguration> configuration) : IDisposable, IGrpcChannelSingletone
     {
         private readonly GrpcChannel? _channel;
         private readonly string _address = configuration.Value?.AIChannelAdress 
-            ?? throw new ArgumentNullException("Адрес сервера Grpc не задан");
+            ?? throw new ArgumentNullException("GRPC server address is not set");
 
         public GrpcChannel GetChannel()
         {

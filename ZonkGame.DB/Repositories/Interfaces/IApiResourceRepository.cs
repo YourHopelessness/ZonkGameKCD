@@ -1,22 +1,22 @@
-﻿using ZonkGame.DB.Context;
+using ZonkGame.DB.Context;
 using ZonkGame.DB.Entites.Auth;
 using ZonkGame.DB.Enum;
 
 namespace ZonkGame.DB.Repositories.Interfaces
 {
     /// <summary>
-    /// Интерфейс репозитория для работы с API ресурсами
+    /// Repository interface for working with API resources
     /// </summary>
     public interface IApiResourceRepository: IEntityRepository<ApiResource, AuthContext>
     {
         /// <summary>
-        /// Получает список API ресурсов
+        /// Receives a list of API resources
         /// </summary>
         /// <param name="api"></param>
         /// <returns></returns>
         Task<List<ApiResource>> GetApiResourcesAsync(ApiEnumRoute? api = null);
         /// <summary>
-        /// Обновляет список API ресурсов в базе данных
+        /// Updates the list of API resources in the database
         /// </summary>
         /// <param name="resources"></param>
         /// <returns></returns>

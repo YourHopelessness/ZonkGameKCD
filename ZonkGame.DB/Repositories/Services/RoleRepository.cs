@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ZonkGame.DB.Context;
 using ZonkGame.DB.Entites.Auth;
 using ZonkGame.DB.Enum;
@@ -18,8 +18,8 @@ namespace ZonkGame.DB.Repositories.Services
                 .Where(x => x.Name == roleName)
                 .FirstOrDefaultAsync()
                  ?? throw new EntityNotFoundException(
-                        "Роль",
-                        new() { { "Имя", roleName } });
+                        "Role",
+                        new() { { "Name", roleName } });
         }
 
         public async Task<List<UserRole>> GetUserRolesAsync(Guid? userId)
@@ -44,7 +44,7 @@ namespace ZonkGame.DB.Repositories.Services
                 .AsNoTracking()
                 .FirstOrDefaultAsync()
                  ?? throw new EntityNotFoundException(
-                        "Роль",
+                        "Role",
                         new() { { "Id", roleId.ToString() } });
         }
 

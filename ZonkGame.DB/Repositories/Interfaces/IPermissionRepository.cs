@@ -1,17 +1,17 @@
-﻿using ZonkGame.DB.Entites.Auth;
+using ZonkGame.DB.Entites.Auth;
 
 namespace ZonkGame.DB.Repositories.Interfaces
 {
     /// <summary>
-    /// Интерфейс репозитория для работы с разрешениями
+    /// Repository interface for working with permits
     /// </summary>
     public interface IPermissionRepository
     {
         /// <summary>
-        /// Получает список всех разрешений
+        /// Receives a list of all permits
         /// </summary>
-        /// <param name="name">имя разрешения</param>
-        /// <returns>разрешение</returns>
+        /// <param name="name">The name of the resolution</param>
+        /// <returns>permission</returns>
         Task<Permission> GetPermissionByName(string name);
     }
 }

@@ -1,17 +1,17 @@
-﻿namespace ZonkGameApi.Request
+namespace ZonkGameApi.Request
 {
     /// <summary>
-    /// Запрос на продолжение решения игрока в игре
+    /// Request for the continuation of the player's decision in the game
     /// </summary>
     public class ContinueDecisionRequest
     {
-        /// <summary> Идентификатор игры, в которой игрок принимает решение </summary>
+        /// <summary>The identifier of the game in which the player makes a decision</summary>
         public Guid GameId { get; set; }
 
-        /// <summary> Нужно ли продолжать игру </summary>
+        /// <summary>Do I need to continue the game</summary>
         public bool ShouldContinue { get; set; }
 
-        /// <summary> Идентификатор игрока, принимающего решение </summary>
+        /// <summary>The identifier of the player making a decision</summary>
         public Guid PlayerId { get; set; }
     }
 }

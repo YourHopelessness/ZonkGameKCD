@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Polly;
 using System.IO;
@@ -12,7 +12,7 @@ using ZonkGameCore.Exceptions;
 namespace ZonkGameCore.ApiUtils
 {
     /// <summary>
-    /// По промежуточного слоя для отлова ошибок и стандартизации ответа контроллеров
+    /// On the intermediate layer for catching errors and standardizing the response of controllers
     /// </summary>
     public class ApiResponseMiddleware
     {

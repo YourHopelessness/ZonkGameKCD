@@ -1,4 +1,4 @@
-﻿using ZonkGame.DB.Exceptions;
+using ZonkGame.DB.Exceptions;
 using ZonkGame.DB.GameRepository.Interfaces;
 using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameCore.Context;
@@ -9,7 +9,7 @@ using ZonkGameCore.Utils;
 namespace ZonkGameCore.Observer
 {
     /// <summary>
-    /// Базовый класс для логгирования
+    /// Basic class for logging
     /// </summary>
     public abstract class BaseObserver(IAuditWriter audutor, IGameRepository repository)
     {
@@ -17,18 +17,18 @@ namespace ZonkGameCore.Observer
         private readonly IAuditWriter _audutor = audutor;
         private readonly IGameRepository _gameRepository = repository;
 
-        protected string RerollMessage = "Игрок {0} отложил все кости. Можно перебросить кости";
-        protected string ContinueTurnMessage = "Игрок {0} продолжил ход";
-        protected string CorrectDiceSelectionMessage = "Игрок {0} набрал {1} очков за ход. Итоговый счет {2}";
-        protected string EndGameMessage = "Игра завершена со счетом {0}, победитель {1}";
-        protected string EndTurnMessage = "Игрок {0} завершил ход. Итоговый счет {1}";
-        protected string FailedTurnMessage = "Игрок {0} совершил неудачный бросок костей, нет доступных комбинаций";
-        protected string FinishTurnMessage = "Игрок {0} решил закончить ход";
-        protected string IncorrectDiceSelectionMessage = "Игрок {0} выбрал некорректные кости: {1}";
-        protected string RollDiceMessage = "Игрок {0} бросил кости: {1}";
-        protected string StartGameMessage = "Начало новой игры. Целевой счет {0}. Игрок {1}";
-        protected string ErrorMessage = "Ошибка в игре: {0}";
-        protected string NewTurnMessage = "Новый ход игрока {0}";
+        protected string RerollMessage = "The player {0} put off all the bones. You can throw the bones";
+        protected string ContinueTurnMessage = "The player {0} continued to move";
+        protected string CorrectDiceSelectionMessage = "The player {0} scored {1} points for the course. The final account {2}";
+        protected string EndGameMessage = "The game is completed with a score {0}, winner {1}";
+        protected string EndTurnMessage = "The player {0} completed the move. The final account {1}";
+        protected string FailedTurnMessage = "The player {0} made an unsuccessful throw of bones, there are no available combinations";
+        protected string FinishTurnMessage = "The player {0} decided to finish the move";
+        protected string IncorrectDiceSelectionMessage = "The player {0} chose incorrect bones: {1}";
+        protected string RollDiceMessage = "The player {0} threw the bones: {1}";
+        protected string StartGameMessage = "The beginning of the new game. Target account {0}. Player {1}";
+        protected string ErrorMessage = "Error in the game: {0}";
+        protected string NewTurnMessage = "New move of the player {0}";
 
         public void SetGameContext(GameContext context)
         {
@@ -36,7 +36,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Новый ход игрока
+        /// New move of the player
         /// </summary>
         public async Task NewTurn()
         {
@@ -50,7 +50,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Начало новой игры 
+        /// The beginning of the new game
         /// </summary>
         public async Task StartGame(GameContext context)
         {
@@ -70,7 +70,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Бросок кубиков
+        /// Throwing cubes
         /// </summary>
         public async Task RollDice()
         {
@@ -85,7 +85,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Выбор костей неверный
+        /// The choice of bones is incorrect
         /// </summary>
         public async Task IncorrectDiceSelection(IEnumerable<int> selectedDices)
         {
@@ -100,7 +100,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Выбор костей верный
+        /// The choice of bones is true
         /// </summary>
         public async Task CorrectDiceSelection(IEnumerable<int> selectedDices)
         {
@@ -126,7 +126,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Выбор продолжения хода
+        /// The choice of continuation of the move
         /// </summary>
         public async Task ContinueTurn()
         {
@@ -148,7 +148,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Выбор завершения хода
+        /// Choosing the completion of the move
         /// </summary>
         public async Task FinishTurn()
         {
@@ -170,7 +170,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Завершение хода
+        /// The end of the move
         /// </summary>
         public async Task EndTurn()
         {
@@ -185,7 +185,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Неудачный ход
+        /// Unsuccessful move
         /// </summary>
         public async Task FailedTurn()
         {
@@ -203,7 +203,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Завершение игры
+        /// The end of the game
         /// </summary>
         public async Task EndGame(Guid winnerId, string winnerName, int totalscore)
         {
@@ -216,7 +216,7 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Можно перебросить кости
+        /// You can throw the bones
         /// </summary>
         public void CanReroll()
         {
@@ -226,12 +226,12 @@ namespace ZonkGameCore.Observer
         }
 
         /// <summary>
-        /// Логгирование ошибки
+        /// Logging error
         /// </summary>
         public abstract void Error(Exception e);
 
         /// <summary>
-        /// Логгирование информации
+        /// Logging of information
         /// </summary>
         protected abstract void Info(string message);
     }

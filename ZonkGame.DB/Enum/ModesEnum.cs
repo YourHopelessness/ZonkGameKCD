@@ -1,15 +1,15 @@
-﻿namespace ZonkGame.DB.Enum
+namespace ZonkGame.DB.Enum
 {
     /// <summary>
-    /// Режим игры
+    /// Game mode
     /// </summary>
     public enum ModesEnum
     {
-        /// <summary> Игрок против игрока</summary>
+        /// <summary>Player against the player</summary>
         PvP,
-        /// <summary> Игрок против ИИ</summary>
+        /// <summary>The player against AI</summary>
         PvE,
-        /// <summary> ИИ против ИИ</summary>
+        /// <summary>AI against AI</summary>
         EvE
     }
 }

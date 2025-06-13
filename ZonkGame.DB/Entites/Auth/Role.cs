@@ -1,29 +1,29 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ZonkGame.DB.Entites.Auth
 {
     /// <summary>
-    /// Представляет роль в системе аутентификации
+    /// Represents the role in the authentication system
     /// </summary>
     [Table("role")]
     public class Role : IdentityRole
     {
         /// <summary>
-        /// Идентификатор роли
+        /// Role identifier
         /// </summary>
         [Required]
         [Column("id")]
         public new Guid Id { get; set; }
 
         /// <summary>
-        /// Описание роли
+        /// Description of the role
         /// </summary>
         [Column("description")]
         public string? Description { get; set; }
 
-        /// <summary> Дата создания </summary>
+        /// <summary>The date of creation</summary>
         [Required]
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }

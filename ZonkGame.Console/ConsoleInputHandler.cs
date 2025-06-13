@@ -1,4 +1,4 @@
-﻿using ZonkGameCore.InputParams;
+using ZonkGameCore.InputParams;
 
 namespace ZonkGameCore.InputHandler
 {
@@ -18,11 +18,11 @@ namespace ZonkGameCore.InputHandler
         {
             while (true)
             {
-                Console.WriteLine("Хотите продолжить игру? (y/n)");
+                Console.WriteLine("Want to continue the game? (y/n)");
                 var input = Console.ReadLine();
                 if (input == null)
                 {
-                    Console.WriteLine("Ваш ответ не должен быть пустым");
+                    Console.WriteLine("Your answer should not be empty");
                 }
                 else if (input == "y")
                 {
@@ -40,26 +40,26 @@ namespace ZonkGameCore.InputHandler
             var selectedDices = new List<int>();
             while (true)
             {
-                Console.WriteLine("Выберите кости, которые хотите отложить (через запятую):");
+                Console.WriteLine("Select the bones that you want to postpone (through a comma):");
                 var input = Console.ReadLine();
                 if (string.IsNullOrEmpty(input))
                 {
-                    Console.WriteLine("Вы должны отложить хотя бы одну кость");
+                    Console.WriteLine("You must postpone at least one bone");
                 }
                 else
                 {
                     selectedDices = [.. input.Split(',', ' ', '.').Select(d => int.Parse(d.Trim()))];
                     if (selectedDices.Count == 0)
                     {
-                        Console.WriteLine("Вы должны отложить хотя бы одну кость");
+                        Console.WriteLine("You must postpone at least one bone");
                     }
                     else if (selectedDices.Any(x => x < 1 || x > 6))
                     {
-                        Console.WriteLine("Кости могут быть только от 1 до 6");
+                        Console.WriteLine("Bones can only be from 1 to 6");
                     }
                     else if (!selectedDices.ToHashSet().IsSubsetOf(roll.ToHashSet()))
                     {
-                        Console.WriteLine("Выбранные кости не совпадают с брошенными костями");
+                        Console.WriteLine("Selected bones do not coincide with abandoned bones");
                     }
                     else
                     {

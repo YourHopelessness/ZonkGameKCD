@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using ZonkGame.DB.Enum;
 using ZonkGameCore.InputParams;
 
@@ -6,35 +6,35 @@ namespace ZonkGameCore.Model
 {
     public class StoredPlayerModel
     {
-        /// <summary> Идентификатор игрока </summary>
+        /// <summary>The player identifier</summary>
         public Guid PlayerId { get; set; }
 
-        /// <summary> Бот ли игрок </summary>
+        /// <summary>Whether a player is a bot</summary>
         public PlayerTypeEnum PlayerType { get; set; } = PlayerTypeEnum.RealPlayer;
 
-        /// <summary> Обработчик ввода игрока </summary>
+        /// <summary>The player input handler</summary>
         [JsonIgnore]
         public IInputAsyncHandler PlayerInputHandler { get; set; } = null!;
 
-        /// <summary> Имя игрока </summary>
+        /// <summary>The name of the player</summary>
         public string PlayerName { get; set; } = null!;
 
-        /// <summary> Счет игрока </summary>
+        /// <summary>The player's account</summary>
         public int TotalScore { get; set; }
 
-        /// <summary> Счет игрока за текущий ход </summary>
+        /// <summary>The player's account for the current move</summary>
         public int TurnScore { get; set; }
 
-        /// <summary> Количество оставшихся костей </summary>
+        /// <summary>The number of remaining bones</summary>
         public int RemainingDice { get; set; }
 
-        /// <summary> Победитель ли данный игрок </summary>
+        /// <summary>Winner is this player</summary>
         public bool IsWinner { get; set; } = false;
 
-        /// <summary> Флаг текущего игрока </summary>
+        /// <summary>The flag of the current player</summary>
         public bool IsCurrentPlayer { get; set; }
 
-        /// <summary> Ходы игрока </summary>
+        /// <summary>The player's moves</summary>
         public int TurnsCount { get; set; }
     }
 }

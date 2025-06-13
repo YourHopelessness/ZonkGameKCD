@@ -1,9 +1,9 @@
-﻿using ZonkGameCore.Model;
+using ZonkGameCore.Model;
 
 namespace ZonkGameCore.Context
 {
     /// <summary>
-    /// Класс для хранения состояния игры
+    /// Class for storing the state of the game
     /// </summary>
     public class GameContext
     {
@@ -36,24 +36,24 @@ namespace ZonkGameCore.Context
             GameId = gameId;
         }
         /// <summary>
-        /// Идентификатор игры
+        /// Identifier of the game
         /// </summary>
         public Guid GameId { get; set; }
 
-        /// <summary> Целевой счет для победы </summary>
+        /// <summary>Target account for victory</summary>
         public int TargetScore { get; init; }
 
-        /// <summary> Текущий бросок </summary>
+        /// <summary>The current throw</summary>
         public IEnumerable<int> CurrentRoll { get; set; } = [];
 
-        /// <summary> Текущий игрок </summary>
+        /// <summary>The current player</summary>
         public PlayerState CurrentPlayer { get; private set; }
 
-        /// <summary> Состояние игроков </summary>
+        /// <summary>The condition of the players</summary>
         public List<PlayerState> Players { get; private set; }
 
         /// <summary>
-        /// Переход к следующему игроку
+        /// Transition to the next player
         /// </summary>
         public PlayerState NextPlayer()
         {
@@ -66,11 +66,11 @@ namespace ZonkGameCore.Context
         }
 
         /// <summary>
-        /// Получить противника текущего игрока
+        /// Get an enemy of the current player
         /// </summary>
         public PlayerState GetOpponentPlayer()
         {
-            return Players.FirstOrDefault(x => x != CurrentPlayer) ?? throw new InvalidOperationException("Не удалось найти противника");
+            return Players.FirstOrDefault(x => x != CurrentPlayer) ?? throw new InvalidOperationException("Failed to find the enemy");
         }
     }
 }

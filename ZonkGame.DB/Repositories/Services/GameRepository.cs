@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ZonkGame.DB.Context;
 using ZonkGame.DB.Entites.Zonk;
 using ZonkGame.DB.Enum;
@@ -38,7 +38,7 @@ namespace ZonkGame.DB.Repositories.Services
                     Game = new Game { Id = gameId },
                     Player = DbContext.Players.Find(pid)
                        ?? throw new EntityNotFoundException(
-                                "Игрок",
+                                "Player",
                                 new() { { "Id", pid.ToString() }}),
                     PlayerTurn = idx + 1
                 })]
@@ -49,7 +49,7 @@ namespace ZonkGame.DB.Repositories.Services
 
         public async Task UpdateGameStateAsync(Guid gameId, string newState)
         {
-            var game = await GetGameByIdAsync(gameId) ?? throw new KeyNotFoundException($"Игры с {gameId} не существует");
+            var game = await GetGameByIdAsync(gameId) ?? throw new KeyNotFoundException($"Games with {Gameid} does not exist");
             game.GameState = newState;
 
             await SaveChangesAsync();
@@ -81,7 +81,7 @@ namespace ZonkGame.DB.Repositories.Services
                 .FirstOrDefaultAsync(x => x.Game.Id == gameId && x.Player.Id == playerId);
 
             return gamePlayer ?? throw new EntityNotFoundException(
-                    "Игры игроков",
+                    "Games of players",
                     new() { { "GameId", gameId.ToString() }, { "PlayerId", playerId.ToString() } });
         }
 
@@ -140,8 +140,8 @@ namespace ZonkGame.DB.Repositories.Services
             var game = await DbContext.Games
                 .Where(g => g.Id == gameId && g.Winner == null)
                 .FirstOrDefaultAsync() ?? throw new EntityNotFoundException(
-                    "Игра",
-                    new() { { "Id", gameId.ToString() }, { "незавершенная и без победителя, Winner", "null" } });
+                    "Game",
+                    new() { { "Id", gameId.ToString() }, { "Inappropriate and without the winner, Winner", "null" } });
 
             game.EndedAt = DateTime.UtcNow;
 

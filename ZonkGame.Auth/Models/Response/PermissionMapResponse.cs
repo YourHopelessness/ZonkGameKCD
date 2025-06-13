@@ -1,14 +1,14 @@
-﻿namespace ZonkGame.Auth.Models.Response
+namespace ZonkGame.Auth.Models.Response
 {
     /// <summary>
-    /// Ответ на запрос карты разрешений
+    /// Answer to a request for permits card
     /// </summary>
     public class PermissionMapResponse
     {
-        /// <summary> Список разрешений, связанных с разрешениями </summary>
+        /// <summary>List of permits related to permits</summary>
         public List<PermissionResponse> Permissions { get; set; } = null!;
 
-        /// <summary> Список ресурсов, связанных с API </summary>
+        /// <summary>List of resources associated with the API</summary>
         public ApiResourceResponse ApiResource { get; set; } = null!;
     }
 } 

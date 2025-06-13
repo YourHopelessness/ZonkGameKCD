@@ -1,20 +1,20 @@
-﻿namespace ZonkGame.Auth.Models.Response
+namespace ZonkGame.Auth.Models.Response
 {
     /// <summary>
-    /// Ответ на запрос разрешения
+    /// Response to a request for permission
     /// </summary>
     public class PermissionResponse
     {
-        /// <summary> Идентификатор разрешения </summary>
+        /// <summary>Resolution identifier</summary>
         public Guid PermissionId { get; set; }
 
-        /// <summary> Имя разрешения </summary>
+        /// <summary>The name of the resolution</summary>
         public string PermissionName { get; set; } = null!;
 
-        /// <summary> Описание разрешения </summary>
+        /// <summary>Description of permission</summary>
         public string? PermissionDescription { get; set; } = null!;
 
-        /// <summary> Флаг, указывающий, выбрано ли разрешение </summary>
+        /// <summary>Flag indicating whether the resolution has been chosen</summary>
         public bool IsChecked { get; set; } = false;
     }
 }

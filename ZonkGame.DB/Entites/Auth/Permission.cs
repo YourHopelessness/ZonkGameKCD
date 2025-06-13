@@ -1,29 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ZonkGame.DB.Entites.Auth
 {
     /// <summary>
-    /// Разрешение
+    /// Permission
     /// </summary>
     [Table("permission")]
     public class Permission
     {
-        /// <summary> Идентификатор разрешения </summary>
+        /// <summary>Resolution identifier</summary>
         [Required]
         [Column("id")]
         public Guid Id { get; set; }
 
-        /// <summary> Имя разрешения </summary>
+        /// <summary>The name of the resolution</summary>
         [Required]
         [Column("name")]
         public string Name { get; set; } = default!;
 
-        /// <summary> Описание разрешения </summary>
+        /// <summary>Description of permission</summary>
         [Column("description")]
         public string? Description { get; set; }
 
-        /// <summary> Дата создания </summary>
+        /// <summary>The date of creation</summary>
         [Required]
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }

@@ -1,33 +1,33 @@
-﻿using ZonkGameCore.ApiUtils.Requests;
+using ZonkGameCore.ApiUtils.Requests;
 
 namespace ZonkGame.Auth.Service.Interfaces
 {
     /// <summary>
-    /// Сервис для работы с ролями и правами доступа.
+    /// Service for working with roles and access rights.
     /// </summary>
     public interface IPermissionService
     {
         /// <summary>
-        /// Получает список ролей пользователя по его id
+        /// Receives a list of user roles on his ID
         /// </summary>
-        /// <param name="userId">Id пользователя</param>
-        /// <returns>Список ролей</returns>
+        /// <param name="userId">User ID</param>
+        /// <returns>List of roles</returns>
         Task<List<string?>> GetRoleNames(Guid userId);
         /// <summary>
-        /// Устанавливает роль по умолчанию для пользователя.
+        /// It sets the default role for the user.
         /// </summary>
-        /// <param name="roleId">Id роли</param>
-        /// <param name="userId">Id пользователя</param>
-        /// <returns>Назначить права доступа пользователю</returns>
+        /// <param name="roleId">ID roles</param>
+        /// <param name="userId">User ID</param>
+        /// <returns>Assign access rights to the user</returns>
         Task SetRoleToUser(Guid roleId, Guid userId);
         /// <summary>
-        /// Назначить роль по-умолчанию для пользователя, если у него нет ролей.
+        /// Assign a role in a defendant for the user if he has no roles.
         /// </summary>
-        /// <param name="userId">Id пользователя</param>
-        /// <returns>Роль по-умолчанию</returns>
+        /// <param name="userId">User ID</param>
+        /// <returns>The role of a state</returns>
         Task SetDefaultRole(Guid userId);
         /// <summary>
-        /// Есть ли доступ у пользователя
+        /// Does the user have access
         /// </summary>
         /// <param name="hasAccessRequest"></param>
         /// <returns></returns>

@@ -24,7 +24,7 @@ class Normilize:
         count = Counter(combination)
         score = 0
 
-        # Проверка на стриты
+        # Checking for strips
         unique = set(combination)
         if unique == {1, 2, 3, 4, 5, 6}:
             return 1500
@@ -40,7 +40,7 @@ class Normilize:
                 score += base * multiplier
                 cnt -= 3
 
-            # Остатки единиц и пятёрок
+            # Remains of units and five
             if die == 1:
                 score += cnt * 100
             elif die == 5:

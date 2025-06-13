@@ -1,4 +1,4 @@
-﻿using ZonkGame.DB.Entites.Zonk;
+using ZonkGame.DB.Entites.Zonk;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.Repositories.Interfaces;
 using ZonkGameAI.RPC;
@@ -18,34 +18,34 @@ namespace ZonkGameApi.Services
     public interface IGameService
     {
         /// <summary>
-        /// Обработка хода игрока
+        /// The player's move
         /// </summary>
-        /// <param name="roomId">Идентификатор комнаты</param>
-        /// <param name="stateMachine">Текущая игра</param>
-        /// <returns>Состояние игры</returns>
+        /// <param name="roomId">Room identifier</param>
+        /// <param name="stateMachine">Current game</param>
+        /// <returns>The state of the game</returns>
         Task<StateResponseModel> MakeStep(Guid roomId, ZonkStateMachine stateMachine);
         /// <summary>
-        /// Получение состояния игры
+        /// Obtaining the state of the game
         /// </summary>
-        /// <param name="roomId">Идентификатор комнаты</param>
-        /// <param name="stateMachine">Текущая игра</param>
-        /// <returns>Состояние игры</returns>
+        /// <param name="roomId">Room identifier</param>
+        /// <param name="stateMachine">Current game</param>
+        /// <returns>The state of the game</returns>
         CurrentStateResponse GetState(Guid roomId, ZonkStateMachine stateMachine);
         /// <summary>
-        /// Создание новой игры
+        /// Creating a new game
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         Task<CurrentStateResponse> CreateGame(GameCreationRequest request);
         /// <summary>
-        /// Завершить игру досрочно, без победителя
+        /// Complete the game ahead of schedule, without a winner
         /// </summary>
-        /// <param name="gameId">идентификатор игры</param>
+        /// <param name="gameId">Identifier of the game</param>
         Task FinishGame(Guid gameId);
     }
 
     /// <summary>
-    /// Сервис для игры
+    /// Service for the game
     /// </summary>
     public class GameService(
         IGrpcChannelSingletone channel,
@@ -78,8 +78,8 @@ namespace ZonkGameApi.Services
                 players.Add(new InputPlayerModel(
                        existingPlayer.PlayerName,
                        existingPlayer.PlayerType == PlayerTypeEnum.AIAgent
-                            ? new GrpcAgentInputHandler(_channel.GetChannel()) // gRPC вызовы с агентом
-                            : existingPlayer.PlayerType == PlayerTypeEnum.RealPlayer ? new SignalRInputHandler(_hub) // SignalR взаимодействие
+ // GRPC calls with an agent
+ // Signalr interaction
                             : new RestInputHandler(),
                         existingPlayer.PlayerType,
                         existingPlayer.Id));

@@ -1,11 +1,11 @@
-﻿using ZonkGame.DB.Enum;
+using ZonkGame.DB.Enum;
 
 namespace ZonkGameCore.Utils
 {
     public static class GameModeDefiner
     {
         /// <summary>
-        /// Определяет режим игры по типу игроков
+        /// Determines the game mode by the type of players
         /// </summary>
         public static ModesEnum GetGameMode(IEnumerable<PlayerTypeEnum> playersType)
         {
@@ -13,7 +13,7 @@ namespace ZonkGameCore.Utils
 
             var types = playersType.ToList();
             if (types.Count == 0)
-                throw new ArgumentException("Нужно хотя бы два игрока", nameof(playersType));
+                throw new ArgumentException("Need at least two players", nameof(playersType));
 
             int realCount = types.Count(t => t == PlayerTypeEnum.RealPlayer);
             int total = types.Count;

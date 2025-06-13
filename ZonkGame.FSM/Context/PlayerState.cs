@@ -1,11 +1,11 @@
-﻿using ZonkGame.DB.Enum;
+using ZonkGame.DB.Enum;
 using ZonkGameCore.Model;
 using ZonkGameCore.InputParams;
 
 namespace ZonkGameCore.Context
 {
     /// <summary>
-    /// Состояние игрока
+    /// The condition of the player
     /// </summary>
     public class PlayerState
     {
@@ -30,39 +30,39 @@ namespace ZonkGameCore.Context
             PlayerType = player.PlayerType;
         }
 
-        /// <summary> Идентификатор игрока </summary>
+        /// <summary>The player identifier</summary>
         public Guid PlayerId { get; set; }
 
-        /// <summary> Бот ли игрок </summary>
+        /// <summary>Whether a player is a bot</summary>
         public PlayerTypeEnum PlayerType { get; set; } = PlayerTypeEnum.RealPlayer;
 
-        /// <summary> Обработчик ввода игрока </summary>
+        /// <summary>The player input handler</summary>
         public IInputAsyncHandler PlayerInputHandler { get; set; }
 
-        /// <summary> Имя игрока </summary>
+        /// <summary>The name of the player</summary>
         public string PlayerName { get; set; }
 
-        /// <summary> Счет игрока </summary>
+        /// <summary>The player's account</summary>
         public int TotalScore { get; private set; } = 0;
 
-        /// <summary> Счет игрока за текущий ход </summary>
+        /// <summary>The player's account for the current move</summary>
         public int TurnScore { get; set; } = 0;
 
-        /// <summary> Количество оставшихся костей</summary>
+        /// <summary>The number of remaining bones</summary>
         public int RemainingDice { get; private set; } = 6;
 
-        /// <summary> Победитель ли данный игрок </summary>
+        /// <summary>Winner is this player</summary>
         public bool IsWinner { get; set; } = false;
 
-        /// <summary> Количество ходов в игре </summary>
+        /// <summary>The number of moves in the game</summary>
         public int TurnsCount { get; set; } = 0;
 
 
         /// <summary>
-        /// Уменьшить количество костей на отложенные
+        /// Reduce the number of bones by delayed
         /// </summary>
-        /// <param name="selected">Количетсво отложенных костей</param>
-        /// <exception cref="InvalidOperationException">Невозможность уменьшить кости</exception>
+        /// <param name="selected">Countered by the deferred bones</param>
+        /// <exception cref="InvalidOperationException">The inability to reduce the bone</exception>
         public void SubstructDices(int selected)
         {
             RemainingDice -= selected;
@@ -70,12 +70,12 @@ namespace ZonkGameCore.Context
             if (RemainingDice < 0)
             {
                 RemainingDice = 0;
-                throw new InvalidOperationException("Количество костей не может быть меньше 0");
+                throw new InvalidOperationException("The number of bones cannot be less than 0");
             }
         }
 
         /// <summary> 
-        /// Установить кости в изначальное состояние 
+        /// Set bones in the original state
         /// </summary>
         public void ResetDices()
         {
@@ -83,7 +83,7 @@ namespace ZonkGameCore.Context
         }
 
         /// <summary> 
-        /// Меняем общий счет игрока в случае успешного хода 
+        /// We change the general account of the player in the event of a successful move
         /// </summary>
         public void AddingTotalScore()
         {

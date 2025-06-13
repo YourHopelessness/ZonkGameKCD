@@ -1,52 +1,52 @@
-﻿using ZonkGame.DB.Entites.Auth;
+using ZonkGame.DB.Entites.Auth;
 using ZonkGame.DB.Enum;
 using ZonkGame.DB.Models;
 
 namespace ZonkGame.DB.Repositories.Interfaces
 {
     /// <summary>
-    /// Интерфейс репозитория для работы с ролями пользователей.
+    /// Interface of the repository for working with user roles.
     /// </summary>
     public interface IRoleRepository
     {
         /// <summary>
-        /// Получает роль по имени.
+        /// He gets a role by name.
         /// </summary>
-        /// <param name="roleName">Название роли</param>
-        /// <returns>Роль</returns>
+        /// <param name="roleName">The name of the role</param>
+        /// <returns>Role</returns>
         Task<Role> GetRoleByNameAsync(string roleName);
         /// <summary>
-        /// Получает роль по идентификатору.
+        /// He receives a role in the identifier.
         /// </summary>
-        /// <param name="roleId">id роль</param>
-        /// <returns>роль</returns>
+        /// <param name="roleId">ID role</param>
+        /// <returns>role</returns>
         Task<Role> GetRoleByIdAsync(Guid roleId);
         /// <summary>
-        /// Получает список ролей.
+        /// Gets a list of roles.
         /// </summary>
-        /// <returns>список ролей</returns>
+        /// <returns>List of roles</returns>
         Task<List<Role>> GetAllRoles();
         /// <summary>
-        /// Получает список ролей пользователя по его идентификатору.
+        /// He receives a list of user roles according to his identifier.
         /// </summary>
         /// <param name="userId"></param>
-        /// <returns>Список ролей</returns>
+        /// <returns>List of roles</returns>
         Task<List<UserRole>> GetUserRolesAsync(Guid? userId = null);
         /// <summary>
-        /// Назначает роль пользователю.
+        /// Assures the role of the user.
         /// </summary>
-        /// <param name="role">Роль</param>
-        /// <param name="user">Пользователем</param>
+        /// <param name="role">Role</param>
+        /// <param name="user">User</param>
         Task SetRoleToUserAsync(Role role, ApplicationUser user);
         /// <summary>
-        /// Получает все роли и их права доступа.
+        /// He receives all roles and their access rights.
         /// </summary>
         /// <returns></returns>
         Task<List<ApiResoursePermissionModel>> GetResourcesAndPermissions(ApiEnumRoute api);
         /// <summary>
-        /// Получает все права доступа к ресурсам API.
+        /// He receives all the rights to access to the API resources.
         /// </summary>
-        /// <returns>Есть ли доступ к ресурсу</returns>
+        /// <returns>Is there any access to the resource</returns>
         Task<bool> HasUserAccessAsync(Guid userId, Guid resorceId);
     }
 }

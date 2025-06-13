@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using ZonkGame.DB.Context;
@@ -12,7 +12,7 @@ namespace ZonkGameCore.Utils.Resource
     public static class ResourceUpdater
     {
         /// <summary>
-        /// Обновляет ресурсы API в базе данных
+        /// Updates API resources in the database
         /// </summary>
         public static async Task UpdateResources(
             Assembly assembly,
@@ -26,7 +26,7 @@ namespace ZonkGameCore.Utils.Resource
         }
 
         /// <summary>
-        /// Регистрирует сервисы для обновления ресурсов API в базе данных
+        /// Registers services for updating API resources in the database
         /// </summary>
         public static void RegisterResorceUpdater(IServiceCollection services, string connectionstring)
         {

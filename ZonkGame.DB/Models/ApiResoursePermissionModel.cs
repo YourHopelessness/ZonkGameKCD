@@ -1,29 +1,29 @@
-﻿using ZonkGame.DB.Entites.Auth;
+using ZonkGame.DB.Entites.Auth;
 
 namespace ZonkGame.DB.Models
 {
     /// <summary>
-    /// Модель, представляющая связь между ресурсом API и его разрешениями
+    /// A model representing a connection between the API resource and its permits
     /// </summary>
     public class ApiResoursePermissionModel
     {
-        /// <summary> Идентификатор ресурса API </summary>
+        /// <summary>API resource identifier</summary>
         public ApiResource ApiResource { get; set; } = default!;
 
-        /// <summary> Список разрешений, связанных с ресурсом API </summary>
+        /// <summary>List of permits related to the API resource</summary>
         public List<PermissionsModel>? Permissions { get; set; } = default!;
         
     }
     
     /// <summary>
-    /// Модель разрешеиния
+    /// Model of permissions
     /// </summary>
     public class PermissionsModel
     {
-        /// <summary> Разрешение </summary>
+        /// <summary>Permission</summary>
         public Permission Permission { get; set; } = null!;
 
-        /// <summary> Флаг, указывающий, выбрано ли разрешение </summary>
+        /// <summary>Flag indicating whether the resolution has been chosen</summary>
         public bool IsChecked { get; set; } = false;
     }
 }
