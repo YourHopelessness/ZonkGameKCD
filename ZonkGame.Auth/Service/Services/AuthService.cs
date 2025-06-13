@@ -19,6 +19,11 @@ namespace ZonkGame.Auth.Service.Services
         UserManager<ApplicationUser> userManager,
         IPermissionService permissionService) : IAuthService
     {
+        /// <summary>
+        /// Authenticates a user using OpenID Connect password flow.
+        /// </summary>
+        /// <param name="request">Authentication request</param>
+        /// <returns>Authentication token response</returns>
         public async Task<TokenResponse> AuthenticateAsync(OpenIdConnectRequest request)
         {
             if (!request.IsPasswordGrantType())
@@ -53,11 +58,19 @@ namespace ZonkGame.Auth.Service.Services
             };
         }
 
+        /// <summary>
+        /// Retrieves user information by identifier.
+        /// </summary>
+        /// <param name="userId">User identifier</param>
         public Task GetUserByIdAsync(Guid userId)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Registers a new user in the system.
+        /// </summary>
+        /// <param name="model">User registration data</param>
         public async Task RegisterAsync(RegisterRequestModel model)
         {
             var user = new ApplicationUser

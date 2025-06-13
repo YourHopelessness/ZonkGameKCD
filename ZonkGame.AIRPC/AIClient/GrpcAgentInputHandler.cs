@@ -7,9 +7,15 @@ namespace ZonkGameAI.RPC.AIClient
 {
     public class GrpcAgentInputHandler(GrpcChannel channel) : IInputAsyncHandler
     {
-        private readonly ZonkService.ZonkServiceClient _serviceClient = 
+        private readonly ZonkService.ZonkServiceClient _serviceClient =
             new(channel);
 
+        /// <summary>
+        /// Requests selected dice from the gRPC agent.
+        /// </summary>
+        /// <param name="roll">Current roll values</param>
+        /// <param name="gameid">Game identifier</param>
+        /// <param name="playerId">Player identifier</param>
         public async Task<IEnumerable<int>?> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid, Guid playerId)
         {
             var response = await _serviceClient.GetSelectedDicesAsync(
@@ -18,6 +24,12 @@ namespace ZonkGameAI.RPC.AIClient
             return [..response.Dices.Select(x => x)];
         }
 
+        /// <summary>
+        /// Requests continuation decision from the gRPC agent.
+        /// </summary>
+        /// <param name="gameid">Game identifier</param>
+        /// <param name="playerId">Player identifier</param>
+        /// <returns>Whether the agent wants to continue the game</returns>
         public async Task<bool?> HandleShouldContinueGameInputAsync(Guid gameid, Guid playerId)
         {
             var response = await _serviceClient.GetContinuationDecisionAsync(

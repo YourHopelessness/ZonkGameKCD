@@ -13,6 +13,11 @@ namespace ZonkGame.DB.Repositories.Services
         EntityRepository<ApiResource, AuthContext>(dbFactory),
         IApiResourceRepository
     {
+        /// <summary>
+        /// Retrieves API resources filtered by API type.
+        /// </summary>
+        /// <param name="api">API type to filter or null for all</param>
+        /// <returns>List of resources</returns>
         public async Task<List<ApiResource>> GetApiResourcesAsync(ApiEnumRoute? api = null)
         {
             var resources = await _context.ApiResource
@@ -22,6 +27,12 @@ namespace ZonkGame.DB.Repositories.Services
             return resources;
         }
 
+        /// <summary>
+        /// Updates API resources and their permissions.
+        /// </summary>
+        /// <param name="resources">New resource list</param>
+        /// <param name="adminPermission">Permission to assign to new resources</param>
+        /// <param name="api">API type filter</param>
         public async Task UpdateResources(
             List<ApiResource> resources,
             Permission adminPermission,

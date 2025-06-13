@@ -6,6 +6,10 @@ namespace ZonkGameRedis
 {
     public interface IRedisConnectionProvider : IDisposable
     {
+        /// <summary>
+        /// Provides access to a Redis database.
+        /// </summary>
+        /// <returns>Redis database instance</returns>
         IDatabase GetDatabase();
     }
 
@@ -22,8 +26,10 @@ namespace ZonkGameRedis
             _db = _multiplexer.GetDatabase();
         }
 
+        /// <inheritdoc />
         public IDatabase GetDatabase() => _db;
 
+        /// <inheritdoc />
         public void Dispose() => _multiplexer.Dispose();
     }
 

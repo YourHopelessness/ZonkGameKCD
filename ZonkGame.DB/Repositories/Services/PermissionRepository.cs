@@ -9,6 +9,11 @@ namespace ZonkGame.DB.Repositories.Services
     public class PermissionRepository(IDbContextFactory<AuthContext> dbFactory) : IPermissionRepository
     {
         private readonly AuthContext authDb = dbFactory.CreateDbContext();
+        /// <summary>
+        /// Retrieves a permission entity by its name.
+        /// </summary>
+        /// <param name="name">Permission name</param>
+        /// <returns>Permission entity</returns>
         public async Task<Permission> GetPermissionByName(string name)
         {
             return await authDb.Permissions

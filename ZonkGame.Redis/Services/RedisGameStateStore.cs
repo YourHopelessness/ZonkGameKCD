@@ -52,6 +52,11 @@ namespace ZonkGameRedis.Services
     {
         private readonly ILogger<RedisGameStateStore> _logger = factory.CreateLogger<RedisGameStateStore>();
 
+        /// <summary>
+        /// Returns game identifiers that exist in the cache.
+        /// </summary>
+        /// <param name="gamesid">List of game IDs to check</param>
+        /// <returns>IDs found in cache</returns>
         public async Task<List<Guid>> GetStoredGames(List<Guid> gamesid)
         {
             var redisKeys = gamesid.Select(g => (RedisKey)GetKey(g)).ToArray();
@@ -71,6 +76,7 @@ namespace ZonkGameRedis.Services
             return storedGameIds;
         }
 
+        /// <inheritdoc />
         public async Task SaveGameStateAsync(StoredFSMModel gameState)
         {
             var json = StoredFSMSerializer.Serialize(gameState);
@@ -83,6 +89,7 @@ namespace ZonkGameRedis.Services
             await redisConnection.GetDatabase().StringSetAsync(key, json, expiry);
         }
 
+        /// <inheritdoc />
         public async Task<ZonkStateMachine?> LoadGameStateAsync(Guid gameId)
         {
             var json = await redisConnection.GetDatabase().StringGetAsync(GetKey(gameId));
@@ -105,11 +112,17 @@ namespace ZonkGameRedis.Services
             return new ZonkStateMachine(baseObserver, desirialized);
         }
 
+        /// <inheritdoc />
         public async Task DeleteGameStateAsync(Guid gameId)
         {
             await redisConnection.GetDatabase().KeyDeleteAsync(GetKey(gameId));
         }
 
+        /// <summary>
+        /// Converts a state machine to a storable model.
+        /// </summary>
+        /// <param name="zfsm">State machine instance</param>
+        /// <returns>Serialized model</returns>
         public static StoredFSMModel Map(ZonkStateMachine zfsm)
         {
             return new StoredFSMModel

@@ -4,11 +4,20 @@ namespace ZonkGameCore.InputHandler
 {
     public class ConsoleInputHandler : IInputAsyncHandler
     {
+        /// <summary>
+        /// Reads user input for selecting dice from the console.
+        /// </summary>
+        /// <param name="roll">Current dice roll</param>
+        /// <returns>Indices of selected dice</returns>
         public Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll)
         {
             return Task.FromResult(GetHandleSelectDiceInput(roll));
         }
 
+        /// <summary>
+        /// Asks the user whether to continue the game.
+        /// </summary>
+        /// <returns>User decision</returns>
         public Task<bool> HandleShouldContinueGameInputAsync()
         {
             return Task.FromResult(GetHandleShouldContinueGameInput());
@@ -71,11 +80,13 @@ namespace ZonkGameCore.InputHandler
             return selectedDices;
         }
 
+        /// <inheritdoc />
         public Task<IEnumerable<int>> HandleSelectDiceInputAsync(IEnumerable<int> roll, Guid gameid)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public Task<bool> HandleShouldContinueGameInputAsync(Guid gameid)
         {
             throw new NotImplementedException();

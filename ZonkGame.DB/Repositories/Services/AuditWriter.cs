@@ -12,6 +12,9 @@ namespace ZonkGame.DB.Repositories.Services
         private ZonkDbContext? _dbContext = null;
         private ZonkDbContext DbContext => _dbContext ??= dbFactory.CreateDbContext();
 
+        /// <summary>
+        /// Writes audit entry for a failed turn.
+        /// </summary>
         public async Task WriteFailedTurnAuditAsync(
             Guid gameId,
             Guid currentPlayerId,
@@ -38,6 +41,9 @@ namespace ZonkGame.DB.Repositories.Services
             await DbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Writes audit entry for dice selection.
+        /// </summary>
         public async Task WriteSelectedDiceAuditAsync(
             Guid gameId,
             Guid currentPlayerId,
@@ -68,6 +74,9 @@ namespace ZonkGame.DB.Repositories.Services
             await DbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Writes audit entry for continuation decision.
+        /// </summary>
         public async Task WriteContinueTurnAuditAsync(
             Guid gameId,
             Guid currentPlayerId,
@@ -94,6 +103,9 @@ namespace ZonkGame.DB.Repositories.Services
             await DbContext.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Writes audit entry for finishing a turn.
+        /// </summary>
         public async Task WriteFinishTurnAuditAsync(
            Guid gameId,
            Guid currentPlayerId,
