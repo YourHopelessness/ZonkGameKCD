@@ -33,8 +33,11 @@ internal class Program
 
         // Register Authorization
         builder.Services.AddControllers(opt => opt.Filters.Add<ZonkAuthorizeFilter>());
+        builder.Services.AddHttpClient();
         builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
         ZonkAuthorizeFilter.ApiEnumRoute = ApiEnumRoute.ZonkBaseGameApi;
+        builder.Services.AddOpenIddict()
+            .AddClient();
 
         // Register GRPC
         builder.Services.AddGrpc();
@@ -92,7 +95,9 @@ internal class Program
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
+        app.MapHub<ZonkGameHub>("/gamehub");
         app.MapControllers();
+        app.UseMiddleware<ApiResponseMiddleware>();
 
         // Update resources
         await ResourceUpdater.UpdateResources(

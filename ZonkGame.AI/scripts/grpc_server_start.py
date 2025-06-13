@@ -1,7 +1,8 @@
 import sys
 import os
+import time
 
-# RAR ± pµRґRYRIXASџ, s ‡ cm РРѕ СРѕРµРѕ Сї їhrѕr ° ° ° ry grpc_Service rys іsm.
+# Find the path to the 'grpc_services' module
 sys.path.append(os.path.dirname(__file__))
 
 from grpc_services.ZonkServiceServicer import create_grpc_service
@@ -9,11 +10,8 @@ from grpc_services.ZonkServiceServicer import create_grpc_service
 if __name__ == "__main__":
     try:
         create_grpc_service("agent1.keras")
-        
-        # R‘r »R ѕR -RYRESHRARIRIR ° ° °» ° ° РіРѕРѕ Рїireѕsmun ° ° °, С ‡ С.1 ± С ‹sѓrµsђrіrµ ѕ · r ° € € € € € € € € € €
-        import time
         while True:
-  # Ryreyrer ryrѕ 1 rґrѕsћ
-
+            # Sleep for 24 hours (86400 seconds)
+            time.sleep(86400)
     except Exception as e:
-        print(f"Ps € ± РР ° ° С · p ° rhasѓrєrµ grpc sѓrµSђrirµSђR °: {e}")
+        print(f"Error while starting gRPC Service: {e}")

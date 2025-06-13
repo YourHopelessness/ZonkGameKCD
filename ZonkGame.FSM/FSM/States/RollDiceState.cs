@@ -4,7 +4,7 @@ using ZonkGameCore.Observer;
 namespace ZonkGameCore.FSM.States
 {
     /// <summary>
-    /// The state of a throw of bones
+    /// The state of a throw of dices
     /// </summary>
     public class RollDiceState(BaseObserver observer, ZonkStateMachine fsm) : BaseGameState(observer, fsm)
     {
@@ -15,7 +15,7 @@ namespace ZonkGameCore.FSM.States
 
             await _observer.RollDice();
 
-            // There is a possible combination among abandoned bones
+            // There is a possible combination among abandoned dices
             if (_fsm.GameContext.CurrentRoll.GetValidCombinations().Count < 1)
             {
                 await _observer.FailedTurn();

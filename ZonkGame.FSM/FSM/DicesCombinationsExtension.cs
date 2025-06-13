@@ -1,21 +1,21 @@
-п»їnamespace ZonkGameCore.FSM
+namespace ZonkGameCore.FSM
 {
     public static class DicesCombinationsExtension
     {
-        /// <summary> rfrѕr "sѓs‚ ‚p ± pµp · 6 </summary>
+        /// <summary> Semi-straight without 6 </summary>
         public static readonly int[] semiStreetComboWithoutSix = [1, 2, 3, 4, 5];
 
-        /// <summary> rfrѕr "sѓs‚ ‚p ± pµp · 1 </summary>
+        /// <summary> Semi-straight without 1 </summary>
         public static readonly int[] semiStreetComboWithoutOne = [2, 3, 4, 5, 6];
 
-        /// <summary> p¤cѓ "r" -s ‚‚ </summary>
+        /// <summary> straight </summary>
         public static readonly int[] fullStreetCombo = [1, 2, 3, 4, 5, 6];
 
         /// <summary>
-        /// РРРѕРґРґРµSђr¶r ° С ° С # ‚p"ry ry єR ѕRѕRѕRѕRѕP"rhes ... p.
+        /// Do the dice contain one possible combination without extra dice
         /// </summary>
-        /// <Param name = "Dice"> pћsm pan"r ѕr¶rµRѕPѕC‹ r plrѕs s.1reyo </pram>
-        /// <Returns> R’R ° P »Pearґrѕs‹ R »Ryo R CS PAN" R ѕr¶rµRѕPѕP ‹RPµ CPѕC‚ ° </burns>
+        /// <param name="dice">Dice in play</param>
+        /// <returns>Are the dice in play valid?</returns>
         public static bool HasValidCombos(this IEnumerable<int> dice)
         {
             var validDice = new HashSet<int>();
@@ -30,17 +30,17 @@
         }
 
         /// <summary>
-        /// Rџr ”Сѓs ‡ РµPѕRERYERPACARPACARP ... rirѕr · p јrѕrѕrѕp‹ ... rrѕrr ± rirѕr ° С · river · · · · · · · · · · · · · · ·
+        /// Getting all possible combinations from dice
         /// </summary>
-        /// <Param name = "Dice"> r‘SSHIS € RµRѕPѕC ‹Rµ єRS s.1reyo </param>
-        /// <burns> ryreysѓrѕrє pprѕRP ± river ° С † Rather no. </ Returns>
+        /// <param name="dice">Thrown dice</param>
+        /// <returns>List of combinations</returns>
         public static List<int[]> GetValidCombinations(this IEnumerable<int> dice)
         {
             var results = new List<int[]>();
             var diceList = dice.ToList();
             var counts = diceList.GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
 
-            // Rysђrѕr # rol r ± РѕР ± »РµР ѕrґrrѕR ° РРѕРіС‹ ...
+            // Threes or more of the same die
             foreach (var kv in counts)
             {
                 int die = kv.Key, count = kv.Value;
@@ -50,7 +50,7 @@
                 }
             }
 
-            // Rџr ° Сђs ‹Ryo rѕrґrrrѕpѕs ‡ рS‹ Rµ (1 Ryo 5)
+            // Pairs and singles (1 and 5)
             foreach (var key in counts.Keys.Where(k => k == 1 || k == 5))
             {
                 int count = counts[key];
@@ -60,51 +60,45 @@
                     results.Add([key]);
             }
 
-
-
-
-
-
-            // Rysm panels ven ‹Ryo ryrѕr» Сѓs ѓs ђ ђ ‹‹
+            // Straights and half-streets
             var distinct = new HashSet<int>(diceList);
- // With "Sr" p "-s ѓ‚ ‚
+            if (distinct.SetEquals(fullStreetCombo)) // straight
                 results.Add(fullStreetCombo);
-            if (semiStreetComboWithoutSix.All(distinct.Contains)) 
+            if (semiStreetComboWithoutSix.All(distinct.Contains)) // semi-straight without 6
                 results.Add(semiStreetComboWithoutSix);
- // RARѕR »Сѓs ѓ‚ ‚p ± pµp · 1
+            if (semiStreetComboWithoutOne.All(distinct.Contains))  // semi-straight without 1
                 results.Add(semiStreetComboWithoutOne);
 
             return results;
         }
 
         /// <summary>
-        /// P ° Сѓs ‡ Рµs ‚Сѓs ‡ РµS1 ° ririsђrѕrѕr ° °
+        /// Calculating the player's score
         /// </summary>
-        /// <Param name = "dits"> rѕs pan"" R ѕr¶rµRѕPѕC ‹Pµ PPѕSѓ CO </PARAM>
-        /// <Returns> cѓs ‡ pµs ‚p ° РС ± s ± s ° ° ° С‹ P pl С С С СО </burns>
+        /// <param name="dices">dice set aside</param>
+        /// <returns>count for selected dice</returns>
         public static int CalculateScore(IEnumerable<int> dices)
         {
             var groupedDices = dices.GroupBy(d => d).ToDictionary(g => g.Key, g => g.Count());
 
             if (dices.Intersect(fullStreetCombo).Count() == 6)
             {
-                // Rysman ‚
+                // Straights
                 return 1500;
             }
             else if (dices.Intersect(semiStreetComboWithoutSix).Count() >= 5)
             {
-                // RXR ° R »С № № Сѓsm,‚ p ± РµР · 6
+                // Semi-straight without 6
                 return 500;
             }
             else if (dices.Intersect(semiStreetComboWithoutOne).Count() >= 5)
             {
-                // RXR ° R »С № № Сѓsm,‚ p ± rµr · 1
+                // Semi-straight without 1
                 return 750;
             }
 
             int score = 0;
-
-            // РС ‡ ryos pan ° ° Рµreј ryrѕ іsђsrikar ° Рј є є є С сsmarn # №
+            // Counting by groups of dices
             foreach (var kvp in groupedDices)
             {
                 int dice = kvp.Key;
@@ -112,16 +106,16 @@
 
                 if (count >= 3)
                 {
-                    // P ° Сѓs ‡ РС ‚ј ј ј ј ј ј ј ј ј ¶reysank µ µ µ р ‡ ‡ ‡ ‡ Р ° ° ° ° ° Р¶ ° Рр єrѕs СО * 2
+                    // Calculate the score multiplier for each dice * 2
                     int multiplier = (int)Math.Pow(2, count - 3);
                     score += (dice == 1 ? 1000 : dice * 100) * multiplier;
                     count -= 3;
                 }
 
-                // РС ‡ rysm ° ° Рµreј rysѓr micrґrer † † С ‹, rrѕs pan ‹SђS‹ C ... RARRµRѕSX € 3s ...
+                // Count all ones that are count less than 3
                 if (dice == 1)
                     score += count * 100;
-                // РС ‡ rys pan ° ° Рµreј rysѓr mic 5, РРѕСship р ‹С ... Рј јrµrѕs € € 3s ...
+                // Count fives ones that are count less than 3
                 else if (dice == 5)
                     score += count * 50;
             }

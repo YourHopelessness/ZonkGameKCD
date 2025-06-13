@@ -78,8 +78,8 @@ namespace ZonkGameApi.Services
                 players.Add(new InputPlayerModel(
                        existingPlayer.PlayerName,
                        existingPlayer.PlayerType == PlayerTypeEnum.AIAgent
- // GRPC calls with an agent
- // Signalr interaction
+                            ? new GrpcAgentInputHandler(_channel.GetChannel()) // gRPC calls with agent
+                            : existingPlayer.PlayerType == PlayerTypeEnum.RealPlayer ? new SignalRInputHandler(_hub) // Signalr interaction
                             : new RestInputHandler(),
                         existingPlayer.PlayerType,
                         existingPlayer.Id));
