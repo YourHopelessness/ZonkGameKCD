@@ -45,9 +45,9 @@ namespace ZonkGame.Auth.Service.Services
                         throw new HttpRequestException("User is null", null, System.Net.HttpStatusCode.BadRequest);
 
             var resource = hasAccessRequest.ResourceId.HasValue
-                  ? await apiResourceRepository.GetAsync(x => x.Id == hasAccessRequest.ResourceId.Value) :
+                  ? await apiResourceRepository.GetAsync(x => x.Id == hasAccessRequest.ResourceId.Value && x.ApiName == hasAccessRequest.Api) :
                 !string.IsNullOrEmpty(hasAccessRequest.ResourceRoute)
-                  ? await apiResourceRepository.GetAsync(x => x.Route == hasAccessRequest.ResourceRoute) :
+                  ? await apiResourceRepository.GetAsync(x => x.Route == hasAccessRequest.ResourceRoute && x.ApiName == hasAccessRequest.Api) :
                         throw new HttpRequestException("Resource is null", null, System.Net.HttpStatusCode.BadRequest);
 
             return await roleRepository.HasUserAccessAsync(

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using OpenIddict.Validation.AspNetCore;
 using ZonkGame.DB.Enum;
 using ZonkGameCore.ApiUtils.ApiClients;
 using ZonkGameCore.ApiUtils.Requests;
@@ -27,7 +26,7 @@ namespace ZonkGameCore.ApiUtils.Authorization
             var result = await
                 authService.AuthenticateAsync(
                         httpContext,
-                        OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+                        scheme: null);
 
             if (!result.Succeeded || result.Principal == null)
             {
@@ -46,7 +45,8 @@ namespace ZonkGameCore.ApiUtils.Authorization
             var accessRequest = new HasAccessRequest
             {
                 ResourceRoute = httpContext.Request.Path,
-                UserId = userId
+                UserId = userId,
+                Api = ApiEnumRoute
             };
             var hasAccess = await authApiClient.HasUserAccess(accessRequest);
             if (!hasAccess)

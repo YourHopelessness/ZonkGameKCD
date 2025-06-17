@@ -79,5 +79,34 @@ namespace ZonkGame.Auth.Controllers
                 }
             }
         }
+
+        /// <summary>
+        /// Introspect tokens
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("introspect")]
+        public async Task<IActionResult> Introspect()
+        {
+            var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+            if (!result.Succeeded || result.Principal is null)
+                return Unauthorized();
+
+            var principal = result.Principal;
+
+            var response = new
+            {
+                active = true,
+                sub = principal.GetClaim(Claims.Subject),
+                name = principal.Identity?.Name,
+                scopes = principal.GetScopes(),
+                roles = principal.FindAll(Claims.Role).Select(r => r.Value),
+                exp = principal.GetClaim(Claims.ExpiresAt),
+                aud = principal.GetClaim(Claims.Audience)
+            };
+
+            return Ok(response);
+        }
+
     }
 }

@@ -21,5 +21,8 @@ namespace ZonkGameCore.ApiConfiguration
 
         /// <summary>Kesh Radis address</summary>
         public string? RedisConnectionString { get; set; }
+
+        /// <summary> Client secret for auth token introspection </summary>
+        public string AuthSecret { get; set; } = string.Empty;
     }
 }

@@ -77,7 +77,9 @@ namespace ZonkGameCore.ApiUtils.ApiClients
             if (!response.IsSuccessStatusCode)
             {
                 throw new HttpRequestException(
-                    $"Request {_baseUrl + relativeUrl} returned unsuccessful status code = {response.StatusCode}");
+                    $"Request {_baseUrl + relativeUrl} returned unsuccessful status code = {response.StatusCode}",
+                    null,
+                    response.StatusCode);
             }
             if (response.Content.Headers.ContentLength == 0)
             {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Abstractions;
 using System.Reflection;
 using ZonkGame.Auth.Models;
 using ZonkGame.Auth.Service.Interfaces;
@@ -91,7 +92,6 @@ internal class Program
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
-
 
         var app = builder.Build();
         if (app.Environment.IsDevelopment())

@@ -5,7 +5,7 @@ using ZonkGameCore.InputHandler;
 namespace ZonkGameApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AgentResponseController : ControllerBase
     {
         [HttpPost("SelectDice")]

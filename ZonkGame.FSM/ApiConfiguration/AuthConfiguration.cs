@@ -24,5 +24,8 @@ namespace ZonkGameCore.ApiConfiguration
 
         /// <summary>The role for all the obscene users by default</summary>
         public string DefaultRoleName { get; set; } = "Player";
+
+        /// <summary> Auth client secret </summary>
+        public string AuthSecret { get; set; } = null!;
     }
 }

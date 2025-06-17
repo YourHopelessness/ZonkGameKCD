@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using OpenIddict.Validation.AspNetCore;
 using System.Reflection;
 using ZonkGame.DB.Context;
 using ZonkGame.DB.Enum;
@@ -36,8 +38,27 @@ internal class Program
         builder.Services.AddHttpClient();
         builder.Services.AddScoped<IAuthApiClient, AuthApiClient>();
         ZonkAuthorizeFilter.ApiEnumRoute = ApiEnumRoute.ZonkBaseGameApi;
+        builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         builder.Services.AddOpenIddict()
-            .AddClient();
+            .AddValidation(options =>
+            {
+                var authapiAddress = builder.Configuration
+                    .GetSection(ExternalApiConfiguration.Position)
+                    .GetSection("AuthApi")
+                    .GetValue<string>("AuthApiAddress") 
+                        ?? throw new ArgumentNullException("Auth address not found");
+                options.SetIssuer(authapiAddress);
+                options.AddAudiences("resource_server");
+                options.UseSystemNetHttp();
+                options.UseAspNetCore();
+                options.UseIntrospection()
+                       .SetClientId(ApiEnumRoute.ZonkBaseGameApi.ToString())
+                       .SetClientSecret(builder.Configuration
+                            .GetSection(GameZonkConfiguration.Position)
+                            .GetValue<string>("AuthSecret") ??
+                                throw new ArgumentNullException("Auth client secret not found"));
+            });
+
 
         // Register GRPC
         builder.Services.AddGrpc();
@@ -94,6 +115,7 @@ internal class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapHub<ZonkGameHub>("/gamehub");
         app.MapControllers();

@@ -1,23 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ZonkGameApi.Controllers
 {
-    [Route("api/[Controller]")]
+    [Route("[controller]")]
     public class HealthCheckController : ControllerBase
     {
-        [HttpGet("Version")]
         /// <summary>
         /// Returns current API version.
         /// </summary>
+        [HttpGet("Version")]
+        [AllowAnonymous]
         public IActionResult ApiVersion()
         {
             return Ok("v1.0");
         }
 
-        [HttpGet("HealthCheck")]
         /// <summary>
         /// Simple health check endpoint.
         /// </summary>
+        [HttpGet("HealthCheck")]
+        [AllowAnonymous]
         public IActionResult HealthCheck()
         {
             return Ok();

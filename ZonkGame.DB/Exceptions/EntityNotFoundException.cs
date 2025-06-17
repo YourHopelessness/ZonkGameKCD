@@ -9,9 +9,10 @@ namespace ZonkGame.DB.Exceptions
 
         public EntityNotFoundException(string entityName, Dictionary<string, string?> parametrs) : base()
         {
-            Description = $"Essence {entityName} with parameter" 
-                + (parametrs.Count < 2 ? "Ohm" : "Ami")
-                + $"{string.Join(", ", parametrs.Select(x => $"{x.Key} = {x.Value}"))}";
+            Description = $"Entity {entityName} with parameter" 
+                + (parametrs.Count < 2 ? " " : "s ")
+                + $"{string.Join(", ", parametrs.Select(x => $"{x.Key} = {x.Value}"))}"
+                + " not found";
         }
     }
 }

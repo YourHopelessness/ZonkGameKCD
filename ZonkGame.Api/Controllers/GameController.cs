@@ -6,7 +6,7 @@ using ZonkGameRedis.Services;
 namespace ZonkGameApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class GameController(
         IGameService gameService,
         IGameStateStore cache) : ControllerBase
